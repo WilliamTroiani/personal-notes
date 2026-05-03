@@ -1,0 +1,91 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{units}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+\usepackage{nicefrac}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{bbm}
+\usepackage{color}
+\usepackage{tensor}
+\usepackage{tipa}
+\usepackage{bussproofs}
+\usepackage{ stmaryrd }
+\usepackage{ textcomp }
+\usepackage{leftidx}
+\usepackage{afterpage}
+
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage
+    }
+
+\graphicspath{ {images/} }
+
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+\newtheorem{notation}{Notation}
+\newtheorem{cor}{Corollary}
+\newtheorem{remark}{Remark}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\call}[1]{\mathcal{#1}}
+\newcommand{\psheaf}{\text{\underline{Set}}^{\scr{C}^{\text{op}}}}
+\newcommand{\und}[1]{\underline{\hspace{#1 cm}}}
+\newcommand{\adj}[1]{\text{\textopencorner}{#1}\text{\textcorner}}
+
+\usepackage[margin=3cm]{geometry}
+
+\title{Approximation of Continuous Functions by ReLU Nets}
+\author{Will Troiani}
+\date{October 2019}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+\input{Sections/Introduction.tex}
+
+\section{Feed-forward Neural Nets, ReLU activations, and Max-min strings}
+\input{Sections/definitions.tex}
+
+\section{Approximation of Continuous Functions by ReLU Nets, Finite Case}
+\input{Sections/FiniteCase.tex}
+
+\section{Approximation of Continuous Functions by ReLU Nets, General Case}
+\label{main}
+\input{Sections/Theorem.tex}
+
+\section{AI-powered addendum}
+\label{sec:ai-powered-addendum}
+\input{Sections/AI_powered_addendum.tex}
+
+\newpage
+\begin{thebibliography}{9}
+\bibitem{Weierstrass} K. Weierstrass, \emph{Über die analytische Darstellbarkeit sogenannter willkürlicher Functionen einer reellen Veränderlichen},Sitzungsberichte der Königlich Preußischen Akademie der Wissenschaften zu Berlin, 1885.
+
+\bibitem{Stone} M. H. Stone, \emph{The Generalised Weierstrass Approximation Theorem}, Mathematics Magazine, 21 (4): 167–184, 1948.
+
+\bibitem{Hanin} B. Hanin, M. Sellke, \emph{Approximating Continuous Functions by ReLU Nets of Minimal Width}, arXiv:1710.11278, 2018
+
+\bibitem{Hanin17} B. Hanin, \emph{Universl function approximation by deep neural nets with bounded width and ReLU acivations}. arXiv preprint arXiv: 1708.02691, 2017
+
+\bibitem{Cybenko} G. Cybenko, \emph{Approximation by superpositions of a sigmoidal function}. Mathematics of Control, Signals, and Systems (MCSS), 2(4):303-314, 1989
+
+\bibitem{Hornik} K. Hornik, M. Stinchcombe, H. White, \emph{Multilayer Feedforward Networks are Universal Approximators}. Neural networks, 2(5): 359 - 366, 1989.
+
+\end{thebibliography}
+
+\end{document}

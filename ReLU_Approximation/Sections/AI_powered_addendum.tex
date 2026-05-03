@@ -1,0 +1,417 @@
+
+This addendum records the mathematical corrections to the preceding notes and gives replacement statements which can be used without relying on the informal geometric sketches.  The original goal is correct: continuous functions on compact sets can be uniformly approximated by ReLU networks.  Several intermediate lemmas in the notes, however, are false as stated or have hypotheses, dimensions, or regions interchanged.  The safest repair is to replace the circle-growth proof by the explicit max-min construction below.
+
+\subsection{Corrected definitions}
+
+\begin{defn}[ReLU network, corrected]
+Let $\rho(t)=\max\{0,t\}$ and let $\rho_d:\bb{R}^d\to\bb{R}^d$ denote the component-wise ReLU map.  A feed-forward ReLU network with input dimension $d_0$ and output dimension $d_L$ consists of affine maps
+\[
+A_i:\bb{R}^{d_{i-1}}\longrightarrow \bb{R}^{d_i},\qquad i=1,\ldots,L,
+\]
+where $d_1,\ldots,d_{L-1}$ are the hidden widths.  Its realised function is
+\[
+f_{\call N}=A_L\circ \rho_{d_{L-1}}\circ A_{L-1}\circ\cdots\circ \rho_{d_1}\circ A_1.
+\]
+Thus the last affine map is not followed by a ReLU unless this is explicitly declared.
+\end{defn}
+
+\begin{remark}[Indexing error in the original definition]
+The displayed expression
+\[
+A_n\operatorname{ReLU}_{d_{n-1}}A_{n-1}\cdots \operatorname{ReLU}_{d_1}A_1
+\]
+uses an affine map $A_n$ that was not included in the preceding list of affine maps.  The corrected indexing is the one in the previous definition.
+\end{remark}
+
+\begin{defn}[Max-min strings, corrected]
+For affine maps $l_1,\ldots,l_N:\bb{R}^n\to\bb{R}^m$, a max-min string is any function obtained from the $l_i$ by finitely many component-wise operations
+\[
+(u,v)\longmapsto u\vee v,
+\qquad
+(u,v)\longmapsto u\wedge v,
+\]
+where
+\[
+(u\vee v)_j=\max\{u_j,v_j\},
+\qquad
+(u\wedge v)_j=\min\{u_j,v_j\}.
+\]
+Equivalently, after ordering the affine maps appropriately, one can write
+\[
+h_1=l_1,
+\qquad
+h_{i+1}=h_i\vee l_{i+1}\quad\text{or}\quad h_{i+1}=h_i\wedge l_{i+1},
+\qquad
+g=h_N.
+\]
+\end{defn}
+
+\subsection{Max-min strings and ReLU networks}
+
+\begin{lemma}[Realising max and min with ReLU]
+For scalar inputs,
+\[
+\max\{a,b\}=b+\rho(a-b),
+\qquad
+\min\{a,b\}=a-\rho(a-b).
+\]
+The same identities hold component-wise on $\bb{R}^m$.
+\end{lemma}
+
+\begin{proof}
+If $a\geq b$, then $\rho(a-b)=a-b$, so the two formulas give $a$ and $b$.  If $a<b$, then $\rho(a-b)=0$, so the two formulas give $b$ and $a$.
+\end{proof}
+
+\begin{lemma}[Correct replacement for Lemma \ref{maxmin}]
+\label{ai:maxmin_relu}
+Let $K\subseteq\bb{R}^n$ be compact and let $g:\bb{R}^n\to\bb{R}^m$ be a max-min string.  Then there is a ReLU network $\call N$ whose realised function agrees with $g$ on $K$.  The construction may be made with hidden widths $n+m$.
+\end{lemma}
+
+\begin{proof}
+Write $g$ using affine maps $l_1,\ldots,l_N:\bb{R}^n\to\bb{R}^m$.  Choose $b\in\bb{R}^n$ such that
+\[
+x+b\in\bb{R}^n_{\geq0}\qquad\text{for all }x\in K.
+\]
+Because $K$ is compact and only finitely many affine functions are involved, choose $C>0$ such that
+\[
+l_i(x)+C\mathbf 1_m\in\bb{R}^m_{\geq0}
+\qquad\text{for all }x\in K\text{ and all }i,
+\]
+where $\mathbf 1_m=(1,\ldots,1)$.  Work with the shifted variables
+\[
+u=x+b,
+\qquad
+L_i(u)=l_i(u-b)+C\mathbf 1_m.
+\]
+The shifted string $g+C\mathbf 1_m$ is obtained from the nonnegative affine functions $L_i$ by the same sequence of max and min operations.
+
+At any intermediate stage store a pair $(u,y)\in\bb{R}^n\times\bb{R}^m$ with $u\geq0$ and $y\geq0$ on $K$.  To replace $y$ by $y\vee L_i(u)$, use the affine maps
+\[
+B_i(u,y)=(u,y-L_i(u)),
+\qquad
+B_i^{-1}(u,z)=(u,z+L_i(u)).
+\]
+Since $u\geq0$, the ReLU map leaves the $u$-coordinates unchanged, and
+\[
+B_i^{-1}\rho_{n+m}B_i(u,y)
+=(u,\rho_m(y-L_i(u))+L_i(u))
+=(u,y\vee L_i(u)).
+\]
+To replace $y$ by $y\wedge L_i(u)$, use
+\[
+C_i(u,y)=(u,L_i(u)-y),
+\qquad
+C_i^{-1}(u,z)=(u,L_i(u)-z),
+\]
+which gives
+\[
+C_i^{-1}\rho_{n+m}C_i(u,y)
+=(u,L_i(u)-\rho_m(L_i(u)-y))
+=(u,y\wedge L_i(u)).
+\]
+Begin with the affine map
+\[
+x\longmapsto (x+b,l_1(x)+C\mathbf 1_m).
+\]
+The first ReLU does nothing on $K$.  Iterating the blocks above produces $(x+b,g(x)+C\mathbf 1_m)$ on $K$.  The final affine map $(u,y)\mapsto y-C\mathbf 1_m$ gives $g(x)$.  Consecutive affine maps may be combined, so this is a feed-forward ReLU network in the standard sense.
+\end{proof}
+
+\begin{remark}[What was wrong in the original proof]
+The map labelled $A_1$ in the original proof has the wrong codomain: $x\mapsto (x,l_1(x))$ takes values in $\bb{R}^{n+m}$, not in $\bb{R}^m$.  Moreover, $A_1^{-1}$ is not defined, because $A_1:\bb{R}^n\to\bb{R}^{n+m}$ is not invertible.  Finally, the proof assumes that arbitrary affine outputs survive ReLU unchanged; this is only true after a positivity shift on the compact set, or after encoding signed quantities by positive and negative parts.
+\end{remark}
+
+\subsection{Finite interpolation}
+
+\begin{remark}[The affine separation lemma is false as stated]
+Lemma \ref{bigaffinefunctionfinite} is false without an additional separation hypothesis.  In $\bb{R}$, take
+\[
+S=\{-1,1\},
+\qquad
+x=0,
+\]
+and ask for an affine function $l(t)=at+b$ with $l(0)=0$ and $l(-1)>0$, $l(1)>0$.  Then $b=0$, so the inequalities become $-a>0$ and $a>0$, impossible.
+
+The statement becomes true if $x$ is an exposed point of $\operatorname{conv}(S\cup\{x\})$.  Equivalently, if there is a linear functional $\lambda$ with $\lambda(s-x)>0$ for all $s\in S$, then for any $t\geq0$ the affine function
+\[
+l(y)=c\lambda(y-x)
+\]
+with $c$ sufficiently large satisfies $l(x)=0$ and $l(s)>t$ for all $s\in S$.
+\end{remark}
+
+\begin{lemma}[Finite interpolation, corrected]
+\label{ai:finite_interpolation}
+Let $S\subseteq\bb{R}^n$ be finite and let $f:S\to\bb{R}^m$ be any function.  Then there is a max-min string $g:\bb{R}^n\to\bb{R}^m$ such that
+\[
+g(s)=f(s)\qquad\text{for every }s\in S.
+\]
+\end{lemma}
+
+\begin{proof}
+If $S$ has one point, take $g$ to be the corresponding constant affine map.  Otherwise, for each $s\in S$ choose $M_s>0$ so large that, for every $t\in S\setminus\{s\}$ and every component $j=1,\ldots,m$,
+\[
+f_j(s)-M_s\lVert t-s\rVert_\infty < f_j(t).
+\]
+This is possible because $S$ is finite and $\lVert t-s\rVert_\infty>0$ for $t\neq s$.  Define
+\[
+q_s(x)=f(s)-M_s\lVert x-s\rVert_\infty\mathbf 1_m.
+\]
+The scalar function $-\lVert x-s\rVert_\infty$ is a finite minimum of affine functions:
+\[
+-\lVert x-s\rVert_\infty
+=\bigwedge_{i=1}^n\big((x_i-s_i)\wedge(s_i-x_i)\big).
+\]
+Hence each $q_s$ is a max-min string.  Now set
+\[
+g(x)=\bigvee_{s\in S}q_s(x),
+\]
+where the maximum is taken component-wise.  At a point $t\in S$, the term $q_t(t)$ equals $f(t)$, while $q_s(t)<f(t)$ component-wise for every $s\neq t$.  Thus $g(t)=f(t)$.
+\end{proof}
+
+\begin{remark}[Edits to Lemma \ref{finitecase}]
+The parameter $\epsilon$ is unused in Lemma \ref{finitecase}.  The conclusion should not be written as $f=g$, because $f$ has domain $S$ while $g$ has domain $\bb{R}^n$.  The corrected conclusion is
+\[
+g(s)=f(s)\qquad\text{for all }s\in S.
+\]
+In the proof, the inductive hypothesis should produce a max-min string on $\bb{R}^n$ agreeing with $f$ on $S\setminus\{s\}$, not a function whose domain is only $S\setminus\{s\}$.
+\end{remark}
+
+\subsection{A clean replacement for the general approximation proof}
+
+The geometric ball-expansion proof in Section \ref{main} can be replaced by the following direct max-min construction.  It proves the natural $\bb{R}^n\to\bb{R}^m$ statement and does not require extending $f$ off $K$.
+
+\begin{thm}[Uniform approximation by max-min strings, corrected]
+\label{ai:uniform_approximation}
+Let $K\subseteq\bb{R}^n$ be compact and let $f:K\to\bb{R}^m$ be continuous.  For every $\epsilon>0$ there exists a max-min string $g:\bb{R}^n\to\bb{R}^m$ such that
+\[
+\sup_{x\in K}\lVert g(x)-f(x)\rVert_\infty\leq \epsilon.
+\]
+Consequently, by Lemma \ref{ai:maxmin_relu}, there exists a ReLU network whose realised function approximates $f$ to within $\epsilon$ on $K$.
+\end{thm}
+
+\begin{proof}
+Since $K$ is compact, $f$ is uniformly continuous and bounded.  Choose $\delta>0$ such that
+\[
+\lVert x-y\rVert_\infty\leq \delta
+\quad\Longrightarrow\quad
+\lVert f(x)-f(y)\rVert_\infty\leq \frac{\epsilon}{2}
+\qquad(x,y\in K).
+\]
+Choose $B>0$ such that $\lVert f(x)\rVert_\infty\leq B$ for all $x\in K$, and choose
+\[
+M>\frac{2B+\epsilon}{\delta}.
+\]
+Finally choose a finite set $S\subseteq K$ which is an $\eta$-net for $K$ in the $\ell^\infty$ metric, with
+\[
+0<\eta<\min\left\{\frac{\delta}{2},\frac{\epsilon}{2M}\right\}.
+\]
+Such a finite set exists by compactness.
+
+For each $s\in S$, define
+\[
+q_s(x)=f(s)-M\lVert x-s\rVert_\infty\mathbf 1_m,
+\]
+and set
+\[
+g(x)=\bigvee_{s\in S}q_s(x).
+\]
+As in Lemma \ref{ai:finite_interpolation}, each $q_s$ is a max-min string and hence so is $g$.
+
+Fix $x\in K$ and a component $j$.  Choose $s_0\in S$ with $\lVert x-s_0\rVert_\infty\leq\eta$.  Then
+\[
+g_j(x)
+\geq f_j(s_0)-M\eta
+\geq f_j(x)-\frac{\epsilon}{2}-\frac{\epsilon}{2}
+=f_j(x)-\epsilon.
+\]
+For the upper bound, let $s\in S$.  If $\lVert x-s\rVert_\infty\leq\delta$, then
+\[
+q_{s,j}(x)=f_j(s)-M\lVert x-s\rVert_\infty\leq f_j(s)
+\leq f_j(x)+\frac{\epsilon}{2}
+\leq f_j(x)+\epsilon.
+\]
+If $\lVert x-s\rVert_\infty>\delta$, then
+\[
+q_{s,j}(x)
+\leq B-M\delta
+< B-(2B+\epsilon)
+=-B-\epsilon
+\leq f_j(x)-\epsilon
+\leq f_j(x)+\epsilon.
+\]
+Thus $q_{s,j}(x)\leq f_j(x)+\epsilon$ for every $s\in S$, and after taking the component-wise maximum we get
+\[
+g_j(x)\leq f_j(x)+\epsilon.
+\]
+Since $x$ and $j$ were arbitrary, $\lVert g(x)-f(x)\rVert_\infty\leq\epsilon$ on $K$.
+\end{proof}
+
+\begin{cor}[Corrected ReLU approximation statement]
+\label{ai:relu_approximation}
+Let $K\subseteq\bb{R}^n$ be compact and let $f:K\to\bb{R}^m$ be continuous.  For every $\epsilon>0$ there is a ReLU network $\call N$ such that
+\[
+\sup_{x\in K}\lVert f_{\call N}(x)-f(x)\rVert_\infty\leq\epsilon.
+\]
+The construction above realizes a max-min approximant using hidden widths $n+m$.
+\end{cor}
+
+\subsection{Corrected modulus of continuity}
+
+\begin{defn}[Modulus and inverse modulus, corrected]
+Let $K\subseteq\bb{R}^n$ be compact and let $f:K\to\bb{R}^m$ be continuous.  Define
+\[
+\omega_{f,K}(\delta)=\sup\{\lVert f(x)-f(y)\rVert_\infty:x,y\in K,\ \lVert x-y\rVert\leq\delta\},
+\qquad \delta\geq0.
+\]
+For $\epsilon>0$, define
+\[
+\omega_{f,K}^{-1}(\epsilon)
+=\sup\{\delta\in[0,\operatorname{diam}(K)]:\omega_{f,K}(\delta)\leq\epsilon\}.
+\]
+If one wants to avoid endpoint issues, use any $0<\delta<\omega_{f,K}^{-1}(\epsilon)$ rather than the supremum itself.
+\end{defn}
+
+\begin{remark}[Edits to the original definition]
+The original definition should restrict to $\delta\geq0$.  It should also specify what happens if the supremum is infinite, or else cap $\delta$ by $\operatorname{diam}(K)$ as above.  Compactness of $K$ implies $\omega_{f,K}^{-1}(\epsilon)>0$ for every $\epsilon>0$.
+\end{remark}
+
+\subsection{If the geometric proof is retained}
+
+The diagrams in the addendum are useful intuition, but the statements around them need the following changes if the radial proof is retained.
+
+\begin{enumerate}
+    \item The circle of radius $r$ should be written
+    \[
+    C_r=\{(x,y)\in\bb{R}^2:x^2+y^2=r^2\},
+    \]
+    not $x^2+y^2=r$.
+
+    \item In the configuration shown in Figure \ref{elelprime}, the points $X$ and $Y$ lie on the smaller circle and $X'$ and $Y'$ lie on the larger circle.  Thus the radii should satisfy $0<r<r'$, with $X,Y\in C_r$ and $X',Y'\in C_{r'}$.
+
+    \item The old region, where an approximating max-min string is already known, should be the inner sector bounded by the rays $0X$ and $0Y$.  The new region should be the outer cap cut off by the chord $X'Y'$.  With this convention, the extension statement should say: if $g$ approximates $f$ on the inner sector, then a clamped function
+    \[
+    \widehat g=(g\wedge(f(Z)+l))\vee(f(Z)-l)
+    \]
+    approximates $f$ on the union of the inner sector and the outer cap.  The original corollary states the hypothesis on the wrong region.
+
+    \item The label \verb|\label{maxmin}| is used twice.  The corollary in the geometric section should be relabeled, for example as \verb|\label{cor:sector_extension}|.
+
+    \item The proof of the geometric corollary says that the needed affine function is supplied by Lemma \ref{ballapprox}.  It should refer to the preceding circle/cap lemma, not to Lemma \ref{ballapprox}, which comes later.
+
+    \item Lemma \ref{ballapprox} cannot prove approximation on a larger ball from a single pair of chords.  A single chord produces only one outer cap.  To extend from $B_{R'}(0)$ to a larger ball, one must choose finitely many chords whose caps cover the annulus and apply the sector-extension step finitely many times.
+
+    \item The set in the proof of Theorem \ref{infinitecase} should be
+    \[
+    \mathcal X=\{r\in[0,R]:\text{ there exists a max-min string approximating }f\text{ on }B_r(0)\},
+    \]
+    not the set of radii for which a max-min string approximates $f$ on the fixed ball $B_R(0)$.
+
+    \item The expression defining $R''$ in Lemma \ref{ballapprox} is dimensionally inconsistent.  If a chord $XY$ on $C_{R'}$ is extended to a chord $X'Y'$ on $C_{R''}$, the correct elementary relation is
+    \[
+    |X'Y'|^2=|XY|^2+4(R''^2-R'^2).
+    \]
+    Therefore any proposed value of $R''$ must be chosen to satisfy this equation for the desired outer chord length.
+\end{enumerate}
+
+The following is the correct abstract form of the clamping step used in the geometric proof.
+
+\begin{lemma}[Clamping extension lemma]
+\label{ai:clamping_extension}
+Let $U,V\subseteq\bb{R}^n$, let $f:U\cup V\to\bb{R}$, and suppose $g$ satisfies
+\[
+|g(x)-f(x)|\leq \eta\qquad\text{for }x\in U.
+\]
+Fix $z\in U\cup V$ and an affine function $l:\bb{R}^n\to\bb{R}$ such that
+\[
+|f(x)-f(z)|\leq l(x)+\eta\quad\text{for }x\in U,
+\]
+while on $V$ one has
+\[
+0\leq l(x)\leq\eta,
+\qquad
+|f(x)-f(z)|\leq\eta.
+\]
+Define
+\[
+\widehat g(x)=\max\{\min\{g(x),f(z)+l(x)\},f(z)-l(x)\}.
+\]
+Then
+\[
+|\widehat g(x)-f(x)|\leq2\eta\qquad\text{for }x\in U\cup V.
+\]
+\end{lemma}
+
+\begin{proof}
+On $V$, the value $\widehat g(x)$ lies in the interval $[f(z)-l(x),f(z)+l(x)]$, so
+\[
+|\widehat g(x)-f(x)|\leq l(x)+|f(z)-f(x)|\leq2\eta.
+\]
+On $U$, put $a=f(z)-l(x)$ and $b=f(z)+l(x)$.  The inequality $|f(x)-f(z)|\leq l(x)+\eta$ says
+\[
+a\leq f(x)+\eta,
+\qquad
+b\geq f(x)-\eta.
+\]
+Also $f(x)-\eta\leq g(x)\leq f(x)+\eta$.  Since both $g(x)$ and $b$ are at least $f(x)-\eta$, their minimum is at least $f(x)-\eta$; since both that minimum and $a$ are at most $f(x)+\eta$, their maximum is at most $f(x)+\eta$.  Thus $|\widehat g(x)-f(x)|\leq\eta$ on $U$.
+\end{proof}
+
+\begin{lemma}[Corrected sector extension lemma]
+\label{ai:sector_extension}
+Let $f:B_{r'}(0)\to\bb{R}$ be continuous, let $0<r<r'$, and let $X,Y\in C_r$ and $X',Y'\in C_{r'}$ be as in the chord configuration of Figure \ref{elelprime}.  Let $P$ be the outer cap of $B_{r'}(0)$ cut off by the chord $X'Y'$, let $Q$ be the inner sector of $B_r(0)$ bounded by the rays $0X$ and $0Y$, and let $Z\in C_{r'}$ be the point on the perpendicular bisector of $X'Y'$ lying in $P$.  Suppose $\delta>0$ is such that
+\[
+\lVert u-v\rVert\leq\delta\quad\Longrightarrow\quad |f(u)-f(v)|\leq\eta
+\qquad (u,v\in B_{r'}(0))
+\]
+and suppose $\operatorname{diam}(P)\leq\delta$.  Then there is an affine function $l:\bb{R}^2\to\bb{R}$ such that
+\[
+0\leq l\leq\eta\quad\text{on }P,
+\qquad
+|f(x)-f(Z)|\leq l(x)+\eta\quad\text{on }Q.
+\]
+Consequently, if $g$ is a max-min string with $|g-f|\leq\eta$ on $Q$, then
+\[
+\widehat g=(g\wedge(f(Z)+l))\vee(f(Z)-l)
+\]
+satisfies $|\widehat g-f|\leq2\eta$ on $Q\cup P$.
+\end{lemma}
+
+\begin{proof}
+Let $l$ be the affine function with $l(Z)=0$ and $l=\eta$ on the line through $X'$ and $Y'$.  Then $0\leq l\leq\eta$ on the cap $P$.  For $x\in Q$, the segment from $Z$ to $x$ meets the chord $X'Y'$ at a point $W\in P$.  Since $Z,W\in P$, the diameter hypothesis gives $\lVert Z-W\rVert\leq\delta$.  Along the line from $Z$ to $x$, the affine function $l$ has slope
+\[
+\frac{\eta}{\lVert Z-W\rVert}\geq\frac{\eta}{\delta}.
+\]
+Subdivide the segment from $Z$ to $x$ into pieces of length at most $\delta$.  The modulus assumption gives
+\[
+|f(x)-f(Z)|\leq \eta\left(\frac{\lVert x-Z\rVert}{\delta}+1\right)
+\leq l(x)+\eta.
+\]
+The final assertion is Lemma \ref{ai:clamping_extension}, with $U=Q$, $V=P$, and $z=Z$.
+\end{proof}
+
+\begin{remark}[Corrections to Lemma \ref{elementarygeometrytwo}]
+The statement is correct, but the proof should be made explicit.  If $\theta=\angle XOY$, then
+\[
+|XY|=2R\sin(\theta/2),
+\qquad
+|TX|=|TY|=R\tan(\theta/2).
+\]
+The hypothesis $|X-Y|\leq R$ gives $2\sin(\theta/2)\leq1$, hence $\theta\leq\pi/3$.  Therefore $\tan(\theta/2)\leq2\sin(\theta/2)$, so $|TX|,|TY|\leq|XY|$.  Hence the diameter of $\Delta XTY$ is $|XY|$.
+\end{remark}
+
+\subsection{Smaller mathematical and LaTeX corrections}
+
+\begin{enumerate}
+    \item In Lemma \ref{bigaffinefunctionfinite}, the phrase $x\in\bb{R}\setminus S$ should be $x\in\bb{R}^n\setminus S$.
+    \item The displayed sector
+    \[
+    \{(\gamma_1(B-x),\gamma_2(C-x)):\gamma_1,\gamma_2\geq0\}
+    \]
+    is not a subset of $\bb{R}^2$ as written.  A planar sector with vertex $x$ should be written as
+    \[
+    x+\{\gamma_1(A-x)+\gamma_2(B-x):\gamma_1,\gamma_2\geq0\}.
+    \]
+    \item In the same proof, $C$ appears but has not been defined.
+    \item The caption reference to the undefined label \texttt{bigaffinefinite} should refer to Lemma \ref{bigaffinefunctionfinite}.
+    \item The label \texttt{maxmin} is used twice: once for the max-min-to-ReLU lemma and once for the geometric corollary.  Rename the geometric label, for example to \texttt{cor:sector-extension}.
+    \item In Theorem \ref{infinitecase}, if the intended theorem is for arbitrary continuous $f:K\to\bb{R}^m$, one should state it that way.  The current statement assumes $f:\bb{R}^2\to\bb{R}$.
+    \item Norms should be fixed consistently.  The replacement proof above uses $\lVert \cdot\rVert_\infty$ because $-\lVert x-s\rVert_\infty$ is immediately a finite minimum of affine functions.
+\end{enumerate}

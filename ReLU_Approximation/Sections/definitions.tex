@@ -1,0 +1,78 @@
+\begin{defn}
+A \textbf{ReLU net} $\call{N}$ consists of
+\begin{itemize}
+    \item a (finite) sequence of \textbf{widths} $d_{in} = d_1,d_2,...,d_n = d_\text{out}$, where each $d_i \in \bb{N}$, $d_{\text{in}}$ is the \textbf{input width}, and $d_{\text{out}}$ the \textbf{output width},
+    \item a sequence of affine functions $(A_i: \bb{R}^{d_i} \to \bb{R}^{d_{i+1}})_{i = 1}^{n-1}$,
+\end{itemize}
+\end{defn}
+Associated to every ReLU net $\call{N}$ is a function
+\begin{equation}
+    f_{\call{N}}: A_n \text{ReLU}_{d_{n-1}} A_{n-1} ... \text{ReLU}_{d_1} A_1: \bb{R}^{d_{\text{in}}} \to \bb{R}^{d_{\text{out}}}
+\end{equation}
+where
+\begin{align*}
+    \text{ReLU}_k: \bb{R}^{k} &\to \bb{R}^k\\
+    (x_1,...,x_k) &\mapsto \big(\operatorname{max}\lbrace 0,x_1\rbrace,...,\operatorname{max}\lbrace 0, x_k \rbrace\big)
+\end{align*}
+The subscript $k$ on ReLU$_k$ will be dropped when its value is clear from context.
+The proof that ReLU nets can be used to approximate continuous functions with compact domains will not use ReLU nets on the nose, but instead will use functions which can be written as particular compositions involving affine functions as well as the $\operatorname{max}$ and $\operatorname{min}$ functions:
+\begin{defn}
+A \textbf{max-min string} is a function $g: \bb{R}^n \to \bb{R}^m$ which can be written as
+\begin{equation}
+    g = \sigma_{L-1}(l_L,\sigma_{L-2}(l_{L-1},...(\sigma_2(l_3,\sigma_1(l_2,l_1))...))
+\end{equation}
+where each $l_i: \bb{R}^n \to \bb{R}^m$ is an affine function, and each $\sigma_i$ is either the component-wise $\operatorname{max}$ function:
+\begin{align*}
+    \operatorname{max}: \bb{R}^{2m} &\to \bb{R}^m\\
+    (x_1,...,x_m,y_1,...,y_m) &\mapsto (\operatorname{max}\lbrace x_1,y_1\rbrace,...,\operatorname{max}\lbrace x_m,y_m)
+\end{align*}
+or the component-wise $\operatorname{min}$ function:
+\begin{align*}
+    \operatorname{min}: \bb{R}^{2m} &\to \bb{R}^m\\
+    (x_1,...,x_m,y_1,...,y_m) &\mapsto (\operatorname{min}\lbrace x_1,y_1\rbrace,...,\operatorname{min}\lbrace x_m,y_m\rbrace)
+\end{align*}
+\end{defn}
+%
+\begin{lemma}
+\label{maxmin}
+Let $g: \bb{R}^n \to \bb{R}^m$ a max-min string and $K \subseteq \bb{R}^n$ a compact set. Then there exists a ReLU net $\call{N}$ such that for all $x \in K$, $f_\call{N}(x) = g(x)$.
+\end{lemma}
+\begin{proof}
+It can be assumed without loss of generality that $K$ lies in the positive orthant, that is,
+\begin{equation*}
+    K \subseteq \bb{R}_+^n := \lbrace (x_1,...,x_n) \in \bb{R}^n \mid 1 \leq i \leq n \Rightarrow x_i \geq 0 \rbrace
+\end{equation*}
+To see this, say that $K$ does \emph{not} lie in the positive orthant. Then let $T: K \to K'$ be a translation where $K'$ does lie in the positive orthant, such a translation exists as $K$ is compact. Then by the theorem (once it has been proved) there exists $\call{N}$ such that $f_\call{N} = gT^{-1}$, which implies $f_\call{N} T = g$, and $f_\call{N} T$ is a ReLU net.\\\\
+%
+So assume $K$ lies in the positive orthant and write $$g = \sigma_{L-1}(l_L,\sigma_{L-2}(l_{L-1},...(\sigma_2(l_3,\sigma_1(l_2,l_1))...))$$
+where $l_i: \bb{R}^{n} \to \bb{R}^{m}$.\\\\
+%
+The key observation is that if $a,b \in \bb{R}$, then $\operatorname{max}\lbrace a,b\rbrace$ can be calculated by adding $a$ to $\operatorname{max}\lbrace 0, b - a\rbrace$, with a similar trick used for $\operatorname{min}$.\\\\
+%
+Define the following affine functions:
+\begin{align*}
+    A_1: \bb{R}^n &\to \bb{R}^m\\
+    x &\mapsto (x,l_1(x))
+\end{align*}
+and if $i = 2,...,L$:
+\begin{align*}
+    A_i: \bb{R}^{n + m} &\to \bb{R}^{n + m}\\
+    (x,y) &\mapsto 
+    \begin{cases}
+    (x, y - l_i(x))& \sigma_{i-1} = \operatorname{max}\\
+    (x, -y + l_i(x))& \sigma_{i-1} = \operatorname{min}
+    \end{cases}
+\end{align*}
+Notice that for $i = 2,...,L$, the functions $A_i$ admit inverses given by:
+\begin{align*}
+    A_i^{-1}: \bb{R}^{n + m} &\to \bb{R}^{n + m}\\
+    (x,y) &\mapsto 
+    \begin{cases}
+    (x, y + l_i(x))& \sigma_{i-1} = \operatorname{max}\\
+    (x, -y + l_i(x))& \sigma_{i-1} = \operatorname{min}
+    \end{cases}
+\end{align*}
+Then the function
+\[h := \text{ReLU}\text{ }A_{L}^{-1}\text{ }\text{ReLU}\text{ }A_L\text{ }...\text{ }A_1^{-1}\text{ }\text{ReLU}\text{ }A_1\]
+is equal to the graph of $g$. Thus $\pi h = g$, where $\pi: \bb{R}^{2m} \to \bb{R}^m$ is the map $(x_1,...,x_n,y_1,...,y_m) \mapsto (y_1,...,y_m)$, and $\pi h$ is a ReLU net.
+\end{proof}
