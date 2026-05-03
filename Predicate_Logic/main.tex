@@ -1,0 +1,866 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{units}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+\usepackage{nicefrac}
+\usepackage{hyperref}
+\usepackage{bbm}
+\usepackage{color}
+\usepackage{tensor}
+\usepackage{tipa}
+\usepackage{bussproofs}
+\usepackage{ stmaryrd }
+\usepackage{ textcomp }
+\usepackage{leftidx}
+\usepackage{afterpage}
+\usepackage{varwidth}
+\usepackage{tasks}
+\usepackage{ cmll }
+
+\newcommand\blankpage{
+	\null
+	\thispagestyle{empty}
+	\addtocounter{page}{-1}
+	\newpage
+}
+
+\graphicspath{ {images/} }
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[subsection] % reset theorem numbering for each chapter
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{cor}[thm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem{exmp}[thm]{Example} % same for example numbers
+\newtheorem{notation}[thm]{Notation}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{condition}[thm]{Condition}
+\newtheorem{question}[thm]{Question}
+\newtheorem{construction}[thm]{Construction}
+\newtheorem{exercise}[thm]{Exercise}
+\newtheorem{example}[thm]{Example}
+\newtheorem{aside}[thm]{Aside}
+
+\def\doubleunderline#1{\underline{\underline{#1}}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\call}[1]{\mathcal{#1}}
+\newcommand{\psheaf}{\text{\underline{Set}}^{\scr{C}^{\text{op}}}}
+\newcommand{\und}[1]{\underline{\hspace{#1 cm}}}
+\newcommand{\adj}[1]{\text{\textopencorner}{#1}\text{\textcorner}}
+\newcommand{\comment}[1]{}
+\newcommand{\lto}{\longrightarrow}
+\newcommand{\rone}{(\operatorname{R}\bold{1})}
+\newcommand{\lone}{(\operatorname{L}\bold{1})}
+\newcommand{\rimp}{(\operatorname{R} \multimap)}
+\newcommand{\limp}{(\operatorname{L} \multimap)}
+\newcommand{\rtensor}{(\operatorname{R}\otimes)}
+\newcommand{\ltensor}{(\operatorname{L}\otimes)}
+\newcommand{\rtrue}{(\operatorname{R}\top)}
+\newcommand{\rwith}{(\operatorname{R}\&)}
+\newcommand{\lwithleft}{(\operatorname{L}\&)_{\operatorname{left}}}
+\newcommand{\lwithright}{(\operatorname{L}\&)_{\operatorname{right}}}
+\newcommand{\rplusleft}{(\operatorname{R}\oplus)_{\operatorname{left}}}
+\newcommand{\rplusright}{(\operatorname{R}\oplus)_{\operatorname{right}}}
+\newcommand{\lplus}{(\operatorname{L}\oplus)}
+\newcommand{\prom}{(\operatorname{prom})}
+\newcommand{\ctr}{(\operatorname{ctr})}
+\newcommand{\der}{(\operatorname{der})}
+\newcommand{\weak}{(\operatorname{weak})}
+\newcommand{\exi}{(\operatorname{exists})}
+\newcommand{\fa}{(\operatorname{for\text{ }all})}
+\newcommand{\ex}{(\operatorname{ex})}
+\newcommand{\cut}{(\operatorname{cut})}
+\newcommand{\ax}{(\operatorname{ax})}
+\newcommand{\negation}{\sim}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\DeclareRobustCommand{\diamondtimes}{%
+	\mathbin{\text{\rotatebox[origin=c]{45}{$\boxplus$}}}%
+}
+\newcommand{\tagarray}{\mbox{}\refstepcounter{equation}$(\theequation)$}
+\newcommand{\startproof}[1]{
+	\AxiomC{#1}
+	\noLine
+	\UnaryInfC{$\vdots$}
+}
+\newenvironment{scprooftree}[1]%
+{\gdef\scalefactor{#1}\begin{center}\proofSkipAmount \leavevmode}%
+	{\scalebox{\scalefactor}{\DisplayProof}\proofSkipAmount \end{center} }
+
+
+\title{First order logic}
+\author{Will Troiani}
+\date{November 2021}
+
+\begin{document}
+	
+	\maketitle
+	\tableofcontents
+	\section{Tethering}
+	A baby correctly moves to the softer floor to crawl on. Immediately interacting with the concept of \emph{softer}. Similarly, an ignored cry for attention is followed by a \emph{louder} cry. This takes place years before the concepts of carpet, floor boards, cry, scream are comprehended or ``understood".
+	
+	The goal of a scientist is to step outside oneself. The scientific method is built upon experiment. To isolate and observe is to analyse beyond bias. The first tempting thought is that this is done so successfully. The second tempting thought is that we are bounded by our senses. The third tempting thought is that mathematics transcends this. The fourth tempting thought is that mathematics is psychology.
+	
+	If mathematics is psychology then how do we apply it? A standard response is to return to the second tempting thought. Let us not abandon just yet the claim that we \emph{do} see. That is, consider for a moment that our interactions are legitimate. I \emph{don't} know what grass is, but I know when it is softer than concrete (whatever concrete is). I don't know what a mouth is, but I know when its noise is insufficient to gain attention. The \emph{relationships} present themselves first, indeed, they're undeniable. Relations between what? Well clearly some kind of object... Is this really so clear though? When asked what a horse is I end up telling a story. This story contains relations, so we are back at the start. The classic response is that ``it's there but we cannot interact with it directly". My thesis in writing put vaguely is this: why not conflate ``out of reach" with ``unreal"? Let us be arrogant, I cannot interact with an isolated object, but I can relate to stories and relations. Hence, objects \emph{do not exist}, but abstract relations \emph{do}.
+	
+	Let us take a step back and consider an example. Say one reads a History textbook. One learns that Napoleon was born in the Kingdom of France. When though does one learn how many ants crawled over the roofs of his shoes throughout the course of his life? Certainly the integer $n$ representing this number is impossible to calculate. However, we believe that this integer $n$ exists ``out there". What if Napoleon never existed, though? We do not have \emph{proof} of his life nor his story. The crucial point is the following: pay attention to the emotional experience as I argue that we don't \emph{know} the facts of Napoleon's story. I suspect this emotion is of some kind of ``internal eye-roll", where one accepts ``sure, perhaps we cannot \emph{know}, but that is true of all History, do we simply give up?" Hence, one notices, what they themselves brought to History. We have noticed that the past is inaccessible with certainty. Is the correct response to sit down with ones arms folded refusing to engage? To state the point explicitly: studying History is a meaningful endeavour, but only when one adopts an acceptance for inference.  A ticket of approval to allow one's own mind to conflate ``greatest likelihood, given the evidence", with ``actuality of events".
+	
+	Another example. One does not stumble over the lack of rigorous definition of Raskolnikov whilst reading Crime and Punishment. One comprehends quickly his internal conflict, and his personal relationships. Again, this is done well before one knows the definition of ``man". In fact, the situation is backwards as this book helps us know, to be ``man" is to struggle, to live is to question one's place and one's time. When the final page turns we know more of ourselves. The story provides relationships from which we derive knowledge. This knowledge feels like the object of ``man" has come further into clarity, but Raskolnikov does not even exist! The entire time not a single actual man was discussed. Now notice, that similar eye-roll sensation. Once again we have brought something to the situation at hand. We suspend our belief and let the thought experiment proceed. Afterwards our understanding has deepened, this never would have happened if took seriously the notion that Crime and Punishment tells us nothing of man because never once is an actual man ever discussed.
+	
+	So why discuss ``objects" at the start of mathematics? To write clearly what a ``set" or a ``type" is cuts the entire endeavour short. Relations are interesting \emph{precisely because we do not know what the objects they relate are}. A topologist asks ``what is space"? A computer scientist ``what is an algorithm"? Do Topologies and Turing Machines answer these questions? My thesis is the following: no, they provide \emph{stories of an environment} where spaces or algorithms can be compared, or rather, \emph{related}. These theories and relationships are \emph{stories} which require the participant be in suspension of disbelief, but not arbitrarily. Indeed, these stories demand a particular suspension of disbelief, which is the only ``real" part of them. The sensation of deriving knowledge of what spaces or algorithms \emph{are} after engaging in this story is in the psychological emotion of \emph{drawing connections}. What space \emph{is}, or what an algorithm \emph{is}, in fact is never answered.
+	%
+	\section{Syntax (first order languages/theories)}
+	What does an author ask of the reader when the author is defining foundations? This is left implicit in almost all accounts (with exceptions, \cite{Murf_Cat}). Here, we state our expectations as clearly as possible, which admittedly is not very clear as indeed to reconcile what these entities \emph{are} is part of the aim of the theory. We bluntly list these objects and provide explanation afterwards (this explanation constitutes the beginning of the story of these objects, as alluded to in the Introduction).
+	\begin{enumerate}
+		\item\label{sus:sorts} A finite amount of \emph{sorts} (or types). We require the ability to identify particular sorts, and also to distinguish sorts. We also require that a new sort may be introduced if needed. The limit of the number of sorts is the limit of the ones abilities, means, and resources to perform the first two requirements of this dotpoint.
+		\item For each sort a finite set of \emph{variables} associated to that sort with the same requirements as that of \ref{sus:sorts}.
+		\item A finite amount of \emph{function symbols} and a finite amount of \emph{relation symbols}, both with the same requirements needed as \ref{sus:sorts}.
+	\end{enumerate}
+	When one is born into the universe, they may notice (if they are advanced) that how objects \emph{behave} is more tangible than what the objects themselves \emph{are}. If a rock can be used to hammer a stake into the ground, then a rock must be in some way akin to a hammer. One literally utters that the rock, at least in the instance of pegging the stake, was a ``type" of hammer.
+	
+	As mentioned in the Introduction, relations are immediately interacted with at the dawn of this universe. Hence the assumption of relation symbols. Function symbols are similar.
+	
+	This level of vagueness can be infuriating. Indeed, it is the author's opinion that in fact this is as good as it gets. We turn to a more ``rigorous" definition in Definition \ref{def:first_order_language}, but we will remark afterwards that this Definition is both circular and dishonest (Remark \ref{rmk:don't_believe_it}). First, the Definition.
+	
+	Our main reference is the textbook \emph{Sketches of an Elephant}, by Johnstone \cite{Johnstone}.
+	\begin{defn}\label{def:first_order_language}
+		A \textbf{first order signature} (or \textbf{first order language}) $\Sigma$ consists of the following data.
+		\begin{itemize}
+			\item A set $\Sigma$-Sort of $\textbf{sorts}$. For each sort $A$ of a signature $\Sigma$ there exists a countably infinite set $\call{V}_A$ of \textbf{variables} of sort $A$. We write $x:A$ for $x \in \call{V}_A$. 
+			\item A set $\Sigma$-Fun of \textbf{function symbols}, together with a map assigning to each $f \in \Sigma$-Fun its $\textbf{type}$, which consists of a finite, non-empty list of sorts (with the last sort in the list enjoying a distinguished status): we write
+			\begin{equation}
+				f: A_1 \times \hdots\times A_n \lto B
+			\end{equation}
+			to indicate that $f$ has type $A_1,...,A_n,B$. The integer $n$ is the \textbf{arity} of $f$, in the case $n = 0$,the function symbol $f$ is a \textbf{constant} of sort $B$.
+			\item A set $\Sigma$-Rel of \textbf{relation symbols}, together with a map assigning to each $R \in \Sigma$-Rel its \textbf{type}, which consists of a finite list of sorts: we write
+			\begin{equation}
+				R \rightarrowtail A_1 \times \hdots \times A_n
+			\end{equation}
+			to indicate that $R$ has type $A_1,...,A_n$. The integer $n$ is the \textbf{arity} of $R$, in the case $n = 0$, the relation symbol $R$ is an \textbf{atomic proposition}.
+		\end{itemize}
+	\end{defn}
+	Using these we construct the \emph{terms} over $\Sigma$.
+	\begin{defn}
+		The collection of \textbf{terms} $\operatorname{Term}(\Sigma)$ over $\Sigma$ is the smallest set subject to the following.
+		\begin{itemize}
+			\item Any variable $x:A$ is in $\operatorname{Term}(\Sigma)$. The sort $A$ is the \textbf{type} of the term $x:A$.
+			\item If $f: A_1 \times \hdots \times A_n \lto B$ is a function symbol and $t_1,...,t_n$ are terms respectively of types $A_1,...,A_n$ then $f(t_1,...,t_n)$ is in $\operatorname{Term}(\Sigma)$. The \textbf{type} of this term is $B$.
+		\end{itemize}
+	\end{defn}
+	We now define the formulas:
+	\begin{defn}
+		We simultaneously define the set $F$ of \textbf{formulae} over $\Sigma$ and, for each formula $\phi$, the (finite) set of \textbf{free variables} of $\phi$.
+		\begin{itemize}
+			\item \textbf{Relations}: if $R \rightarrowtail A_1 \times \hdots \times A_n$ is a relation symbol and $t_1: A_1 , \hdots, t_n: A_n$ are terms then
+			\begin{equation}
+				R(t_1,...,t_n) \in F, \qquad \operatorname{FV}(R(t_1,...,t_n)) = \bigcup_{i = 1}^n \operatorname{FV}(t_i)
+			\end{equation}
+			\item \textbf{Equality}: if $s,t$ are terms of the same sort then
+			\begin{equation}
+				s = t \in F,\qquad \operatorname{FV}(s = t) = \operatorname{FV}(s) \cup \operatorname{FV}(t)
+			\end{equation}
+			\item \textbf{Truth}: the special symbol
+			\begin{equation}
+				\top \in F,\qquad \operatorname{FV}(\top) = \varnothing
+			\end{equation}
+			\item \textbf{Falsity}: the special symbol
+			\begin{equation}
+				\bot \in F,\qquad \operatorname{FV}(\bot) = \varnothing
+			\end{equation}
+			\item \textbf{Disjunction}: if $\phi,\psi$ are both in $F$ then
+			\begin{equation}
+				\phi \vee \psi \in F,\qquad \operatorname{FV}(\phi \vee \psi) = \operatorname{FV}(\phi) \cup \operatorname{FV}(\psi)
+			\end{equation}
+			\item \textbf{Conjunction}: if $\phi,\psi$ are both in $F$ then
+			\begin{equation}
+				\phi \wedge \psi \in F,\qquad \operatorname{FV}(\phi \wedge \psi) = \operatorname{FV}(\phi) \cup \operatorname{FV}(\psi)
+			\end{equation}
+			\item \textbf{Implication}: if $\phi, \psi$ are both in $F$ then
+			\begin{equation}
+				\phi \Rightarrow \psi \in F,\operatorname{FV}(\phi \Rightarrow \psi) = \operatorname{FV}(\phi) \cup \operatorname{FV}(\psi)
+			\end{equation}
+			\item \textbf{Negation}: if $\phi$ is in $F$ then
+			\begin{equation}
+				\neg \phi \in F,\qquad \operatorname{FV}(\neg \phi) = \operatorname{FV}(\phi)
+			\end{equation}
+			\item \textbf{Existential quantification}: if $x:A$ is a variable and $\phi$ is in $F$ then
+			\begin{equation}
+				(\exists x:A) \phi \in F,\qquad \operatorname{FV}((\exists x:A) \phi) = \operatorname{FV}(\phi)\setminus\lbrace x\rbrace
+			\end{equation}
+			\item \textbf{Universal quantification}: if $x:A$ is a variable and $\phi$ is in $F$ then
+			\begin{equation}
+				(\forall x:A) \phi \in F,\qquad \operatorname{FV}((\forall x:A) \phi) = \operatorname{FV}(\phi)\setminus\lbrace x\rbrace
+			\end{equation}
+		\end{itemize}
+	\end{defn}
+	Now we define the formal expressions which will serve as axioms for First Order Theories.
+	
+	%\begin{defn}
+	%A \textbf{sequent} over a signature $\Sigma$ is a formal expression of the form
+	%\begin{equation}
+	%    \phi \vdash_{\overrightarrow{x}}\psi
+	%\end{equation}
+	%where $\phi,\psi$ are formulae over $\Sigma$ and $\overrightarrow{x}$ is a context such that
+	%\begin{equation}
+	%    \operatorname{FV}(\phi) \cup \operatorname{FV}(\psi) \subseteq \overrightarrow{x}
+	%\end{equation}
+	%\end{defn}
+	
+	\begin{defn}
+		A \textbf{first order theory} over a first order language $\Sigma$ is a set of formulas in $\Sigma$.
+	\end{defn}
+	
+	\begin{example}\label{ex:groups}
+		A \textbf{first order theory of groups}:
+		First we define the \textbf{first order language of groups} $\Sigma$:
+		\begin{itemize}
+			\item $\Sigma$ consists of the single sort $A$.
+			\item There are three function symbols:
+			\begin{align*}
+				*&: A \times A \lto A\\
+				(\und{0.2})^{-1}&: A \lto A\\
+				e&: A
+			\end{align*}
+			\item No relation symbols.
+		\end{itemize}
+		The first order theory of groups (which we also label $\Sigma$) over $\Sigma$ consists of the following formulas:
+		\begin{align*}
+			(x * y) * z &= x * (y * z),\\
+			x * x^{-1} &= e,\\
+			x * e &= x,\\
+			e * x &= x
+		\end{align*}
+	\end{example}
+	As promised, we Remark on the short-comings of the above definitions.
+	\begin{remark}\label{rmk:don't_believe_it}
+		We have the following complaints:
+		\begin{itemize}
+			\item In Definition \ref{def:first_order_language}, what do we mean by a set? ZFC set theory provides a definition of a set, but \emph{this itself is a first order theory}, hence this Definition is inherently circular.
+			\item In Definition \ref{def:first_order_language}, why do we allow for an infinite set of each of the objects defined? Consider a countably infinite subset $V$ of the real numbers where each element $V$ is an irrational number. It is not even determinable by finite means whether a real number $r$ is an element of $V$ or not, so this boldly dissatisfies desiderata \ref{sus:sorts} that we can identify and distinguish sorts.
+		\end{itemize}
+	\end{remark}
+	Is there any chance at resolving the complains of Remark \ref{rmk:don't_believe_it}? One work around is the say to oneself that we are not defining what Mathematics \emph{is}, but instead we are defining a mathematical object itself, just as one defines a group, or a vector space, etc. Hence, a ``First Order Theory" is \emph{the mathematical object} consisting of a countably infinite set (truly a set) of \emph{sorts}, and a countably infinite set of variables... This first question here, is ``are these mathematical objects interesting"? This is a good question...
+	
+	Another work around is the accept the vague definition given at the beginning of this Section. Mathematics is an inherently philosophical endeavour, especially when considering foundations, so surely \emph{some} kind of imprecise muse is required before foundations are defined. Here, we have provided one such.
+	
+	\section{Semantics (models of first order theories)}\label{sec:models}
+	We consider the special case when the number of sorts is equal to 1.
+	\begin{defn}
+		An \textbf{interpretation} $\call{I}$ of a first order language consists of the following data.
+		\begin{itemize}
+			\item A non-empty set $D$ called the \textbf{domain}.
+			\item For any function symbol $f: A_1 \times \hdots \times A_n \lto B$ a function
+			\begin{equation}
+				\call{I}(f): D^n \lto D
+			\end{equation}
+			If $f$ is $0$-ary then $\call{I}(f)$ is simply a choice of element from $D$.
+			\item For any relation symbol $R \rightarrowtail A_1 \times \hdots \times A_n$ a function
+			\begin{equation}
+				\call{I}(R): D^n \lto \lbrace 0,1\rbrace
+			\end{equation}
+		\end{itemize}
+	\end{defn}
+	
+	\begin{defn}
+		Let $D$ be a set. A \textbf{valuation} over $\Sigma$ in a set $D$ is a function
+		\begin{equation}
+			\nu: \call{V} \lto D
+		\end{equation}
+		We also introduce the following notation. If $d \in D$ is an element of $D$, $x \in \call{V}$, and $\nu: \call{V} \lto D$ is some valuation, then we have the following valuation.
+		\begin{equation}
+			\nu_{x \mapsto d}(y) =
+			\begin{cases}
+				d, & x = y,\\
+				\nu(y), & x \neq y
+			\end{cases}
+		\end{equation}
+	\end{defn}
+	We now extend an interpretation of a language to a model of a first order theory (given a choice of valuation).
+	
+	\begin{defn}\label{def:interpretation}
+		Let $\bb{T}$ be a first order theory over a first order language $L$. Let $\call{I}$ be an interpretation of $L$ and $\nu$ a valuation in the domain $D$ of $\call{I}$. We extend the interpretation to terms in the following way.
+		\begin{itemize}
+			\item $\call{I}_{\nu}(x) = \nu(x)$, for any variable $x$,
+			\item $\call{I}_{\nu}(f(t_1,...,t_n)) = \call{I}(f)(\call{I}_{\nu}(t_1),...,\call{I}_{\nu}(t_n))$, where $f(t_1,...,t_n)$ is a term constructed from an $n$-ary function symbol $f$ and $n$ terms $t_i$.
+		\end{itemize}
+		Then the interpretation is extended to the formulas:
+		\begin{align}
+			\call{I}_{\nu}(R(t_1,...,t_n)) = 1 &\text{ iff } \call{I}(R)(\call{I}_{\nu}(t_1),...,\call{I}_{\nu}(t_n)) = 1\\
+			\call{I}_{\nu}(s = t) = 1 &\text{ iff }\call{I}_{\nu}(s) = \call{I}_{\nu}(t)\\
+			\call{I}_{\nu}(\top) = 1&\\
+			\call{I}_{\nu}(\bot) = 0&\\
+			\call{I}_{\nu}(\phi \vee \psi) = 1&\text{ iff }\call{I}_{\nu}(\phi) = 1\text{ or }\call{I}_{\nu}(\psi) = 1\\
+			\call{I}_{\nu}(\phi \wedge \psi) = 1&\text{ iff }\call{I}_{\nu}(\phi) = 1\text{ and }\call{I}_{\nu}(\psi) = 1\\
+			\call{I}_{\nu}(\phi \Rightarrow \psi) = 1&\text{ iff }\call{I}_{\nu}(\phi) = 0\text{ or }\call{I}_{\nu}(\psi) = 1\\
+			\call{I}_{\nu}(\neg \phi) = 1&\text{ iff }\call{I}_{\nu}(\phi) = 0\\
+			\call{I}_{\nu}((\exists x:A)\phi) = 1&\text{ iff there exists }d \in D\text{ such that }\call{I}_{\nu_{x \mapsto d}}(\phi) = 1\\
+			\call{I}_{\nu}((\forall x:A)\phi) = 1&\text{ iff for all }d \in D\text{ we have }\call{I}_{\nu_{x \mapsto d}}(\phi) = 1
+		\end{align}
+		Let $\bb{T}$ be a first order theory over a first order language $L$. Then a \textbf{model} for $\bb{T}$ is an interpretation $\call{I}$ of $L$ such that for all valuations $\nu$, each formula $\phi$ in $\bb{T}$ we have:
+		\begin{equation}
+			\call{I}_{\nu}(\phi) = 1
+		\end{equation}
+	\end{defn}
+	\begin{example}
+		Let $\Sigma$ be the first order theory of groups (see Example \ref{ex:groups}). We consider the set $\bb{Z}$ of integers along with the interpretation $\call{I}$ of the first order language $\Sigma$:
+		\begin{align}
+			\call{I}(\ast)(n,m) &= n + m\\
+			\call{I}((\und{0.2})^{-1})n &= -n\\
+			\call{I}(e) &= 0
+		\end{align}
+		Then, the formula
+		\begin{equation}
+			(x * y) * z = x * (y * z)
+		\end{equation}
+		is interpreted under a valuation $\nu$ as
+		\begin{equation}
+			\call{I}_{\nu}\big((x * y) * z = x * (y * z)\big)
+		\end{equation}
+		which evaluations to $1$ if and only if for all $n,m,r \in \bb{Z}$ the following equality holds.
+		\begin{equation}
+			(n + m) + r = n + (m + r)
+		\end{equation}
+		which indeed we see holds true. Similarly, the other formulas are satisfied, and so this is a model of the first order theory of groups.
+		
+		Indeed, more generally, a model of a first order theory of groups is simply a group.
+	\end{example}
+
+\begin{remark}
+	We did not use anything special about the category of sets. If a category $\call{C}$ admits appropriate structure, we can indeed construct models of first order theories in $\call{C}$. In fact, the categorical approach is much more reasonable, because there is no reason to draw such significance to the category of sets. The interested reader is directed to \cite{TroianiColimits}.
+	\end{remark}
+	
+	\section{Proof (natural deduction)}
+	So far we have discussed \emph{language} and \emph{meaning}, or what is the same, \emph{syntax} and \emph{semantics}. Now we discuss \emph{proof}.
+	
+	\begin{defn}\label{def:natural_deduction_deduction_rules}
+		The deduction rules for the \textbf{natural deduction} are given as follows.
+		\begin{itemize}
+			\item Conjunction:
+			\begin{center}
+				\AxiomC{$A$}
+				\AxiomC{$B$}
+				\RightLabel{$\wedge I$}
+				\BinaryInfC{$A \wedge B$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$A \wedge B$}
+				\RightLabel{$\wedge E1$}
+				\UnaryInfC{$A$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$A \wedge B$}
+				\RightLabel{$\wedge E 2$}
+				\UnaryInfC{$B$}
+				\DisplayProof
+				\end{center}
+			\item Disjunction
+			\begin{center}
+				\AxiomC{$A$}
+				\RightLabel{$\vee I1$}
+				\UnaryInfC{$A \vee B$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$B$}
+				\RightLabel{$\vee I2$}
+				\UnaryInfC{$A \vee B$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$A \vee B$}
+				\AxiomC{$[A]^i$}
+				\noLine
+				\UnaryInfC{$\vdots$}
+				\noLine
+				\UnaryInfC{$C$}
+				\AxiomC{$[B]^j$}
+				\noLine
+				\UnaryInfC{$\vdots$}
+				\noLine
+				\UnaryInfC{$C$}
+				\RightLabel{$\wedge E^{i,j}$}
+				\TrinaryInfC{$C$}
+				\DisplayProof
+				\end{center}
+			\item Implication
+			\begin{center}
+				\AxiomC{$[A]^i$}
+				\noLine
+				\UnaryInfC{$\vdots$}
+				\noLine
+				\UnaryInfC{$B$}
+				\RightLabel{$\Rightarrow I^i$}
+				\UnaryInfC{$A \Rightarrow B$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$A \Rightarrow B$}
+				\AxiomC{$A$}
+				\RightLabel{$\Rightarrow E$}
+				\BinaryInfC{$B$}
+				\DisplayProof
+				\end{center}
+			\item Negation
+			\begin{center}
+				\AxiomC{$[A]^i$}
+				\noLine
+				\UnaryInfC{$\vdots$}
+				\noLine
+				\UnaryInfC{$\bot$}
+				\RightLabel{$\neg I^i$}
+				\UnaryInfC{$\neg A$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$\neg A$}
+				\AxiomC{$A$}
+				\RightLabel{$\neg E$}
+				\BinaryInfC{$\bot$}
+				\DisplayProof
+				\end{center}
+			\item Universal quantification. The $\forall I$ rule can only be employed in the context where the formula $B$ does not occur in $A$ nor in any assumption formula upon which $\forall x A$ depends.
+			\begin{center}
+				\AxiomC{$A[x := B]$}
+				\RightLabel{$\forall I$}
+				\UnaryInfC{$\forall x A$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$\forall x A$}
+				\RightLabel{$\forall E$}
+				\UnaryInfC{$A[x := B]$}
+				\DisplayProof
+				\end{center}
+			\item Existential quantification. The $\exists E$ rule can only be employed in the context where the formula $B$ does not occur in $A$ nor in $C$.
+			\begin{center}
+				\AxiomC{$A[x := B]$}
+				\RightLabel{$\exists I$}
+				\UnaryInfC{$\exists x A$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$\exists x A$}
+				\AxiomC{$[A[x:= B]]^i$}
+				\noLine
+				\UnaryInfC{$\vdots$}
+				\noLine
+				\UnaryInfC{$C$}
+				\RightLabel{$\exists E^i$}
+				\BinaryInfC{$C$}
+				\DisplayProof
+				\end{center}
+			\item (Respectively) equality, falsum, contradiction.
+			\begin{center}
+				\AxiomC{$A = B$}
+				\AxiomC{$C$}
+				\RightLabel{$=$}
+				\BinaryInfC{$C[B:= A]$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$\bot$}
+				\RightLabel{$\bot E$}
+				\UnaryInfC{$A$}
+				\DisplayProof
+				%
+				\qquad
+				%
+				\AxiomC{$[\neg A]^i$}
+				\noLine
+				\UnaryInfC{$\vdots$}
+				\noLine
+				\UnaryInfC{$\bot$}
+				\RightLabel{$\bot C^i$}
+				\UnaryInfC{$A$}
+				\DisplayProof
+				\end{center}
+			\end{itemize}
+		A \textbf{proof} is a finite, rooted planar tree with edges labelled by formulas and all vertices except for the root vertex labelled by a valid instance of a deduction rule. The leaves of the proof are the \textbf{assumptions} and if there exists a proof $\pi$ where the edge connected to the root node is labelled by formula $A$ and $\Gamma$ is the set of assumptions of $\pi$ we write
+		\begin{equation}
+			\Gamma \vdash A
+			\end{equation}
+		\end{defn}
+	How does proof relate to truth? To answer this question we begin with a different question: what comes first, logic or mathematics? If mathematics is truly built on a logical foundation (for instance, if mathematics is founded upon the first order theory of ZFC sets) then our answer is that \emph{logic} comes first. However, what if, hypothetically speaking, ZFC set theory was capable of proving something we believe to be false? Say ZFC could prove that the integer $1$ is equal to the integer $0$. Would we question the nature of integers? Or would we question ZFC set theory? Of course, we would question ZFC set theory, indeed, we would try to ``find the error" in our formalisation. Now the tables have turned, and it is \emph{mathematics} which we are measuring the quality of our logical system against.
+	
+	Perhaps an alternative explanation exists. Maybe one would suggest that even if a certain foundation of mathematics were to suggest that $1 = 0$, that does not necessarily mean it is \emph{wrong}, it just means it is not talking about the integers, and instead is talking about some other system where indeed $1$ \emph{does} equal $0$. This suggestion only further highlights that mathematics comes first, as this suggestion is born on the stubborn belief that the \emph{integer} 1 is \emph{not} equal to the \emph{integer} 0. So where does this stubborn \emph{belief} in the integers $0$ and $1$ come from? Moreover, where does the stubborn \emph{belief} that they are distinct come from?
+	
+	This is a platonist viewpoint: that mathematical (along with other theoretical) objects \emph{exist} and logic is a language designed by \emph{humans} in order to interact with those objects on as intimate of a level as \emph{humanly} possible.
+	
+	So what is the point being made here? The point, is we can loop back to our original question, that of how \emph{proof} relates to \emph{truth}, and suggest an answer which can be more easily digested if the platonist perspective is borne in mind. Statements are true exactly when \emph{they are}. For instance, the integer $1$ is not equal to the integer $0$, ``there is no way that it \emph{can} be". This truth relates to proof by way of the fact that it can be proven using (for example) the first order theory of ZFC sets.
+	
+	For this to become more compelling, one must apriori believe in the platonic ideal of ZFC sets so that, for example, the notation $\varnothing$, which denotes the empty set, \emph{is} talking about \emph{something}. This is the point where the particular choice of the ZFC as our foundation is parculiar and indeed confusing. The platonic ideal of a \emph{set} (as apposed to the platonic ideal of a \emph{ZFC set}) is itself a questionable object, because it seems like such a thing ought to be described by naive set theory, and Russell's Paradox stops us from getting far with that. Moreover, ZFC is out dated and highly arbitrary as a foundation of mathematics. The solution? Simply choose a different theory, but which one?
+	
+	This is where the topoi approach is more elating, as one may choose the mathematical object they have the strongest platonic belief in (provided the collection of such objects along with their morphisms form a topos), and use that belief to help them swallow the legitimacy of this entire approach. For instance, if one \emph{believes} in locally compact, hausdorff spaces, or modules over some ring, or even ZFC sets, then any of these can be used as the models (in the sense of Section \ref{sec:models}) for the syntactic theories. That is, one may \emph{choose} which topos the syntax is talking about. This is a \emph{very} accomodating way to perform mathematics. Any topos can be taken as the platonic universe which \emph{exists}, and then the language of first order theories can be used to reason about them. The concept of \emph{truth} is that which pertains to the topos in question.
+	
+	This means that what we \emph{really} mean when we talk about the \emph{truth} of a statement which has been proven in some first order theory, is the platonic ideal of ``truth" as it exists with respect to the platonic world of ZFC sets (because we have chosen the topos of ZFC sets here) holds. We can thus make the following vague definition, a precise version of which is given in Definition \ref{def:models}.
+	
+	\begin{defn}[Vague definition] A first order theory is \emph{true} under assumptions $\Gamma$ when it is true in all models. We write $\Gamma \models A$ when this holds.
+		\end{defn}
+	
+	\begin{defn}\label{def:models}
+		Let $\call{I}$ be an interpretation of a first order language $L$, let $A$ be a formula in $L$, and let $\Gamma$ be a set of formulas.
+		\begin{itemize}
+			\item $\call{I} \models A$ if $\call{I}_\nu(A) = 1$ for all valuations $\nu$.
+			\item $\call{I} \models \Gamma$ if $\call{I} \models A$ for all $A \in \Gamma$.
+			\item $\Gamma \models A$ if $\call{I} \models A$ for all interpretations $\call{I}$ which satisfy $\call{I} \models \Gamma$.
+			\end{itemize}
+		\end{defn}
+	
+	We will refer losely to the inference rules of Definition \ref{def:natural_deduction_deduction_rules} along with the choice of first order languages as the allowed sentences as \textbf{classical natural deduction}. Generally speaking, a \textbf{logical system} consists of a language along with deduction rules and a definition of \emph{proof}. We will not formalise these abstract definitions here though.
+	
+	We now have a notion of \emph{proof} and a notion fo \emph{truth}. The obvious question to ask is, what of the provable formulas are true, and what of the true formulas are provable?
+	
+	\begin{defn}
+		If $\Gamma \vdash A$ implies $\Gamma \models A$, then classical natural deduction is \textbf{sound}.
+		\end{defn}
+	
+	\begin{defn}
+		If $\Gamma \models A$ implies $\Gamma \vdash A$, then classical natural deduction is \textbf{complete}.
+		\end{defn}
+	
+	\begin{thm}\label{thm:sound_complete}
+		Classical natural deduction is both sound for natural deduction and complete for the models of Definition \ref{def:models}.
+		\end{thm}
+	\begin{proof}
+		\textbf{Proof of soundness:} Let $\pi$ be a proof of $D$ with hypotheses $\Gamma$. We proceed by induction on the height of $\pi$. If $\pi$ has height $0$, then $\pi$ consists of a single assumption and single conclusion $D$. This implies $D \in \Gamma$. Thus, if $\call{I} \models \Gamma$ then in particular $\call{I} \models D$.
+		
+		Now say that $\pi$ has heigh $n > 0$ and the result holds for all proofs $\pi'$ with height $k < n$. We proceed by cases on the deduction rule of $\pi$. Most of these cases are trivial. For instance, say the final rule is $\wedge I$ so that $D = A \wedge B$ for some $A,B$.
+		\begin{center}
+			\AxiomC{$\pi_1$}
+			\noLine
+			\UnaryInfC{$\vdots$}
+			\noLine
+			\UnaryInfC{$A$}
+			\AxiomC{$\pi_1$}
+			\noLine
+			\UnaryInfC{$\vdots$}
+			\noLine
+			\UnaryInfC{$A$}
+			\RightLabel{$\wedge I$}
+			\BinaryInfC{$A \wedge B$}
+			\DisplayProof
+			\end{center}
+		By definition, $\Gamma \models A \wedge B$ if for all interpretations $\call{I}$ such that $\call{I} \models \Gamma$ we have $\Gamma \models A \wedge B$, in other words, $\call{I}_\nu(A \wedge B) = 1$ for all valuations $\nu$. By Definition \ref{def:interpretation} this holds if and only if $\call{I}_\nu(A) = \call{I}_\nu(B)$ which holds by the inductive hypothesis.
+		
+		The cases when the final rule is $\wedge E1, \wedge E2, \vee I1, \vee I2$ are similarly simple.
+		
+		Say the final rule is $\wedge E^{i,j}$ for some $i,j$
+		\begin{center}
+			\AxiomC{$\pi'$}
+			\noLine
+			\UnaryInfC{$\vdots$}
+			\noLine
+			\UnaryInfC{$A \vee B$}
+			\AxiomC{$[A]^i$}
+			\noLine
+			\UnaryInfC{$\vdots$}
+			\noLine
+			\UnaryInfC{$D$}
+			\AxiomC{$[B]^j$}
+			\noLine
+			\UnaryInfC{$\vdots$}
+			\noLine
+			\UnaryInfC{$D$}
+			\RightLabel{$\wedge E^{i,j}$}
+			\TrinaryInfC{$D$}
+			\DisplayProof
+		\end{center}
+	Say $\call{I}$ satisfy $\call{I} \models \Gamma$ and let $\nu$ be an arbitrary valuation. By the existence of $\pi'$ we have $\Gamma \vdash A \vee B$ and so by the inductive hypothesis $\Gamma \models A \vee B$. Thus either $\call{I}_\nu(A) = 1$ or $\call{I}_\nu(B) = 1$. We also have that $\Gamma \cup \{ A \} \vdash D$ and so $\Gamma \cup \{ A \} \models D$. Thus, if $\call{I}_\nu(A) = 1$ then $\Gamma \cup \{ A \} \models D$ implies $\call{I}_\nu(D) = 1$. Otherwise, we must have $\call{I}_\nu(B) = 1$ and then $\Gamma \cup \{ B \} \models D$ implies $\call{I}_\nu(D) = 1$. It follows that $\Gamma \models D$.
+	
+	Say the final rule of $\pi$ is $\Rightarrow I^i$ so that $D = A \Rightarrow B$ for some $A,B$ and let $\call{I}$ is such that $\call{I} \models A$.
+	\begin{center}
+		\AxiomC{$[A]^i$}
+		\noLine
+		\UnaryInfC{$\vdots$}
+		\noLine
+		\UnaryInfC{$B$}
+		\RightLabel{$\Rightarrow I^i$}
+		\UnaryInfC{$A \Rightarrow B$}
+		\DisplayProof
+	\end{center}
+We need to show $\call{I}_\nu(A \Rightarrow B) = 1$ for each evaluation $\nu$ which amounts to showing that either $\call{I}_\nu(A) = 0$ or $\call{I})_\nu(B) = 1$. If $\call{I}_\nu(A) \neq 0$ then $\call{I}_\nu(A) = 1$. Thus, since $\Gamma \cup \{ A \} \vdash B$ and so $\Gamma \cup \{ A \} \models B$ we have $\call{I}_\nu(B) = 1$.
+
+Say the final rule of $\pi$ is $\Rightarrow E$.
+\begin{center}
+	\AxiomC{$A \Rightarrow D$}
+	\AxiomC{$A$}
+	\RightLabel{$\Rightarrow D$}
+	\BinaryInfC{$D$}
+	\DisplayProof
+\end{center}
+Since $\call{I}_\nu(A)$ is $1$ we have that $\call{I}_\nu(A) \neq 0$ which implies $\call{I}_\nu(B) = 1$.
+
+Say the final rule of $\pi$ is $\neg I^i$.
+\begin{center}
+	\AxiomC{$[A]^i$}
+	\noLine
+	\UnaryInfC{$\vdots$}
+	\noLine
+	\UnaryInfC{$\bot$}
+	\RightLabel{$\neg I^i$}
+	\UnaryInfC{$\neg A$}
+	\DisplayProof
+\end{center}
+We need to show that $\call{I}_\nu(\neg A) = 1$ which amounts to showing $\call{I}_\nu(A) = 0$. We use proof by contradiction. Say $\call{I}_\nu(A) = 1$. Since $\Gamma \cup \{ A \} \vdash \bot$ we have $\Gamma \cup \{ A \} \models \bot$ which implies $\call{I}_\nu(\bot) = 1$, contradicting Definition \ref{def:interpretation}.
+
+\textcolor{red}{How do I do this one?}
+
+\begin{center}
+	\AxiomC{$\neg A$}
+	\AxiomC{$A$}
+	\RightLabel{$\neg E$}
+	\BinaryInfC{$\bot$}
+	\DisplayProof
+\end{center}
+		\end{proof}
+	
+	\begin{thm}
+		Let $\bb{T}$ be a first order theory, that is, a set of formulas in some first order language. There exists an interpretation $\call{I}$ so that $\call{I} \models \bb{T}$ if and only if for every finite subset $\bb{T}' \subseteq \bb{T}$ there exists an interpretation $\call{I}'$ such that $\call{I}' \models \bb{T}'$.
+		\end{thm}
+	\begin{proof}
+		For convenience, if a theory $\bb{S}$ admits an interpretation $\call{J}$ such that $\call{J} \models \bb{S}$ we will say that $\bb{S}$ \textbf{admits a model}.
+		
+		We prove the contrapositive. Assume that $\bb{T}$ does not admit a model.
+		
+		By the Completeness Theorem we have that $\bb{T}$ is inconsistent. Let $A$ denote a formula such that $\bb{T} \vdash A$ and $\bb{T} \vdash \neg A$. Let $\pi, \pi'$ respectively be proofs of $A, \neg A$. Since $\pi, \pi'$ are finite there exists finite subsets $\bb{T}',\bb{T}'' \subseteq \bb{T}$ so that $\bb{T}' \vdash A$ and $\bb{T}'' \vdash \neg A$. This implies that $\bb{T}' \cup \bb{T}'' \vdash A \wedge \neg A$. Thus the finite subset $\bb{T}' \cup \bb{T}''$ is inconsistent and thus does not have a model.
+		
+		The other direction of the Theorem is trivial.
+		\end{proof}
+	
+	\begin{defn}
+		Let $\bb{T}$ be a first order theory and $\call{I}, \call{J}$ two interpretations of $\bb{T}$. A \textbf{morphism of interpretations} $\eta: \call{I} \lto \call{J}$ is a family of functions $ \eta = \{  \eta_{A}: \call{I}(A) \lto \call{J}(A)\}_{A \in \Sigma-\text{Sort}}$, indexed by the sorts of the first order signature $\Sigma$ of $\bb{T}$, subject to the following.
+		\begin{itemize}
+			\item For each function symbol $f: A_1 \times \ldots \times A_n \lto B$ the following Diagram commutes.
+			\begin{equation}\label{eq:function}
+				\begin{tikzcd}
+					\call{I}(A_1) \times \ldots \times \call{I}(A_n)\arrow[r,"{\call{I}(f)}"]\arrow[d,swap,"{\eta_{A_1} \times \ldots \times \eta_{A_n}}"] & \call{I}(B)\arrow[d,"{\eta_{B}}"]\\
+					\call{J}(A_1) \times \ldots \times \call{J}(A_n)\arrow[r,"{\call{J}(f)}"] & \call{J}(B)
+					\end{tikzcd}
+				\end{equation}
+		\item For each relation symbol $R \rightarrowtail A_1 \times \ldots \times A_n$ the following triangle commutes.
+		\begin{equation}
+			\begin{tikzcd}\label{eq:relation}
+				\call{I}(A_1) \times \ldots \times \call{I}(A_n)\arrow[d,swap,"{\eta_{A_1} \times \ldots \times \eta_{A_n}}"]\arrow[dr,"{\call{I}(R)}"]\\
+				\call{J}(A_1) \times \ldots \times \call{J}(A_n)\arrow[r,swap,"{\call{J}(R)}"] & \{ 0,1 \} 
+				\end{tikzcd}
+			\end{equation}
+		\end{itemize}
+	A morphism of interpretations $\eta: \call{I} \lto \call{J}$ is an \textbf{isomorphism} if there exists another morphism of interpretations $\eta^{-1}: \call{J} \lto \call{I}$ such that for all sorts $A \in \Sigma$ we have $\eta^{-1}\eta(A) = A = \eta\eta^{-1}(A)$.
+		\end{defn}
+	
+	\begin{lemma}\label{lem:isomorphic_models}
+		Let $\call{T}$ be a first order theory, $\call{I}, \call{J}$ be interpretations and $\phi$ be a formula. Say there exists an isomorphism of intepretations $\eta: \call{I} \lto \call{J}$. Then for any formula $\phi$ we have
+		\begin{equation}
+			\call{I} \models \phi \text{ if and only if }\call{J} \models \phi
+			\end{equation}
+		\end{lemma}
+	\begin{proof}[Sketch]
+		It suffices to show that if $\call{I} \models \phi$, then for any valution $\nu$ of $\call{J}$ we have $\call{J}_\nu(\phi) = 1$.
+		
+		Proceed by induction on the construction of $\phi$.  Notice that $\phi \neq \bot$, otherwise there every interpretation $\mu$ of $\call{I}$ would satisfy $\call{I}_\mu(\phi) = 0$ which contradicts $\call{I} \models \phi$. Thus, the base cases are $\phi = \top, R(t_1,\ldots, t_n)$ for some relation symbol $R$ and terms $t_1, \ldots, t_n$. The result holds trivially in the former case and follows easily from commutativity of \eqref{eq:function}, \eqref{eq:relation}. The rest is a matter of routine checks.
+		\end{proof}
+	
+	
+	
+	\section{Completeness of a theory}
+	
+	Theorem \ref{thm:sound_complete} states that classical natural deduction is complete. There, we were not referring to a particular first order theory, instead we were referring to classical natural deduction on a whole. Thus, there ought not be any confusion when we introduce completeness \emph{of a theory} in Definition \ref{def:completeness_theory} below. This is why it is not contradictory that G\"{o}del has two both a completeness Theorem \ref{thm:sound_complete} and an incompleteness Theorem (See my note \cite{TroianiIncompleteness}).
+	
+	In this Section we develop a method for determining whether a first order theory is complete.
+	
+	\begin{defn}\label{def:completeness_theory}
+		A first order theory $\bb{T}$ over a first order language $\Sigma$ is \textbf{complete} if every statement is either proveable or disproveable. That is, for every formula $\phi$ of $\Sigma$ we have
+		\begin{equation}
+			\bb{T} \vdash \phi \quad \text{or} \quad \bb{T} \vdash \neg \phi
+			\end{equation}
+		\end{defn}
+	
+	\begin{thm}[Compactness Theorem]
+		Let $\bb{T}$ be a first order theory with set of axioms $\call{A}$. For each finite subset $\call{A}' \subseteq \call{A}$ let $\bb{T}_{\call{A}'}$ denote the first order theory given by the same language as $\bb{T}$ but with only axioms from $\call{A}'$. Then $\bb{T}$ admits a model if and only if $\bb{T}_{\call{A}'}$ admits a model for all finite $\call{A}' \subseteq \call{A}$.
+		\end{thm}
+	\begin{proof}
+		Any proof $\pi$ of any sequent $\bb{T} \vdash \phi$ is finite, and so there exists only a finite number of axioms used in $\pi$. Thus, there exists some subset $\bb{A}' \subseteq \call{A}$ such that $\bb{T}_{\call{A}'} \vdash \phi$. The contrapositive to this is that if $\bb{T}_{\call{A}'} \vdash \phi$ for all finite $\call{A}' \subseteq \call{A}$ then $\bb{T} \vdash \phi$. The result then follows by the completeness Theorem.
+		
+		The other direction is trivial.
+		\end{proof}
+	
+	\begin{defn}\label{def:skolemisation}
+		Let $\bb{T}$ be a first order theory with a single sort $A$ over the language $\Sigma$. Let $\phi$ be a formula in a first order theoy $\bb{T}$. Let $x_1,\ldots, x_n$ denote the occurrences which come directly after a universal quantifier $\forall$ and let $y_1, \ldots, y_m$ denote the occurrences which come directly after an existential quantifier $\exists$. Assume moreover that the labelling is so that $i < j$ if the earliest instance of $x_i$ is to the left of the earliest instance of $x_j$ in $\phi$, and similarly for the labelling on $y_1, \ldots, y_m$. For each $i = 1,\ldots, m$ let $\mu_i$ denote the number of universal quantifications to the left of $y_i$. Define function symbols
+		\begin{equation}
+			f_{i}: A^{n_i} \lto A
+			\end{equation}
+		Let $\overline{\phi}$ denote the formula given by removing all existential quantifiers and the occurrences immediately to the right of these quantifiers from $\phi$. For example, if $\phi = (\exists x:A) x$, then $\overline{\phi} = x$. Consider the first order language $\Sigma'$ which is given by adding all the function symbols $f_i$ to $\bb{T}$. The \textbf{Skolemisation of $\phi$}, $\call{S}(\phi)$ is the following formula in $\Sigma'$.
+		\begin{equation}
+			\call{S}(\phi) := \overline{\phi}[y_i := f_i(x_1,\ldots, x_{\mu_i})]_{i = 1,\ldots, m}
+			\end{equation}
+		The \textbf{Skolemisation of $\bb{T}$} is the first order theory $\call{S}(\bb{T})$ over the language $\Sigma'$ whose axioms are given by $\call{S}(\phi)$ where $\phi$ is an axiom of $\bb{T}$.
+		\end{defn}
+	
+	\begin{example}
+		Say $\phi = \forall x_1 \exists y_1 \forall x_2, x_1 + x_2 = y_1$. Then
+		\begin{equation}
+			\call{S}(\phi) = \forall x_1 \forall x_2, x_1 + x_2 = f(x_1)
+			\end{equation}
+		\end{example}
+	
+	Let $\bb{T}$ be a first order theory and assume $\bb{T}$ admits a model $\call{I}$. Let $D \subseteq |\call{I}(A)|$ be an arbitrary subset.
+	\begin{equation}
+		\call{I} \models \bb{T}
+		\end{equation}
+Write each axiom in $\bb{T}'$ in the form
+\begin{equation}\label{eq:universal}
+	\forall x_1 \ldots \forall x_n, \phi
+	\end{equation}
+where $\phi$ has no quantifiers. Let $\bb{T}''$ denote the first order theory given by removing all universal quantifiers of all axioms of $\bb{T}'$, so that a formula of the form \eqref{eq:universal} is replaced by $\phi$. It is clear that $\bb{T}''$ has a model if and only if $\bb{T}'$ has a model.
+
+Now, for each function symbol $f: A^n \lto A$ in the first order language associated to $\bb{T}'$, consider the set $\operatorname{im}\call{I}(f)\restriction_{D}$. Taking the union over all function symbols $f$ we define a set $E$.
+\begin{equation}
+	E := D \cup \bigcup_{f \in \bb{T}''}\operatorname{im}(\call{I}(f)\restriction_D)
+	\end{equation}
+We will define a model $\call{J}$ of $\bb{T}$ with domain $E$. Define
+\begin{equation}
+	\call{J}(A) := E
+	\end{equation}
+For each function symbol $f: A^n \lto A$ in the language associated to $\bb{T}$, define
+\begin{equation}
+	\call{J}(f) = \call{I}(f)\restriction_{D^n}
+	\end{equation}
+For each relation symbol $R \rightarrowtail A^n$ define
+\begin{equation}
+	\call{J}(R) = \call{I}(R)\restriction_{D^n}
+	\end{equation}
+Then $\call{J} \models \bb{T}$ and $|\call{J}(A)| = \kappa$.
+We have proven:
+\begin{lemma}[Lower Lowenheim-Skolem Theorem]
+	Let $\bb{T}$ be a first order theory over a first order language $\call{L}$ with one sort $A$. Let $\call{I}$ be a model of $\bb{T}$ such that $|\call{I}(A)|$ has infinite cardinality. For any infinite cardinal $\kappa \leq |\call{I}(A)|$ there exists a model $\call{J}$ of $\bb{T}$ such that $|\call{J}(A)| = \kappa$.
+	\end{lemma}
+There is also an upper version of the Lowenheim-Skolem Theorem.
+	\begin{lemma}[Upper Lowenheim-Skolem Theorem]
+		Let $\bb{T}$ be a first order theory over a first order language $\call{L}$ with one sort $A$. Let$\call{I}$ a model of $\bb{T}$ such that $|\call{I}(A)|$ has infinite cardinality. For any infinite cardinal $\kappa > |\call{I}(A)|$ there exists a model $\call{J}$ of $\bb{T}$ such that $|\call{J}(A)| = \kappa$.
+		\end{lemma}
+	\begin{proof}
+		Let $X$ be a set of cardinality $\kappa$ and for each $x \in X$ define a constant $c_x$ and let $C$ be this set of constants. Define the following set of sentences.
+		\begin{equation}
+			\scr{X} := \{ c_x \neq c_y \mid x \neq y \in X \}
+			\end{equation}
+		We will show using the compactness Theorem \ref{??} that the theory $\bb{T}_C$ whose language is given by $\bb{T}$ along with all constants in $C$ and whose axioms are given by those in $\bb{T}$ along with the sentences $\scr{X}$.
+		
+		Let $\scr{X}' \subseteq \scr{X}$ be a finite subset of $\scr{X}$ and let $C_{\scr{X}'}$ be the set of constants which appear in any sentence in $\scr{X}'$.
+		
+		Consider the theory $\bb{T}_{\scr{X}'}$ defined analogously to $\bb{T}_{\scr{X}}$. This theory admits a model $\call{K}$, defined in the following way: let $\{ y_x \}_{x \in \scr{X}'}$ be a set of distinct elements of $\call{I}(A)$, since $\call{I}(A)$ is infinite in cardinality, this can always be done. The remainder of the interpretation is given by $\call{I}$. It is clear that $\call{K} \models \bb{T}_{\scr{X}'}$.
+		
+		It follows that there exists a model $\call{J}$ of $\bb{T}_C$ such that $|\call{L}(A)| \geq \kappa$. The model $\call{J}$ in the statement then exists by the Lower Lowenheim-Skolem Theorem.
+		\end{proof}
+	
+	\begin{thm}[Lower Lowenheim Skolem Theorem]
+		Let $\bb{T}$ be a first order theory over a first order language $\call{L}$. Assume that $\call{L}$ consists of only one sort $A$ and assume that there are at most countably infinitely many funciton symbols. Assume $\bb{T}$ admits a model $\call{I}$ such that $\call{I}(A)$ has infinite cardinality. Then for any cardinal $\kappa \leq |\call{I}(A)|$ there exists a model $\call{J}$ of $\bb{T}$ such that $|\call{J}(A)| = \kappa$.
+		\end{thm}
+	\begin{proof}
+		
+		\end{proof}
+	
+	
+	
+	
+	
+	
+	
+	\begin{cor}[Lowenhiem-Skolem Theorem]
+		Let $\bb{T}$ be a first order theory with one sort $A$ which admits an model $\call{I}$ so that $\call{I}(A)$ is infinite in cardinality. Then for any cardinal $\kappa$ there exists a model $\call{J}$ of $\bb{T}$ so that $|\call{J}(A)| = \kappa$.
+		\end{cor}
+	
+	\begin{lemma}[\L o\'{s}-Vaught test]
+		Let $\bb{T}$ be a first order theory over $\Sigma$. Assume $\bb{T}$ satisfies the following.
+		\begin{itemize}
+			\item $\Sigma$ has only 1 sort, $A$ say.
+			\item $\call{T}$ has no finite models (that is, for every model $\call{I}$ we have $\call{I}(A)$ is an infinite set.
+			\item There exists some infinite cardinal $\kappa$ for which there is exactly one model of $\call{T}$ of size $\kappa$ up to isomorphism.
+			\end{itemize}
+		Then $\call{T}$ is complete.
+		\end{lemma}
+	\begin{proof}
+		Assume for a contradiction that $\call{T}$ is not complete, that is, there exists some formula $\phi$ such that $\call{T} \not\vdash \phi$ and $\call{T} \not\vdash \neg \phi$. By the completeness Theorem this means there exists a models $\call{I}, \call{J}$ such that
+		\begin{equation}
+			\call{I} \models \phi,\quad \call{J} \models \neg \phi
+			\end{equation}
+		Since all models of $\call{T}$ are infinite, we have that $\call{I}, \call{J}$ are infinite. By the Lowenheim-Skolem Theorem it follows that there exists a model $\call{I}'$ of size $\kappa$ so that $\call{I}' \models \phi$ and a model $\call{J}'$ also of size $\kappa$ so that $\call{J}' \models \neg \phi$. However, since there is only one model of $\call{T}$ up to isomorphism we have by Lemma \ref{lem:isomorphic_models} that $\call{J}' \models \phi$ which is a contradiction.
+		\end{proof}
+	
+	
+	
+	
+	
+	
+	\section{Topoi}
+	We have mentioned several times that one need not place ZFC sets on any pedistool above any other topos. This section takes this seriously and works on the level of generality of topos theory. For an Introduction we refer the reader to \cite{TroianiThesis}, \cite{TroianiColimits}, \cite{Johnstone}, \cite{MM}.
+	
+	\begin{defn}
+		Let $\call{E}$ be a topos and $\Sigma$ a first order language. A \textbf{$\Sigma$-structure} $M$ is a choice of object $ME$ for each object $E \in \call{E}$, a choice of morphism $Mf: ME_1 \times \ldots \times ME_n \lto MF$ for each function symbol $f: E_1 \times \ldots \times E_n \lto F$ and a choice of subobject $MR \rightarrowtail ME_1 \times \ldots \times E_n$ for each relation symbol $R \subseteq E_1 \times \ldots \times E_n$ of a first order language $\Sigma$.
+		
+		A \textbf{morphism of $\Sigma$-structures} $\eta: M \lto M'$ is a collection of morphisms $\eta = \{ \eta_E: ME \lto M'E \}_{E \in \cal{E}}$, indexed by the objects of $\call{E}$, satisfying the following conditions.
+		\begin{itemize}
+			\item For each function symbol $f: E_1 \times \ldots \times E_n \lto F$ the following diagram commutes
+			\begin{equation}
+				\begin{tikzcd}
+					ME_1 \times \ldots \times ME_n\arrow[r,"{Mf}"]\arrow[d,swap,"{\eta_{E_1} \times \ldots \times \eta_{E_n}}"] & MF\arrow[d,"{\eta_F}"]\\
+					M'E_1 \times \ldots \times M'E_n\arrow[r,"{M'f}"] & M'F
+					\end{tikzcd}
+				\end{equation}
+			\item For each relation symbol $R \subseteq E_1 \times \ldots \times E_n$ the following diagram commutes
+			\begin{equation}
+				\begin{tikzcd}
+					MR\arrow[r,rightarrowtail]\arrow[d,swap,"{\eta_R}"] & ME_1 \times \ldots \times ME_n\arrow[d,"{\eta_{E_1} \times \ldots \times \eta_{E_n}}"]\\
+					M'R\arrow[r,rightarrowtail] & M'E_1 \times \ldots \times M'E_n
+					\end{tikzcd}
+				\end{equation}
+			\end{itemize}
+		\end{defn}
+	
+	\begin{defn}
+		Given a topos $\call{E}$ and a first order language $\Sigma$ the collection of all $\Sigma$-structrues along with the collection of morphisms of $\Sigma$-structures forms a category $\underline{\Sigma-\operatorname{Str}}$.
+		
+		Given a first order theory $\bb{T}$ the subcategory $\underline{\operatorname{Mod}_{\bb{T}}}(\call{E})$ of $\underline{\Sigma-\operatorname{Str}}$ consisting of the models of $\bb{T}$ is the \textbf{category of models} of $\bb{T}$ in $\call{E}$.
+		\end{defn}
+	
+	\begin{thebibliography}{9}
+		\bibitem{TroianiThesis} W. Troiani, \emph{(Finite) simplicial sets are algorithms}, \url{http://therisingsea.org/notes/MScThesisWillTroiani.pdf}
+		
+		\bibitem{TroianiColimits} W. Troiani, \emph{The internal language and finite colimits}
+		
+		\bibitem{Murf_Cat} D. Murfet, \emph{Foundations for Category Theory}. \url{http://therisingsea.org/notes/FoundationsForCategoryTheory.pdf}
+		
+		\bibitem{Johnstone} Johnstone, \emph{Sketches of an elephant}.
+		
+		\bibitem{MM} M\"{o}dijk, MacLane, \emph{Sheaves in Geometry and Logic}.
+		
+		\bibitem{TroianiIncompleteness} W. Troiani, \emph{G\"{o}del's First Incompleteness Theorem}
+		
+	\end{thebibliography}
+	
+	
+	
+	
+\end{document}

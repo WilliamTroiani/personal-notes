@@ -1,0 +1,242 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{units}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+\usepackage{nicefrac}
+\usepackage{hyperref}
+\usepackage{bbm}
+\usepackage{color}
+\usepackage{tensor}
+\usepackage{tipa}
+\usepackage{bussproofs}
+\usepackage{ stmaryrd }
+\usepackage{ textcomp }
+\usepackage{leftidx}
+\usepackage{afterpage}
+\usepackage{varwidth}
+\usepackage{tasks}
+\usepackage{ cmll }
+\usepackage{makecell}
+\usepackage{MnSymbol}
+
+\newcommand\blankpage{
+	\null
+	\thispagestyle{empty}
+	\addtocounter{page}{-1}
+	\newpage
+}
+
+\graphicspath{ {images/} }
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[subsection] % reset theorem numbering for each chapter
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{cor}[thm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem{exmp}[thm]{Example} % same for example numbers
+\newtheorem{notation}[thm]{Notation}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{condition}[thm]{Condition}
+\newtheorem{question}[thm]{Question}
+\newtheorem{construction}[thm]{Construction}
+\newtheorem{exercise}[thm]{Exercise}
+\newtheorem{example}[thm]{Example}
+\newtheorem{aside}[thm]{Aside}
+
+\def\doubleunderline#1{\underline{\underline{#1}}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\call}[1]{\mathcal{#1}}
+\newcommand{\psheaf}{\text{\underline{Set}}^{\scr{C}^{\text{op}}}}
+\newcommand{\und}[1]{\underline{\hspace{#1 cm}}}
+\newcommand{\adj}[1]{\text{\textopencorner}{#1}\text{\textcorner}}
+\newcommand{\comment}[1]{}
+\newcommand{\lto}{\longrightarrow}
+\newcommand{\rone}{(\operatorname{R}\bold{1})}
+\newcommand{\lone}{(\operatorname{L}\bold{1})}
+\newcommand{\rimp}{(\operatorname{R} \multimap)}
+\newcommand{\limp}{(\operatorname{L} \multimap)}
+\newcommand{\rtensor}{(\operatorname{R}\otimes)}
+\newcommand{\ltensor}{(\operatorname{L}\otimes)}
+\newcommand{\rtrue}{(\operatorname{R}\top)}
+\newcommand{\rwith}{(\operatorname{R}\&)}
+\newcommand{\lwithleft}{(\operatorname{L}\&)_{\operatorname{left}}}
+\newcommand{\lwithright}{(\operatorname{L}\&)_{\operatorname{right}}}
+\newcommand{\rplusleft}{(\operatorname{R}\oplus)_{\operatorname{left}}}
+\newcommand{\rplusright}{(\operatorname{R}\oplus)_{\operatorname{right}}}
+\newcommand{\lplus}{(\operatorname{L}\oplus)}
+\newcommand{\prom}{(\operatorname{prom})}
+\newcommand{\ctr}{(\operatorname{ctr})}
+\newcommand{\der}{(\operatorname{der})}
+\newcommand{\weak}{(\operatorname{weak})}
+\newcommand{\exi}{(\operatorname{exists})}
+\newcommand{\fa}{(\operatorname{for\text{ }all})}
+\newcommand{\ex}{(\operatorname{ex})}
+\newcommand{\cut}{(\operatorname{cut})}
+\newcommand{\ax}{(\operatorname{ax})}
+\newcommand{\negation}{\sim}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\DeclareRobustCommand{\diamondtimes}{%
+	\mathbin{\text{\rotatebox[origin=c]{45}{$\boxplus$}}}%
+}
+\newcommand{\tagarray}{\mbox{}\refstepcounter{equation}$(\theequation)$}
+\newcommand{\startproof}[1]{
+	\AxiomC{#1}
+	\noLine
+	\UnaryInfC{$\vdots$}
+}
+\newenvironment{scprooftree}[1]%
+{\gdef\scalefactor{#1}\begin{center}\proofSkipAmount \leavevmode}%
+	{\scalebox{\scalefactor}{\DisplayProof}\proofSkipAmount \end{center} }
+
+\usepackage[margin=1cm]{geometry}
+
+\title{Three algorithms}
+\author{Will Troiani}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	\section{Introduction}
+	It is the twenty-first century and formal logic has been irreversibly intertwined with the theory of computation. When pressed on exactly why this intertwinement is actual science and not mere hope one can quickly list off at least three algorithms which are central to the theory of computation which are each born through the study of formal logic, the following is such a list.
+	\begin{enumerate}
+		\item\label{cut_elimination} The cut-elimination process of Sequent Calculus.
+		\item\label{representing_formula} The construction of a representing formulas for a given general recursive function.
+		\item \label{counit} The counit of the Curry-Howard-Lambek correspondence.
+	\end{enumerate}
+	We explain these in more detail, but first we tantilize the reader: these three examples were not chosen arbitrarily, they all have something crucial in common, we invite the reader to consider what this may be as we describe each of these algorithms in more detail.
+	
+	\textbf{Cut-elimination:} What distinguishes a logical system to a computational system? An opinion loyal to history would describe how a logical system would concern itself with proofs while a computational system would admit some kind of re-write procedure. For instance, we recognise Turing Machines and the simply typed lambda calculus as computational systems due to their re-write systems respectively being that of the tape head and $\beta$-reduction. Hence, at the very least a computational system must be \emph{dynamic}. So then what is the Sequent Calculus? This is a formal language designed for writing proofs, but it also admits a re-write procedure, that described by the cut-elimination Theorem, which states that every formula $\varphi$ provable using the cut rule (modus ponens) is equivalent to a proof of $\varphi$ which does \emph{not} make use of the cut-rule. However, the existence of such a cut-free proof is not the whole story, as in fact there is an effective \emph{procedure} which turns a proof $\pi$ which makes use of the cut rule and iteratively constructs proofs of lower complexity cuts until eventually all the instances of the cut rule are completely eliminated. This cut-reduction procedure has the same expressive power as the simply-typed lambda calculus, and hence the once sharp line between proof systems and systems of computation is blurred.
+	
+	\textbf{Representing formulas:} Logic is the science which comes before all sciences, \emph{right?} Well, without making a difinitive statement on this, at the very least one must reckon with G\"{o}del's First Incompleteness Theorem before an answer is drawn. A common misquoting of this Theorem is the following: any logical system, sufficiently expressive, is necessarily either incomplete, ie, there exists a formula $F$ which for which there exists no proof $F$ and no proof of $\neg F$, or inconsistent, in that there exists a formula $F$ such that both $F$ and $\neg F$ are proveable. Why is this statement incorrect? It is because the statement failed to include the hypothesis that the set of axioms and the set of deduction rules are \emph{effectively decidable}. In fact, concistent and complete systems sufficiently strong enough to express the basic laws of arithmetic \emph{do} exist! They are just not describable via computable means. The key component to the standard proof of this result is the algorithm which takes a general recursive function and constructs a formula $F$ representing this function. Indeed, it is significant that is procedure is \emph{effectively computable}, if this procedure is allowed to perform uncomputable steps, then the result fails to hold.
+	
+	\textbf{Curry-Howard-Lambek:} An internal language can be thought of as a concrete syntax which may be used to describe objects and morphisms inside a category, where the structure of the type theory reflects the structure of the category. This is a concrete example of logic as a language for mathematics. The line which is blurred here is between \emph{content} and \emph{form}; be the type theory associated to a category rich enough, then terms in the type theory become more comprehensible than the morphisms or objects they represent. Hence the morphism is percieved via the syntax, a morphism whose existence would be difficult to describe had this syntactic system not been present. Not only do terms of an internal logic describe morphisms, they describe \emph{procedures} for constructing the morphism via the categorical structure. In the particular case of the Curry-Howard-Lambek correspondence, the categorical structure is that of a Cartesian Closed Category, and the internal language is a typed lambda-calculus (with products) taken up to $\alpha\beta\eta$-equivalence.
+	
+	So what do these three systems have in common? Clearly, they are all results where the most significant component is the providence of some kind of effective procedure, but moreover, \emph{they were all originally proved non-constructively}, that is, none of these results were originally proven in such a way that the implied algorithm can be easily extracted from the proof.
+	
+	Indeed, Gentzen's originally proved the cut-elimination Theorem \cite{Gentzen} by introducing an auxillary deduction rule, the \emph{mix} rule, and proving that this rule can be eliminated. G\"{o}del's First Incompleteness Theorem was proved \cite{Godel} by first coming up with a simpler characterisation of the general recursive functions using his $\beta$-function Lemma and then showed that the general recursive functions are representable via this simpler characterisation. The Curry-Howard-Lambek correspondence is the least offender of this pattern, indeed this result crucially uses the algorithm implied by \emph{functional completeness}, a result due to Lambek \cite{lambek}, but the standard proof that the two concerned categories are equivalent does not put this algorithm in central focus.
+	
+	In this note we remedy this by providing constructive proofs of all three results. From the proofs given here, the relevant algorithms are extracted easily and written down concretely for the first time.
+	
+	\section{Curry-Howard-Lambek Correspondence}
+	\begin{defn}
+		A \textbf{positive intuitionist calculus} consists of:
+		\begin{itemize}
+			\item An at most countably infinite collection $\call{T}$ of types $A, B, C, ...$. Amongst these is a special type $\top$. There are also two type constructors, conjunction and arrow. More precisely, if $A,B$ are types then so are $A \wedge B, A \Rightarrow B$.
+			\item A binary relation $\vdash$ on $T$. If $A,B$ are types such that $(A,B) \in \vdash$ then we write $A \vdash B$.
+		\end{itemize}
+		Subject to the following.
+		\begin{itemize}
+			\item The relation $\vdash$ is subject to the following deduction rules, these are the \textbf{Axiom rules}:
+			\begin{center}
+				\AxiomC{}
+				\RightLabel{$\ax$}
+				\UnaryInfC{$A \vdash A$}
+				\DisplayProof
+				\qquad
+				\AxiomC{}
+				\RightLabel{$0_A$}
+				\UnaryInfC{$A \vdash \top$}
+				\DisplayProof
+				\qquad
+				\AxiomC{}
+				\RightLabel{$(\wedge E)_1$}
+				\UnaryInfC{$A \wedge B \vdash A$}
+				\DisplayProof
+				\qquad
+				\AxiomC{}
+				\RightLabel{$(\wedge E)_2$}
+				\UnaryInfC{$A\wedge B \vdash B$}
+				\DisplayProof
+				\qquad
+				\AxiomC{}
+				\RightLabel{$\in_{A,B}$}
+				\UnaryInfC{$(B \Longrightarrow A) \wedge B \vdash A$}
+			\end{center}
+		\item There are also the \textbf{constructor rules:}
+		\begin{center}
+			\AxiomC{$A \vdash B$}
+			\AxiomC{$B \vdash C$}
+			\RightLabel{$\cut$}
+			\BinaryInfC{$A \vdash C$}
+			\DisplayProof
+			\qquad
+			\AxiomC{$C \vdash A$}
+			\AxiomC{$C \vdash B$}
+			\RightLabel{$(\wedge I)$}
+			\BinaryInfC{$C \vdash \langle A, B \rangle$}
+			\DisplayProof
+			\qquad
+			\AxiomC{$A \wedge B \vdash C$}
+			\RightLabel{$(\Rightarrow I)$}
+			\UnaryInfC{$A \vdash B \Rightarrow C$}
+			\DisplayProof
+		\end{center}
+		\end{itemize}
+	\end{defn}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\begin{thebibliography}{99}
+		\bibitem{GMZ} W. Troiani, D. Murfet. \emph{The Gentzen-Mints-Zucker Duality}
+		
+		\bibitem{Gentzen} G. Gentzen. \emph{Investigations into logical deduction}
+		
+		\item{Godel} K. G\"{o}del, \emph{On Formally Undecidable Propositions of Principia Mathematica}
+		
+		\item{LambekScott} J. Lambek, P. J. Scott
+		
+		\item{lambek} J. Lambek, \emph{Functional Completeness}.
+	\end{thebibliography}
+	
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

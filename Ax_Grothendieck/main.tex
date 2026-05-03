@@ -1,0 +1,273 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{units}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+\usepackage{nicefrac}
+\usepackage{hyperref}
+\usepackage{bbm}
+\usepackage{color}
+\usepackage{tensor}
+\usepackage{tipa}
+\usepackage{bussproofs}
+\usepackage{ stmaryrd }
+\usepackage{ textcomp }
+\usepackage{leftidx}
+\usepackage{afterpage}
+\usepackage{varwidth}
+\usepackage{tasks}
+\usepackage{ cmll }
+\usepackage{quiver}
+\usepackage{adjustbox}
+
+\newcommand\blankpage{
+	\null
+	\thispagestyle{empty}
+	\addtocounter{page}{-1}
+	\newpage
+}
+
+\graphicspath{ {images/} }
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[subsection] % reset theorem numbering for each chapter
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{cor}[thm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem{exmp}[thm]{Example} % same for example numbers
+\newtheorem{notation}[thm]{Notation}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{condition}[thm]{Condition}
+\newtheorem{question}[thm]{Question}
+\newtheorem{construction}[thm]{Construction}
+\newtheorem{exercise}[thm]{Exercise}
+\newtheorem{example}[thm]{Example}
+\newtheorem{aside}[thm]{Aside}
+
+\def\doubleunderline#1{\underline{\underline{#1}}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\call}[1]{\mathcal{#1}}
+\newcommand{\psheaf}{\text{\underline{Set}}^{\scr{C}^{\text{op}}}}
+\newcommand{\und}[1]{\underline{\hspace{#1 cm}}}
+\newcommand{\adj}[1]{\text{\textopencorner}{#1}\text{\textcorner}}
+\newcommand{\comment}[1]{}
+\newcommand{\lto}{\longrightarrow}
+\newcommand{\rone}{(\operatorname{R}\bold{1})}
+\newcommand{\lone}{(\operatorname{L}\bold{1})}
+\newcommand{\rimp}{(\operatorname{R} \multimap)}
+\newcommand{\limp}{(\operatorname{L} \multimap)}
+\newcommand{\rtensor}{(\operatorname{R}\otimes)}
+\newcommand{\ltensor}{(\operatorname{L}\otimes)}
+\newcommand{\rtrue}{(\operatorname{R}\top)}
+\newcommand{\rwith}{(\operatorname{R}\&)}
+\newcommand{\lwithleft}{(\operatorname{L}\&)_{\operatorname{left}}}
+\newcommand{\lwithright}{(\operatorname{L}\&)_{\operatorname{right}}}
+\newcommand{\rplusleft}{(\operatorname{R}\oplus)_{\operatorname{left}}}
+\newcommand{\rplusright}{(\operatorname{R}\oplus)_{\operatorname{right}}}
+\newcommand{\lplus}{(\operatorname{L}\oplus)}
+\newcommand{\prom}{(\operatorname{prom})}
+\newcommand{\ctr}{(\operatorname{ctr})}
+\newcommand{\der}{(\operatorname{der})}
+\newcommand{\weak}{(\operatorname{weak})}
+\newcommand{\exi}{(\operatorname{exists})}
+\newcommand{\fa}{(\operatorname{for\text{ }all})}
+\newcommand{\ex}{(\operatorname{ex})}
+\newcommand{\cut}{(\operatorname{cut})}
+\newcommand{\ax}{(\operatorname{ax})}
+\newcommand{\negation}{\sim}
+\newcommand{\true}{\top}
+\newcommand{\false}{\bot}
+\DeclareRobustCommand{\diamondtimes}{%
+	\mathbin{\text{\rotatebox[origin=c]{45}{$\boxplus$}}}%
+}
+\newcommand{\tagarray}{\mbox{}\refstepcounter{equation}$(\theequation)$}
+\newcommand{\startproof}[1]{
+	\AxiomC{#1}
+	\noLine
+	\UnaryInfC{$\vdots$}
+}
+\newenvironment{scprooftree}[1]%
+{\gdef\scalefactor{#1}\begin{center}\proofSkipAmount \leavevmode}%
+	{\scalebox{\scalefactor}{\DisplayProof}\proofSkipAmount \end{center} }
+
+
+\title{Ax-Grothendieck via model theory}
+
+\begin{document}
+	\maketitle
+	
+	\begin{defn}\label{def:FoT_fields}
+		We define $\call{F}$, the first order theory of fields, beginning with the first order language of fields. Let $\Sigma$ be a signature consisting of a single sort $A$. We introduce 5 function symbols.
+		\begin{itemize}
+			\item $0,1: A$,
+			\item $-: A \lto A$,
+			\item $+, \cdot: A \times A \lto A$.
+			\end{itemize}
+		The first order language of fields has no relation symbols.
+		
+		The axioms are given as follows.
+		\begin{align}
+			&(x + y) + z = x + (y + z)\\
+			&x + y = y + x\\
+			&x + 0 = x\\
+			&(x\cdot y)\cdot z = x \cdot (y \cdot z)\\
+			&x \cdot 1 = 1 \cdot x = x\\
+			&x\cdot (y + z) = x\cdot y + x \cdot z\\
+			&x + (-x) = 0\\
+			&x\neq 0 \Rightarrow \exists y, xy = 1
+			\end{align}
+		This set of formulas forms the axioms of $\call{F}$.
+		\end{defn}
+	
+	\begin{defn}
+		For each $d \geq 1$ define the following formula.
+		\begin{equation}
+			P_d := \forall a_0 \ldots \forall a_d \exists x, a_d \neq 0 \wedge a_0 + a_1 x + \ldots + a_{d-1}x^{d-1} + a_dx^d = 0
+			\end{equation}
+		For each prime number $p$ define the following formula.
+		\begin{equation}\label{eq:characteristic}
+			S_d := 1 + \ldots + 1 = 0
+			\end{equation}
+		where there are $d$ instances of $1$ in \eqref{eq:characteristic}.
+		\end{defn}
+	
+	\begin{defn}
+		Let $\call{ACF}$ denote the \textbf{first order theory of algebrically closed fields} which is over the same language as $\call{F}$ and consists of all the axioms of Definition \ref{def:FoT_fields} along with $P_d$ for each $d \geq 1$.
+		
+		The \textbf{first order theory of algebraically closed fields of characteristic $p$} is denoted $\call{ACF}_p$ and consists of all the axioms of $\call{ACF}$ along with $S_p$.
+		
+		Lastly, the \textbf{first order theory of algebraically closed fields of characteristic $0$} is denoted $\call{ACF}_0$ and consists of all the axioms of $\call{ACF}$ along with the formula $\neg S_p$ for each prime number $p$.
+		\end{defn}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\begin{lemma}\label{lem:finite_characteristic_ax}
+		Let $f: \overline{\bb{F}_p}^n \lto \overline{\bb{F}_p}^n$ be a polynomial. If $f$ is injective then it is surjective.
+		\end{lemma}
+	\begin{proof}
+		Let $\underline{y} = (y_1,\ldots, y_n) \in \overline{\bb{F}_p}^n$ be arbitrary. Consider the field extension $K \supseteq \bb{F}_p$ generated by $y_1,\ldots, y_n$ as well as the coefficients of $f$. Since every element of $\overline{\bb{F}_p}$ is algebraic over $\bb{F}_p$ (by the definition of an algebraic closure) we have $K$ is an algebraic extension and thus finite of $\bb{F}_p$. Since $\bb{F}_p$ is finite, this implies $K$ is finite. Lastly, we notice that fields are closed under polynomial expressions, and so $f(K^n) \subseteq K^n$, which by injectivity and finiteness implies surjectivity.
+		\end{proof}
+	
+	\begin{cor}
+		Let $k$ be an algebraically closed field and $f: k^n \lto k^n$ a polynomial. If $f$ is injective then it is surjective.
+		\end{cor}
+	\begin{proof}
+		There is a small slieght of hand involved, we need to turn the statement of the corollary into a first order formula, but we cannot do that if try to work with a polynomial of arbitrary degree. So instead we will consider the statement ``If $f$ is injective and has degree at most $d$ then it is surjective". The idea is to write out the following statement
+		\begin{align}
+			\forall a_0\ldots \forall a_{d}&(\forall x \forall y, f(x) = f(y) \Rightarrow x = y)\\
+			&\Longrightarrow \forall y \exists x, y = f(x)
+		\end{align}
+	however we need to write out $f$ explicitly. This is where we use the fact that $f$ is a polynomial. Our first order statement is:
+		\begin{align*}
+			\forall a_0\ldots \forall a_{d}&(\forall x \forall y, a_0 + a_1 x + \ldots + a_{d-1}x^{d-1} + a_dx^d\\
+			&= a_0 + a_1 y + \ldots + a_{d-1}y^{d-1} + a_dy^d \Rightarrow x = y)\\
+			&\Longrightarrow \forall y \exists x, y = a_0 + a_1 x + \ldots + a_{d-1}x^{d-1} + a_dx^d
+			\end{align*}
+		Denote this formula $B_d$.
+		
+		Since $\call{ACF}_0$ is complete, this statement is either proveable or its negation is proveable. That is, either $\call{ACF}_0 \vdash B_d$ or $\call{ACF}_0 \vdash \neg B_d$. Suppose $\call{ACF}_0 \vdash \neg B_d$ and let $\pi$ be such a proof. Since $\pi$ is finite, only finitely many axioms of $\call{ACF}_0$ appear amongst its premises. This, there exists some prime $q$ such that $\neg S_q$ does \emph{not} appear amongst the premises of $\pi$. That is, $\pi$ is a valid proof in $\call{ACF}_q$! By soundness of $\call{ACF}_q$ we derive a contradiction to Lemma \ref{lem:finite_characteristic_ax}, and so we must have $\call{ACF}_0 \vdash B_d$. The result then follows by soundness of $\call{ACF}_0$.
+		\end{proof}
+	
+	\begin{lemma}
+		\label{algebraicclosure}
+		Every field $F$ can be embedded into an algebraically closed field $\bar{F}$.
+	\end{lemma}
+	\begin{proof}
+		Let $\Lambda$ be the collection of monic, irreducible polynomials with coefficients in $F$. For each $f \in F$, let $u_{f,0},...,u_{f,d}$ be formal indeterminants, where $d$ is the degree of $f$. Let $F[\lbrace U\rbrace]$ be the polynomial ring over $F$ where $U$ is the collection of all $u_{f,i}$. Write
+		\[f - \prod_{i = 0}^d(x - u_{f,i}) = \sum_{i = 0}^{d-1}\alpha_{f,i}x^i \in F[\lbrace U \rbrace][x]\]
+		Let $I$ be the ideal generated by $\alpha_{f,i}$. $I$ is not all of $F[\lbrace U \rbrace]$ so there exists a maximal ideal $M$ containing $I$. Let $F_1 = F[\lbrace U \rbrace]/M$. Repeat this process to define $f_i$ for all $i > 0$. Then $\cup_{i = 1}^\infty F_i$ is algebraically closed which $F$ embeds into, and moreover is an algebraic extension of $F$.
+	\end{proof}
+
+\begin{cor}
+	If $F$ is infinite, then the cardinality of $F$ is equal to the cardinality of $\overline{F}$.
+	
+	If $F$ is finite, then the cardinality of $\overline{F}$ is countably infinite.
+	\end{cor}
+\begin{proof}
+	Using the notation of the proof of Lemma \ref{algebraicclosure}, we first observe that the $|\{ U \}| = | F |$
+	\end{proof}
+
+	
+	\begin{lemma}
+		Let $p$ be either a prime number or $0$ and let $\kappa \geq \aleph_1$ be an uncountable cardinal. There exists an algebraically closed field of characteristic $p$ whose cardinality is $\kappa$. Moreover, this field is unique up to isomorphism.
+		\end{lemma}
+	\begin{proof}
+		Define $F$ to be
+		\begin{equation}
+			p = \begin{cases}
+				\bb{Q},& p = 0\\
+				\bb{F}_p, & p \neq 0
+				\end{cases}
+			\end{equation}
+		Let $X$ be any set of cardinality $\kappa$ (eg, $X = \bb{R}$) and consider the polynomial ring $F[\{ X \}]$. The ideal $I \subseteq F[ \{ X \} ]$ generated by $X$ is not all of $F[\{ X \}]$ and so is contained in some maximal ideal $\frak{m}$ (using Zorn's Lemma). The field $F[\{ X \}]/\frak{m}$ has cardinality $\aleph_1$, as there are countably many polynomials over a single indeterminant, and we claim that the algebraic closure $\overline{F[\{ X \}]/\frak{m}}$ of $F[\{ X \}]/\frak{m}$ also has cardinality $\kappa$.
+		
+		The argument above show that in the notation of Lemma \ref{algebraicclosure}, that $F_i$ has cardinality $\kappa$ for all $i \geq 0$. Since $\overline{F[\{ X \}]/\frak{m}}$ is the countable union of all of these fields, it follows that the cardinality of $\overline{F[\{ X \}]/\frak{m}}$ is $\kappa$.
+		
+		The uniqueness claim follows easily by considering a transcendental basis of $\overline{F[\{ X \}]/\frak{m}}$ and observing that this basis has cardinality $\kappa$. The rest follows from the universal property of the algebraic closure.
+		\end{proof}
+	
+	\begin{cor}
+		There is only one model (up to isomorphism) of $\call{ALG}_0$ and of $\call{ALG}_p$ for each cardinal $\kappa \geq \aleph_1$.
+		\end{cor}
+	
+	\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

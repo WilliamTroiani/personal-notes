@@ -1,0 +1,511 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[margin=1cm]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[subsection]
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{cor}[thm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{exmp}[thm]{Example}
+\newtheorem{notation}[thm]{Notation}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{construction}[thm]{Construction}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\call}[1]{\mathcal{#1}}
+\newcommand{\blank}{\sqcup}
+\newcommand{\Dir}{\{\texttt{Left},\texttt{Stay},\texttt{Right}\}}
+\newcommand{\Heads}{\{\texttt{Y},\texttt{N}\}}
+\newcommand{\Start}{q_{\texttt{Start}}}
+\newcommand{\Finish}{q_{\texttt{Finish}}}
+\newcommand{\op}{\operatorname{op}}
+\DeclareMathOperator{\Tape}{Tape}
+\DeclareMathOperator{\readout}{read}
+
+\title{Reversible Computation}
+\author{William Troiani}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+Computation, considered as an invisible mental process, is a naive stance. The crucial point is that there are genuine mathematical and physical properties of computation which are independent of the choice of implementation.
+
+A historically significant indication that this might be the case was the thought experiment often referred to as \emph{Maxwell's Demon}, where it appears as though heat is being transferred from a cooler body to a warmer body, contradicting the second law of thermodynamics. This thought experiment includes an onlooker, the demon, who stands idle and makes decisions. A proposed solution was that the decision process inside the demon's mind was to be included as part of the physical system. That is, the \emph{computation} being performed by the demon was a \emph{physically} relevant part of the experiment.
+
+Rigorous work following this thought experiment includes a result, first proved by Landauer, that irreversible computation is inherently linked with physical irreversibility \cite{Landauer}. There, it is argued that practical computation fundamentally involves irreversible computation. Bennett proved that this pessimistic conclusion is not forced by the mathematics of computation \cite{Bennett}. In this note, we present Bennett's proof by showing that every terminating computation of a Turing machine can be simulated by a reversible Turing machine; see Theorem \ref{thm:reversible} for the precise statement.
+
+What, though, makes a Turing machine $M$ \emph{reversible}? More is required than the bare recoverability of the input from the output. We want a reverse machine whose computation retraces the original computation. Because our convention is that a step first rewrites and then moves, the reverse machine may need a few administrative steps to move the head to the correct square before a previous tape update is undone. The definition below makes that convention explicit.
+
+\subsection{One-tape machines}
+
+The set of finite words over an alphabet $\Sigma$ is denoted $\Sigma^\ast$. Throughout, $\blank\in\Sigma$ denotes the blank symbol, and input and output words are taken in $(\Sigma\setminus\{\blank\})^\ast$.
+
+\begin{notation}\label{not:tapes}
+Let
+\[
+\Tape(\Sigma)=\{t:\bb Z\to\Sigma\mid t(k)=\blank\text{ for all but finitely many }k\}.
+\]
+Elements of $\Tape(\Sigma)$ are called \textbf{tapes}. If $w=w_0\cdots w_{m-1}\in(\Sigma\setminus\{\blank\})^\ast$, define the tape $\widetilde w\in\Tape(\Sigma)$ by
+\[
+\widetilde w(k)=
+\begin{cases}
+w_k,&0\leq k<m,\\
+\blank,&\text{otherwise.}
+\end{cases}
+\]
+A tape $t$ \textbf{represents} the word $w$ if $t=\widetilde w$.
+
+For $d\in\Dir$, define
+\[
+\Delta(d)=
+\begin{cases}
+-1,&d=\texttt{Left},\\
+0,&d=\texttt{Stay},\\
+1,&d=\texttt{Right}.
+\end{cases}
+\]
+Also define the opposite direction by
+\[
+\op(\texttt{Left})=\texttt{Right},\qquad
+\op(\texttt{Right})=\texttt{Left},\qquad
+\op(\texttt{Stay})=\texttt{Stay}.
+\]
+\end{notation}
+
+\begin{defn}\label{def:Turing_machine}
+A \textbf{Turing machine} is a tuple
+\[
+M=(\Sigma,Q,q_{\mathrm{in}},q_{\mathrm{out}},\delta)
+\]
+consisting of the following data.
+\begin{itemize}
+\item A finite alphabet $\Sigma$ containing a distinguished blank symbol $\blank$.
+\item A finite set $Q$ of states, containing distinguished states $q_{\mathrm{in}}$ and $q_{\mathrm{out}}$.
+\item A partial transition function
+\[
+\delta:\Sigma\times(Q\setminus\{q_{\mathrm{out}}\})\rightharpoonup \Sigma\times Q\times\Dir.
+\]
+\end{itemize}
+The transition function is required to satisfy the following final-state convention: if
+\[
+\delta(\sigma,q)=(\tau,q_{\mathrm{out}},d),
+\]
+then $d=\texttt{Stay}$. Thus every transition into the output state leaves the head fixed, and there are no transitions out of $q_{\mathrm{out}}$.
+
+When the distinguished states are called $\Start$ and $\Finish$, we write
+\[
+M=(\Sigma,Q,\Start,\Finish,\delta).
+\]
+\end{defn}
+
+\begin{defn}\label{def:configuration}
+A \textbf{configuration} of $M=(\Sigma,Q,q_{\mathrm{in}},q_{\mathrm{out}},\delta)$ is a triple
+\[
+(t,q,p)\in\Tape(\Sigma)\times Q\times\bb Z.
+\]
+The integer $p$ is the head position. If $\delta(t(p),q)$ is defined and
+\[
+\delta(t(p),q)=(\tau,q',d),
+\]
+then the successor configuration is
+\[
+(t',q',p+\Delta(d)),
+\]
+where
+\[
+t'(p)=\tau,
+\qquad
+ t'(k)=t(k)\quad\text{for all }k\neq p.
+\]
+We write
+\[
+(t,q,p)\leadsto_M(t',q',p+\Delta(d))
+\]
+for this one-step successor relation.
+\end{defn}
+
+\begin{defn}\label{def:computation}
+A \textbf{computation} of $M=(\Sigma,Q,q_{\mathrm{in}},q_{\mathrm{out}},\delta)$ on input $w\in(\Sigma\setminus\{\blank\})^\ast$ is a finite or infinite sequence of configurations
+\[
+(t_0,q_0,p_0)\leadsto_M(t_1,q_1,p_1)\leadsto_M\cdots
+\]
+with
+\[
+(t_0,q_0,p_0)=(\widetilde w,q_{\mathrm{in}},0).
+\]
+The computation \textbf{halts} if it is finite and has final configuration
+\[
+(t_n,q_{\mathrm{out}},0).
+\]
+If, in addition, $t_n=\widetilde u$ for some $u\in(\Sigma\setminus\{\blank\})^\ast$, then $M$ \textbf{halts on $w$ with output $u$}, and we write $M(w)=u$.
+\end{defn}
+
+\begin{remark}\label{rmk:normal-form}
+The hypotheses that a halting computation finishes with head position $0$, and that every transition into the output state uses $\texttt{Stay}$, are normalization conventions. Lemma \ref{lem:normalization} records why they do not reduce the class of computable partial functions.
+\end{remark}
+
+\begin{defn}\label{def:head_equivalence}
+Two configurations $(t,q,p)$ and $(t',q',p')$ are \textbf{head-equivalent}, written
+\[
+(t,q,p)\sim(t',q',p'),
+\]
+if $t=t'$ and $q=q'$. Thus $\sim$ forgets only the head position.
+\end{defn}
+
+\begin{defn}\label{def:run}
+A \textbf{run} of $M$ from an arbitrary configuration $C$ is any finite or infinite sequence
+\[
+C=C_0\leadsto_M C_1\leadsto_M C_2\leadsto_M\cdots
+\]
+following the successor relation of Definition \ref{def:configuration}. Computations on inputs are the special runs whose first configuration is $(\widetilde w,q_{\mathrm{in}},0)$.
+\end{defn}
+
+\begin{defn}\label{def:reversible_machine}
+A Turing machine $M=(\Sigma,Q,q_{\mathrm{in}},q_{\mathrm{out}},\delta)$ is \textbf{reversible} if there exists a Turing machine
+\[
+M^\dagger=(\Sigma,Q^\dagger,q_{\mathrm{out}},q_{\mathrm{in}},\delta^\dagger)
+\]
+with the same tape alphabet, with $Q\subseteq Q^\dagger$, and with input and output states swapped, such that the following condition holds.
+
+For every halting computation of $M$
+\[
+C_0\leadsto_M C_1\leadsto_M\cdots\leadsto_M C_n,
+\]
+where $C_0=(\widetilde w,q_{\mathrm{in}},0)$ and $C_n=(t_n,q_{\mathrm{out}},0)$, the run of $M^\dagger$ beginning at $C_n$ is finite and contains the configurations of the forward computation in reverse order, up to head-equivalence. More precisely, if
+\[
+D_0\leadsto_{M^\dagger}D_1\leadsto_{M^\dagger}\cdots\leadsto_{M^\dagger}D_m
+\]
+is the run of $M^\dagger$ beginning at $C_n$, then there are indices
+\[
+0=r_0<r_1<\cdots<r_n=m
+\]
+such that
+\[
+D_{r_i}\sim C_{n-i}\qquad\text{for all }0\leq i\leq n.
+\]
+The configurations between two successive checkpoints are administrative configurations used, for example, to move the head before undoing a previous rewrite.
+\end{defn}
+
+\begin{exmp}\label{ex:scan_return}
+Consider the machine which scans the input and returns to the start. Its alphabet is
+\[
+\Sigma=\{0,1,\dot 0,\dot 1,\blank\},
+\]
+where dotted symbols mark the first input square. Its states are
+\[
+Q=\{\Start,q_{\texttt{MoveRight}},q_{\texttt{MoveLeft}},\Finish\}.
+\]
+For $\sigma\in\{0,1\}$, the relevant transitions are
+\begin{align*}
+(\sigma,\Start)&\longmapsto(\dot\sigma,q_{\texttt{MoveRight}},\texttt{Right}),\\
+(\sigma,q_{\texttt{MoveRight}})&\longmapsto(\sigma,q_{\texttt{MoveRight}},\texttt{Right}),\\
+(\blank,q_{\texttt{MoveRight}})&\longmapsto(\blank,q_{\texttt{MoveLeft}},\texttt{Left}),\\
+(\sigma,q_{\texttt{MoveLeft}})&\longmapsto(\sigma,q_{\texttt{MoveLeft}},\texttt{Left}),\\
+(\dot\sigma,q_{\texttt{MoveLeft}})&\longmapsto(\sigma,\Finish,\texttt{Stay}),\\
+(\blank,\Start)&\longmapsto(\blank,\Finish,\texttt{Stay}).
+\end{align*}
+Unspecified transitions are undefined. This computes the identity function on binary words and returns the head to position $0$. It is not literally its own reverse: a reverse machine starts in the state $\Finish$ and retraces the displayed trajectory back to $\Start$.
+\end{exmp}
+
+\begin{exmp}\label{ex:noninjective}
+The transition function of a reversible machine need not be injective on all of $\Sigma\times Q$. We only require reversibility along actual halting computations. For example, consider the machine which moves to the end of the input, appends ten zeros, returns the head to position $0$, and halts. Let
+\[
+\Sigma=\{0,1,\blank\}
+\]
+and
+\[
+Q=\{\Start,q_2,\ldots,q_{10},q_{\texttt{Done}},q_{\texttt{Reset}},\Finish,q_{\texttt{Move}},q_{\texttt{Dummy}}\}.
+\]
+For $\sigma\in\{0,1\}$, define the reachable transitions by
+\begin{align*}
+(\sigma,\Start)&\longmapsto(\sigma,q_{\texttt{Move}},\texttt{Right}),
+&
+(\sigma,q_{\texttt{Move}})&\longmapsto(\sigma,q_{\texttt{Move}},\texttt{Right}),\\
+(\blank,\Start)&\longmapsto(0,q_2,\texttt{Right}),
+&
+(\blank,q_{\texttt{Move}})&\longmapsto(0,q_2,\texttt{Right}),\\
+(\blank,q_i)&\longmapsto(0,q_{i+1},\texttt{Right})\quad(2\leq i\leq 9),
+&
+(\blank,q_{10})&\longmapsto(0,q_{\texttt{Done}},\texttt{Left}),\\
+(\sigma,q_{\texttt{Done}})&\longmapsto(\sigma,q_{\texttt{Done}},\texttt{Left}),
+&
+(\blank,q_{\texttt{Done}})&\longmapsto(\blank,q_{\texttt{Reset}},\texttt{Right}),\\
+(\sigma,q_{\texttt{Reset}})&\longmapsto(\sigma,\Finish,\texttt{Stay}).
+\end{align*}
+Add the unreachable dummy transitions
+\[
+(\rho,q_{\texttt{Dummy}})\longmapsto(\blank,q_{\texttt{Dummy}},\texttt{Stay})
+\qquad(\rho\in\Sigma).
+\]
+These dummy transitions make $\delta$ non-injective, but they are never encountered in a computation beginning at $\Start$. They therefore do not affect the reversible behavior of the reachable halting computations.
+\end{exmp}
+
+\begin{lemma}[Normalization]\label{lem:normalization}
+Every ordinary one-tape Turing machine can be converted into a Turing machine satisfying Definition \ref{def:Turing_machine}, computing the same partial function under the output convention of Definition \ref{def:computation}.
+\end{lemma}
+
+\begin{proof}
+We recall the standard construction. Add a fresh marker for the initial square, simulate the original machine, and, when the simulated machine halts, enter a cleanup phase. The cleanup phase moves the intended output into the block beginning at the marked origin, erases temporary workspace and the marker, returns the head to position $0$, and enters the output state by a $\texttt{Stay}$ transition. This adds only finitely many tape symbols and states and does not change the computed partial function.
+\end{proof}
+
+\subsection{Multi-tape machines and one-tape simulation}
+
+\begin{defn}\label{def:ntape}
+An \textbf{$n$-tape Turing machine} is a tuple
+\[
+M=(\Sigma,Q,q_{\mathrm{in}},q_{\mathrm{out}},\delta),
+\]
+where $\Sigma$, $Q$, $q_{\mathrm{in}}$, and $q_{\mathrm{out}}$ are as before, and the transition function is partial:
+\[
+\delta:\Sigma^n\times(Q\setminus\{q_{\mathrm{out}}\})\rightharpoonup \Sigma^n\times Q\times\Dir^n.
+\]
+If
+\[
+\delta((\sigma_1,\ldots,\sigma_n),q)=((\tau_1,\ldots,\tau_n),q_{\mathrm{out}},(d_1,\ldots,d_n)),
+\]
+then $d_1=\cdots=d_n=\texttt{Stay}$.
+
+A configuration is a triple
+\[
+(\mathbf t,q,\mathbf p)=\big((t^1,\ldots,t^n),q,(p^1,\ldots,p^n)\big)
+\in\Tape(\Sigma)^n\times Q\times\bb Z^n.
+\]
+If
+\[
+\delta\big((t^1(p^1),\ldots,t^n(p^n)),q\big)
+=\big((\tau_1,\ldots,\tau_n),q',(d_1,\ldots,d_n)\big),
+\]
+then the successor configuration is
+\[
+(\mathbf s,q',(p^1+\Delta(d_1),\ldots,p^n+\Delta(d_n))),
+\]
+where, for every $j$,
+\[
+s^j(p^j)=\tau_j,
+\qquad
+s^j(k)=t^j(k)\quad\text{for all }k\neq p^j.
+\]
+The computation on input $(w_1,\ldots,w_n)$ starts at
+\[
+((\widetilde w_1,\ldots,\widetilde w_n),q_{\mathrm{in}},(0,\ldots,0)).
+\]
+It halts only in state $q_{\mathrm{out}}$ with all heads at position $0$. If the final tapes are $(\widetilde o_1,\ldots,\widetilde o_n)$, then the output is $(o_1,\ldots,o_n)$. Reversibility is defined by the evident $n$-tape analogue of Definition \ref{def:reversible_machine}, with head-equivalence forgetting the tuple of head positions.
+\end{defn}
+
+\begin{lemma}\label{lem:one_tape_simulation}
+Let $M$ be an $n$-tape Turing machine. There is a one-tape Turing machine $S(M)$ with the following property. If
+\[
+M(w_1,\ldots,w_n)=(o_1,\ldots,o_n),
+\]
+then
+\[
+S(M)(w_1\#\cdots\#w_n)=o_1\#\cdots\#o_n.
+\]
+Moreover, if $M$ is in normal form, then $S(M)$ may be chosen in normal form.
+\end{lemma}
+
+\begin{proof}
+We describe the encoding and one simulated step. The one-tape machine first converts the delimiter input $w_1\#\cdots\#w_n$ into a zipped encoding of the $n$ tapes. The working alphabet for this encoded part is
+\[
+\Gamma=(\Sigma\times\Heads)^n.
+\]
+A column
+\[
+((\sigma_1,\epsilon_1),\ldots,(\sigma_n,\epsilon_n))\in\Gamma
+\]
+represents the symbols $\sigma_1,\ldots,\sigma_n$ appearing at the same integer position on the $n$ tapes. The marker $\epsilon_j=\texttt{Y}$ means that the head of tape $j$ is currently at this column. Several components of the same column may be marked $\texttt{Y}$, since several simulated heads may occupy the same integer position.
+
+Only finitely many columns are written. The simulator maintains one all-blank guard column on each side of the represented interval. If a simulated head moves into a guard column, the represented interval is extended by creating a fresh guard column beyond it. This handles moves beyond the current nonblank region.
+
+The finite control stores the current simulated state $q$, a vector
+\[
+(a_1,\ldots,a_n)\in(\Sigma\coprod\{\texttt{?}\})^n,
+\]
+and a phase marker. A read phase sweeps across the encoded tape. Whenever it encounters a component $(\sigma_j,\texttt{Y})$, it replaces the corresponding question mark $\texttt{?}$ in the state by $\sigma_j$. Once all entries have been found, the state contains
+\[
+((a_1,\ldots,a_n),q).
+\]
+The simulator then computes
+\[
+\delta((a_1,\ldots,a_n),q)=((b_1,\ldots,b_n),q',(d_1,\ldots,d_n))
+\]
+in its finite control. Notice that the current simulated state is $q$, not necessarily $\Start$.
+
+During the update phase, the simulator sweeps back across the encoded tape. For each component marked $\texttt{Y}$, it rewrites $a_j$ as $b_j$. If $d_j=\texttt{Stay}$, the marker $\texttt{Y}$ remains on that component. If $d_j=\texttt{Left}$ or $d_j=\texttt{Right}$, the marker is removed from the old component and placed in the corresponding component of the neighboring column. If multiple heads move to the same neighboring column, all corresponding components are marked. The finite control records which pending head moves have already been performed. After all pending moves are complete, the finite control is reset to
+\[
+((\texttt{?},\ldots,\texttt{?}),q'),
+\]
+and the next read phase begins. If $q'=q_{\mathrm{out}}$, the simulator enters its own output phase.
+
+Finally, the simulator decodes the zipped representation back into delimiter form
+\[
+o_1\#\cdots\#o_n.
+\]
+The initial delimiter-to-zipped conversion and the final zipped-to-delimiter conversion are fixed-format tape rearrangements. Since $n$ is fixed and the delimiters determine the components, these conversions can be implemented by a finite sequence of scans, markings, and shifts. They are injective on the well-formed encodings used here, and they preserve the represented tuple of tapes.
+\end{proof}
+
+\begin{lemma}\label{lem:reversible_one_tape_simulation}
+If $M$ is a reversible $n$-tape Turing machine, then the one-tape simulator $S(M)$ in Lemma \ref{lem:one_tape_simulation} can be chosen to be reversible.
+\end{lemma}
+
+\begin{proof}
+Let $M^\dagger$ be a reverse machine for $M$. The inverse of the simulator is obtained by applying the same simulation construction to $M^\dagger$, together with the reverse of the fixed-format encoding and decoding routines. Thus the inverse simulator does not try to recover the input of a local transition from its output by assuming that the transition table is injective. At the macro-step level it simulates the given reverse computation of $M$.
+
+It remains only to ensure that the micro-steps used by the simulator can be reversed. The read sweeps, update sweeps, guard-column extensions, and delimiter conversions are all performed with phase states recording the finite amount of temporary information needed to undo them. Hence the reverse simulator traverses the same encoded macro-configurations in the opposite order, with only administrative configurations in between. Therefore $S(M)$ is reversible.
+\end{proof}
+
+\subsection{Bennett's reversible simulation}
+
+\begin{lemma}\label{lem:bennett_four_tape}
+For every Turing machine $M$ there is a reversible four-tape Turing machine $B_M$ such that, for every input $w$ on which $M$ halts with output $M(w)$, the machine $B_M$ halts with final tape contents
+\[
+(w,\varepsilon,\varepsilon,M(w)).
+\]
+All four heads finish at position $0$.
+\end{lemma}
+
+\begin{proof}
+By Lemma \ref{lem:normalization}, we may replace $M$ by an equivalent normal-form machine. Thus assume $M$ is final-stationary and halts with head position $0$.
+
+The four tapes of $B_M$ have the following roles:
+\begin{center}
+\begin{tabular}{ccl}
+\toprule
+Tape 1 && simulates the tape of $M$,\\
+Tape 2 && records the symbol-state update at each step,\\
+Tape 3 && records the head movement at each step,\\
+Tape 4 && stores a protected copy of the final output.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The computation is divided into three reversible phases.
+
+\medskip
+\noindent\textbf{Phase 1: compute and record history.}
+Suppose that at forward step $j$, where $0\leq j<m$, the simulated computation has head position $p_j$ and
+\[
+\delta(\sigma,q)=(\tau,q',d_j).
+\]
+Tape 1 performs this simulated step. At the same time, tape 2 writes the history symbol
+\[
+h_j=((\sigma,q),(\tau,q')),
+\]
+and tape 3 writes the direction $d_j$, both in the next unused history cell. Since $h_j$ contains both the before-data and the after-data, this recorded step can be undone without requiring $\delta$ itself to be injective.
+
+When the simulated machine enters $q_{\mathrm{out}}$, the final direction is $\texttt{Stay}$, because $M$ is final-stationary. Hence $d_{m-1}=\texttt{Stay}$. Erase this final $\texttt{Stay}$, shift the remaining directions one cell to the right, and write $\texttt{Stay}$ in the first direction cell. The shifted sequence is
+\[
+s_0=\texttt{Stay},
+\qquad
+s_j=d_{j-1}\quad(1\leq j\leq m-1).
+\]
+This is the sequence needed by the reverse pass: after undoing forward step $j$, the reverse machine must move to the site of forward step $j-1$, so it moves in the opposite direction to $s_j=d_{j-1}$.
+
+\medskip
+\noindent\textbf{Phase 2: copy the output.}
+Tape 4 is blank on all reachable configurations entering this phase. Therefore the copying operation
+\[
+(x,\blank)\longmapsto(x,x)
+\]
+from tape 1 to tape 4 is reversible on the reachable configurations of this phase. The heads are then returned to their origins.
+
+\medskip
+\noindent\textbf{Phase 3: uncompute.}
+Read the history symbols on tape 2 from right to left. If the current history symbol is
+\[
+h_j=((\sigma,q),(\tau,q')),
+\]
+then tape 1, currently in simulated state $q'$ and reading $\tau$ at the appropriate cell, rewrites $\tau$ as $\sigma$ and changes the simulated state back to $q$. The movement performed after this inverse rewrite is the opposite of the shifted direction $s_j$ on tape 3. As each history entry is used, the corresponding cells of tapes 2 and 3 are erased; the inverse phase re-creates exactly those entries. At the end of this phase, tape 1 again contains the original input $w$, tapes 2 and 3 are blank, and tape 4 still contains $M(w)$.
+
+Each phase has an inverse on its reachable configurations, and the phase label is part of the finite control. Hence the composite four-tape machine is reversible.
+\end{proof}
+
+\begin{exmp}\label{ex:direction_shift}
+If a computation has four simulated directions
+\[
+d_0=\texttt{Right},\qquad d_1=\texttt{Stay},\qquad d_2=\texttt{Left},\qquad d_3=\texttt{Stay},
+\]
+then the shifted directions paired with the history entries are
+\[
+\begin{array}{c|cccc}
+j&0&1&2&3\\
+\hline
+h_j&h_0&h_1&h_2&h_3\\
+d_j&\texttt{Right}&\texttt{Stay}&\texttt{Left}&\texttt{Stay}\\
+s_j&\texttt{Stay}&\texttt{Right}&\texttt{Stay}&\texttt{Left}
+\end{array}
+\]
+The reverse phase reads $h_3,h_2,h_1,h_0$ and moves by $\op(s_3),\op(s_2),\op(s_1),\op(s_0)$ after the corresponding rewrites. This compensates for the fact that a forward step rewrites before it moves.
+\end{exmp}
+
+\begin{thm}[Bennett]\label{thm:reversible}
+For every Turing machine
+\[
+M=(\Sigma,Q,\Start,\Finish,\delta)
+\]
+there exists a reversible one-tape Turing machine
+\[
+N=(\Sigma',Q',\Start',\Finish',\delta')
+\]
+such that $\Sigma\subseteq\Sigma'$ and there is a distinguished symbol $\#\in\Sigma'\setminus\Sigma$ with the following property: if $M$ halts on input $w$ with output $M(w)=u$, then $N$ halts on input $w$ with output
+\[
+w\#\#u.
+\]
+\end{thm}
+
+\begin{proof}
+By Lemma \ref{lem:normalization}, we may assume that $M$ satisfies the head-position and final-$\texttt{Stay}$ conventions. Apply Lemma \ref{lem:bennett_four_tape} to obtain a reversible four-tape machine $B_M$ which maps
+\[
+(w,\varepsilon,\varepsilon,\varepsilon)
+\quad\text{to}\quad
+(w,\varepsilon,\varepsilon,u)
+\]
+whenever $M(w)=u$.
+
+By Lemma \ref{lem:reversible_one_tape_simulation}, this four-tape reversible computation can be simulated by a reversible one-tape machine. Prepend a reversible initialization routine which converts the one-tape input $w$ into the four-tape encoding $(w,\varepsilon,\varepsilon,\varepsilon)$. Append a reversible formatting routine which converts the final four-tape encoding $(w,\varepsilon,\varepsilon,u)$ into the one-tape word
+\[
+w\#\#u.
+\]
+Both formatting routines are reversible on their canonical domains, and the composition of reversible machines is reversible by composing their reverse machines in the opposite order. Therefore the resulting one-tape machine $N$ is reversible and satisfies $N(w)=w\#\#M(w)$ whenever $M(w)$ is defined.
+\end{proof}
+
+\begin{thebibliography}{9}
+
+\bibitem{Landauer}
+R. Landauer.
+\newblock Irreversibility and heat generation in the computing process.
+\newblock \emph{IBM Journal of Research and Development}, 5(3):183--191, 1961.
+
+\bibitem{Bennett}
+C. H. Bennett.
+\newblock Logical reversibility of computation.
+\newblock \emph{IBM Journal of Research and Development}, 17(6):525--532, 1973.
+
+\bibitem{Troiani}
+W. Troiani.
+\newblock Reversible Turing Machines, 2019.
+\newblock \url{https://williamtroiani.github.io/Notes/Reversible_computation_talk_notes.pdf}.
+
+\bibitem{Clift}
+J. Clift.
+\newblock Universal Turing Machines.
+\newblock \url{http://therisingsea.org/notes/talk-james-utm.pdf}.
+
+\end{thebibliography}
+
+\end{document}

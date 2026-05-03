@@ -1,0 +1,1644 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{units}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+\usepackage{nicefrac}
+\usepackage{hyperref}
+\usepackage{bbm}
+\usepackage{color}
+\usepackage{tensor}
+\usepackage{tipa}
+\usepackage{bussproofs}
+\usepackage{ stmaryrd }
+\usepackage{ textcomp }
+\usepackage{leftidx}
+\usepackage{afterpage}
+\usepackage{varwidth}
+
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage
+    }
+
+\graphicspath{ {images/} }
+
+\newtheorem{thm}{Theorem}
+\numberwithin{thm}{subsection}
+\newtheorem{defn}{Definition}
+\numberwithin{defn}{subsection}
+\newtheorem{lemma}{Lemma}
+\numberwithin{lemma}{subsection}
+\newtheorem{example}{Example}
+\numberwithin{example}{subsection}
+\newtheorem{notation}{Notation}
+\numberwithin{notation}{subsection}
+\newtheorem{cor}{Corollary}
+\numberwithin{cor}{subsection}
+\newtheorem{remark}{Remark}
+\numberwithin{remark}{subsection}
+\newtheorem{condition}{Condition}
+\numberwithin{condition}{subsection}
+\newtheorem{question}{Question}
+\numberwithin{question}{subsection}
+\newtheorem{construction}{Construction}
+\numberwithin{construction}{subsection}
+\newtheorem{exercise}{Exercise}
+\numberwithin{construction}{subsection}
+\newtheorem{solution}{Solution}
+\numberwithin{construction}{subsection}
+\newtheorem{fact}{Fact}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\call}[1]{\mathcal{#1}}
+\newcommand{\psheaf}{\text{\underline{Set}}^{\scr{C}^{\text{op}}}}
+\newcommand{\und}[1]{\underline{\hspace{#1 cm}}}
+\newcommand{\adj}[1]{\text{\textopencorner}{#1}\text{\textcorner}}
+\newcommand{\comment}[1]{}
+\newcommand{\lto}{\longrightarrow}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\spec}{\operatorname{Spec}}
+
+\usepackage[margin=3cm]{geometry}
+
+\title{Hartshorne Exercise Solutions}
+\author{Will Troiani}
+\date{October 2020}
+
+\begin{document}
+
+\maketitle
+\section{Chapter I}
+\subsection{\S 1}
+\textbf{1.1}:\\
+%
+\textbf{a)} The affine coordinate ring is defined by the formula $A(Y)=k[x,y]/I(Y)$. In this instance, $I(Y)=(y-x^2)$ as $(y-x^2)$ is a radical ideal. Let $\varphi:k[x,y]\to k[x]$ be the morphism defined by $x\mapsto x$ and $y\mapsto x^2$. This is surjective and $\ker(\varphi)=(y-x^2)$, so that $A(Y)\cong k[x]$.\\\\
+%
+\textbf{b)} We have $A(Z)=k[x,y]/(1-xy)$. This is in fact isomorphic to $k[x]_x$. To see this, define a morphism $\varphi:k[x,y]\to k[x]_x$ by $x\mapsto x$ and $y\mapsto x^{-1}$. Then $\varphi$ is a surjection and its kernel is exactly $(1-xy)$.\\\\
+%
+\textbf{c)} First note that if $p(x,y)$ is a homogeneous polynomial of degree $n$ in $k[x,y]$, where $k$ is an algebraically closed field, then $p$ splits into a product of linear factors. To see this write $p=y^ng(\frac{x}{y})$. Then $g(\frac{x}{y})$ will split so we can write $p=y^n(\frac{x}{y}-a_1)...(\frac{x}{y}-a_n)=(x-a_1y)...(x-a_ny)$.\\
+        
+        Now, suppose that $f(x,y)$ is an irreducible quadratic over an algebraically closed field $k$. Let $p(x,y)$ be the degree 2 homogeneous part of $f$. By the above we can write $p=(ax-by)(cx-dy)$. Potentially swapping variables we can assume without loss of generality that $a\neq 0$. If these factors are linearly dependent, we can do a change of variables to replace $x$ with $ax-by$ (note that replacing $x$ with a linear polynomial in $x$ and $y$ induces an automorphism of $k[x,y]$). Then $f(x,y)=x^2+ax+by+c$. We can then do a change of variables and replace $ax+by+c$ with $-y$, giving $f(x,y)=x^2-y$. Solving $f=0$ then gives $y=x^2$.\\
+        
+        If both factors are linearly independent, we can assume that $a,d\neq 0$. Thus by a change of variables (replacing $ax-by$ with $x$ and $cx-dy$ with $y$, which induces an automorphism of $k[x,y]$ as these factors are linearly independent) we can write $f(x,y)=xy+ax+by+c$. We then have $f(x,y)=(x+b)(y+a)+c-ab$. Another change of variables then allows us to write $f(x,y)=xy-1$. Solving for $f=0$ then gives $xy=1$.\\\\
+%
+\textbf{1.2}: For the first part, simply note that $Y=Z(y-x^2,z-x^3)$. Similarly to 1.1c, we can see that $k[x,y,z]/(y-x^2,z-x^3)\cong k[x]$. Since $k[x]$ has no nilpotent elements, $(y-x^2,z-x^3)$ is a radical ideal and is thus equal to $I(Y)$. Hence $A(Y)\cong k[x]$, as required.\\\\
+%
+\textbf{1.3}: $Y = Z(y) \cup Z(x) \cup Z(x^2 - y)$ and the corresponding ideals are $(y), (x)$, and $(x^2 - y)$.\\\\
+%
+\textbf{1.4}: A basis for the closed sets of $\bb{A}^1 \times \bb{A}^1$ is given by $\lbrace X \times Y \mid X \subseteq \bb{A}^1\text{ closed, }Y \subseteq \bb{A}^1\text{ closed}\rbrace$ which means every closed set is finite. However, the set $Z(y -x) \subseteq \bb{A}^2$ is closed and infinite ($k$ is algebraically closed and thus infinite), thus these topologies are not equal.\\\\
+%
+\textbf{1.5}: If $B$ is finitely generated then $B \cong k[x_1,...,x_n]/\frak{a}$ for some ideal $\frak{a}$. Moreover, if $B$ has no nilpotent elements then $\frak{a}$ is radical. Which means $Z(\frak{a})$ is such that
+\[A(Z(\frak{a})) = k[x_1,...,x_n]/IZ(\frak{a}) = k[x_1,...,x_n]/\sqrt{\frak{a}} = k[x_1,...,x_n]/\frak{a} \cong B\]
+The converse is obvious.\\\\
+%
+\textbf{1.6}: See \cite{varieties}.\\\\
+%
+\textbf{1.7}:\\
+%
+\textbf{a)} Routine, if one was only interested in the case of algebraic sets then use the bijection between algebraic sets and radical ideals coupled with the corresponding statements for Noetherian rings.\\\\
+%
+\textbf{b)} If $X$ is not quasi-compact then one can construct from an infinite cover with no finite subcover a strictly ascending chain of open subsets, taking complements of which induces a strictly decreasing chain of closed sets.\\\\
+%
+\textbf{c)} Follows easily by considering the contrapositive.\\\\
+%
+\textbf{d)} Let $X$ be Noetherian and Hausdorff. The space $X$ decomposes into finitely many irreducible components $X = X_1 \cup \hdots \cup X_n$. Each $X_i$ is Noetherian, Hausdorff, and irreducible. By irreducibility, any two non-empty open sets of $X_i$ have non-empty intersection, which contradicts the Hausdorff condition unless $X_i$ consists of a single element. Thus $X$ is finite. Lastly, any finite, Hausdorff space is discrete.\\\\
+%
+\textbf{1.8}:\\
+%
+Decompose $Y \cap H$ into finitely many irreducibles $Y \cap H = Y_1 \cup ... \cup Y_n$ with no $Y_i$ containing any other. Each $Y_i$ is an irreducible subset of $Y$ and so corresponds to a prime $\frak{p}_i$ of $A(Y)$. Since $Y_i$ is also a subset of $H$ it follows that $\frak{p}_i$ contains $(IH)A(Y) = \big(IZ(f)\big)A(Y) = (f)A(Y)$. In fact, since there is no irreducible subset strictly between $Y_i$ and $Y$ it follows that $\frak{p}_i$ is minimal over $(f)A(Y)$, that is, $\operatorname{dim}A(Y)/\frak{p}_i = \operatorname{dim}A(Y) - 1 = r - 1$. Since primes ideals of $A(Y)/\frak{p}_i$ correspond to irreducible subsets of $Y_i$ we thus have $\operatorname{dim}Y_i = r-1$.\\\\
+%
+\textbf{1.9}:\\
+%
+Decompose $Z(\frak{a})$ into finitely many irreducible components $Z(\frak{a}) = Y_1 \cup \hdots \cup Y_n$ with no $Y_i$ containing any other. Each $Y_i$ corresponds to a prime ideal $\frak{p}_i$ which is minimal over $\frak{a}$. By Krull's Principal Ideal Theorem, $\operatorname{ht.}\frak{p} \leq r$. We also know
+\[\operatorname{ht.}\frak{p}_i + \operatorname{dim}A_n/\frak{p}_i = \operatorname{dim}A_n\]
+thus $\operatorname{dim}Y_i = \operatorname{dim}A_n/\frak{p}_i \geq n - r$.\\\\
+%
+\textbf{1.10}:\\
+%
+\textbf{a)} Solved in $\cite{varieties}$.\\\\
+%
+\textbf{b)} Solved in \cite{varieties}.\\\\
+%
+\textbf{c)} Consider the Sierpinski space $\Sigma := \lbrace 0,1\rbrace$ with topology $\big\lbrace \varnothing, \lbrace 0 \rbrace, \lbrace 0,1 \rbrace\big\rbrace$. We have that $\overline{\lbrace 0 \rbrace} = \Sigma$ so $\lbrace 0 \rbrace$ is dense. Furthermore, $\operatorname{dim}\lbrace 0 \rbrace = 0$. However, $\operatorname{dim}\Sigma = 1$ as demonstrated by the following sequence $\lbrace 0 \rbrace \subseteq \Sigma$.\\\\
+%
+\textbf{d)} This is obvious as if $Y \neq X$ then any chain of irreducible, closed subsets of $Y$ remain so as subsets of $X$. Since $X$ itself is irreducible, $Y \neq X \Longrightarrow \operatorname{dim}Y < \operatorname{dim}X$.\\\\
+%
+\textbf{e)} Consider $\bb{N}$ with the the topology whose closed sets are all initial segments.\\\\
+%
+\textbf{1.12} $x^2 + y^2 + 1$. We have that $Z_{\bb{A}^2_\bb{R}}(x^2 + y^2 + 1) = \varnothing$ which by definition is not irreducible.
+
+\subsection{\S 2}
+Throughout, $S = k[x_0,...,x_n]$\\
+\textbf{2.1}:\\
+For clarity, if $\frak{a} \subset S$ is an ideal we will write $Z_{\bb{P}^n}(\frak{a})$ for the zero set in $\bb{P}^n$ and $Z_{\bb{A}^{n+1}}(\frak{a})$ for the zero set in $\bb{A}^{n+1}$.
+
+Let $\frak{a} \subseteq S$ be homogeneous and say $f \in S$ is a homogeneous polynomial such that $\operatorname{deg}f>0$ and for all $P \in Z_{\bb{P}^n}(\frak{a})$ we have that $f(P) = 0$. It follows that for all non-zero $P \in Z_{\bb{A}^{n+1}}(\frak{a})$ we have that $f(P) = 0$. Moreover, since $\operatorname{deg}f > 0$ and $f$ is homogeneous it follows that $f(0,...,0) = 0$. Thus for all $P \in Z_{\bb{A}^{n+1}}(\frak{a})$ we have that $f(P) = 0$ and so by the regular nullstellensatz we have that $f^r \in \frak{a}$ for some $r > 0$.\\\\
+%
+\textbf{2.2}:\\
+Say $Z_{\bb{P}^n}(\frak{a}) = \varnothing$. Then $Z_{\bb{A}^{n+1}}(\frak{a})$ is either empty or the singleton set $\lbrace (0,...,0)\rbrace$. In the case that it is empty, it follows from the nullstellensatz that $\frak{a} = S$, and in the case that it is the singleton set containing $(0,...,0)$ we have that $\sqrt{\frak{a}} = S_+$ again by the nullstellensatz, thus $(i) \Rightarrow (ii)$. Now say $\sqrt{\frak{a}} = S_+$ and let $d$ be the least integer such that there exists a polynomial of degree $d$ in $\frak{a}$, we claim that $S_d \subseteq \frak{a}$. For each $i$ there exists $d_i > 0$ such that $x_i^{d_i} \in \frak{a}$, as $\sqrt{\frak{a}} = S_+$. Let $d = \operatorname{max}_id_i$. Then $x_i^d \in \frak{a}$ for all $i$, as these generate $S_d$ we have that $S_d \subseteq \frak{a}$. If $\sqrt{\frak{a}} = S$ then $\frak{a} = S$. Thus $(ii) \Rightarrow (iii)$. Lastly, if $\frak{a} \supset S_d$ for some $d$ then $Z_{\bb{A}^{n+1}}(\frak{a}) \subseteq Z_{\bb{A}^{n+1}}(S_d) = \lbrace (0,...,0)\rbrace$ and so $Z_{\bb{P}^{n}}(\frak{a}) = \varnothing$.\\\\
+%
+\textbf{2.3}:\\
+\textbf{a),b),c)} are trivial.\\
+%
+\textbf{d)} First notice that if $Z(\frak{a}) = \varnothing$ then $IZ(\frak{a}) = S$, but from the previous part it might be that $\sqrt{\frak{a}} = S_+$, so we cannot assert that $IZ(\frak{a}) = \sqrt{\frak{a}}$. Assuming $Z(\frak{a}) \neq \varnothing$ then we have that $I_{\bb{A}^{n+1}}Z_{\bb{A}^{n+1}}(\frak{a}) = \sqrt{\frak{a}}$. Notice that all elements of $\sqrt{\frak{a}}$ are homogeneous, and so $I_{\bb{P}^n}Z_{\bb{P}^n}(\frak{a}) = \sqrt{\frak{a}}$.\\
+%
+\textbf{e)} Let $W \supseteq Y$ be closed, we show $ZI(Y) \subseteq W$. Write $W = Z(\frak{a})$. By $a)$ it suffices to show $I(Y) \supseteq \frak{a}$. This holds as $W \supseteq Y$ implies $I(Y) \supseteq I(W) = IZ(\frak{a})$, which by $d)$ is equal to $\sqrt{\frak{a}}$. The result then follows as $\frak{a} \subseteq \sqrt{\frak{a}}$.\\\\
+%
+\textbf{2.4}:\\
+\textbf{a)} The previous exercise implies that there is a one-to-one order reversing bijection between proper radical ideals of $S$ not equal to $S_+$ and non-empty closed subsets of $\bb{P}^n$. We then notice that $I(\varnothing) = S$ and $Z(S) = \varnothing$, so this bijection extends to that as stated in the question.\\
+\textbf{b)} Immediate from the fact that the bijection is order reversing.\\
+\textbf{c)} $I(\bb{P}^n) = (0)$ which is prime.\\\\
+%
+\textbf{2.5}: 
+\textbf{a)}: Every descending chain of algebraic sets corresponds to an ascending chain of ideals of $k[x_0,...,x_n]$ which is Noetherian.\\\\
+%
+\textbf{b)} Follows from Proposition \cite[\S I \text{Prop}1.5]{hartshorne}\\\\
+%
+\textbf{2.6}:\\
+We will use the following lemma:
+\begin{lemma}
+\label{lem:indet_map}
+If a ring map $f: A \lto B$ is injective and extends to a map $F: A[\lbrace x_i\rbrace_{i \in I}] \lto B$ such that the ideal generated by $\lbrace x_i\rbrace_{i \in I}$ has empty intersection with $\ker{F}$, then $F$ is injective.
+\end{lemma}
+\begin{proof}
+Clearly a non-zero element of $A[\lbrace x_i\rbrace_{i \in I}]$ maps to a non-zero element of $B$.
+\end{proof}
+There is a map
+\begin{align*}
+    S &\lto S_{(x_i)}\\
+    f &\mapsto f(x_0/x_i,...,x_n/x_i)
+\end{align*}
+and thus a composite
+\[
+\psi_i: A \stackrel{\beta_i}{\lto}S\lto S_{(x_i)}
+\]
+given by $f \mapsto x_i^{\operatorname{deg}f}f(x_0/x_i,...,x_n/x_i) \mapsto f(x_0/x_i,...,x_n/x_i)$ (with $x_i/x_i$ omitted). This map is clearly an isomorphism as it is just a relabelling of indeterminants. In fact, we have:
+\begin{lemma}
+Let $Y \subseteq \bb{P}^n$ be a projective variety, $f \in I(Y_i)$, and $P \in Y \cap U_i$. Then
+\[f(\varphi_i(P)) = 0 \Longleftrightarrow (\beta_i f)(P) = 0\]
+Moreover, if $P \not\in U_i$ then $P_i = 0$ and so $(\beta_i f)(P) = 0$. Thus $f \in I(Y_i) \Rightarrow \beta_i(f) \in I(Y)$.
+\end{lemma}
+Thus $\psi_i(I(Y_i)) = I(Y)S_{(x_i)}$, and so \[\varphi_i^\ast: A(Y_i) \lto S_{(x_i)}/(I(Y)S_{(x_i)}) \cong S(Y)_{(x_i)}\]
+    is an isomorphism.
+
+This extends naturally to a surjective map $A(Y_i)[x_i] \lto S(Y)_{x_i}$, the image of $x_i$ under which is a unit, we thus have a map 
+\[
+    \delta_i: \big(A(Y_i)[x_i]\big)_{x_i} \lto S(Y)_{x_i}
+\]
+our next claim is that this is an isomorphism. This maps onto a set of generators and is thus surjective. For injectivity, as $A(Y_i)[x_i]$ is an integral domain, it suffices to show $A(Y_i)[x_i] \lto S(Y)_{x_i}$ is injective, which follows from Lemma \ref{lem:indet_map}.
+
+We now show $\operatorname{dim}S(Y)_{x_i} = \operatorname{dim}S(Y) - 1$. By $(1.8A)$ this equality is equivalent to $\operatorname{tr.deg}_kS(Y)_{x_i} = \operatorname{tr.deg}_kS(Y) - 1$. We have
+\begin{align*}
+\operatorname{Frac}S(Y) &\cong \operatorname{Frac}S(Y)_{x_i}\\
+&\cong\operatorname{Frac}\big(A(Y_i)[x_i]\big)_{x_i}\\
+&\cong \operatorname{Frac}\big(A(Y_i)[x_i]\big)\\
+&= \big(A(Y_i)\big)(x_i)\\
+&\cong \big(S(Y)_{x_i}\big)_0(x_i)
+\end{align*}
+thus
+\[\operatorname{tr.deg}_kS(Y) = \operatorname{tr.deg}_k\big(S(Y)_{x_i}\big)_0(x_i) = \operatorname{tr.deg}\big(S(Y)_{x_i}\big)_0 + 1\]
+
+We also have that
+\[\operatorname{dim}\big(S(Y)_{x_i}\big)_0 = \operatorname{dim}A(Y_i) = \operatorname{dim}(Y \cap U_i)\]
+
+Thus $\operatorname{dim}S(Y) = \operatorname{dim}(Y\cap U_i) + 1$ for all $i$, notice this value is independent of $i$ and so by exercise $1.10b)$ we have $\operatorname{dim}S(Y) = \operatorname{dim}Y + 1$.\\\\
+%
+\textbf{2.7}:\\
+\textbf{a)} Cover $\bb{P}^n$ by open affines $\lbrace U_i\rbrace_{i = 0}^n$, by exercise $1.10$ we have that $\operatorname{dim}\bb{P}^n = \sup_i\operatorname{dim}U_i$. For each $U_i$ we have $\operatorname{dim}U_i = \operatorname{dim}\bb{A}^n = n$.\\
+\textbf{b)} 
+We make use of the following fact from topology:
+\begin{fact}
+\label{fact:homeo_closure} Let $X, Y$ be topological spaces, $Z \subseteq X$ a subset, and $U \subseteq X, V \subseteq Y$ open subsets. If $\varphi: U \to V$ is a homeomorphism then $\varphi(U \cap \operatorname{cl}_X(Z)) = \operatorname{cl}_V(\varphi(U \cap Z))$.
+\end{fact}
+%
+$Y$ is an open subset of an affine space and so is irreducible. This in turn implies that $\bar{Y}$ is irreducible and thus affine. The previous exercise then applies, so we have $\operatorname{dim}\bar{Y} = \operatorname{dim}(\bar{Y})_i$, where we recall that $(\bar{Y})_i = \varphi_i(\operatorname{cl}_{\bb{P}^n}(Y) \cap U_i)$. We have $\varphi_i(\operatorname{cl}_{\bb{P}^n}(Y) \cap U_i) = \operatorname{cl}_{\varphi_i(U_i)}\varphi_i(Y \cap U_i)$ by Fact \ref{fact:homeo_closure} and this in turn is just $\operatorname{cl}_{\bb{A}^n}\varphi_i(Y \cap U_i)$. In other notation, we have $\overline{(Y_i)} = (\bar{Y})_i$. It follows from Proposition \cite[\S 1 1.10]{hartshorne} that $\operatorname{dim}Y_i = \operatorname{dim}\overline{(Y_i)}$. It remains to show that $\operatorname{dim}Y_i = \operatorname{dim}Y$. By exercise $1.10$ it suffices to show for all $i \neq j$ such that neither $Y \cap U_i$ nor $Y \cap U_j$ are empty that $\operatorname{dim}Y_i = \operatorname{dim}Y_j$. We have:
+\[\operatorname{dim}\overline{(Y_i)} = \operatorname{dim}(\bar{Y})_i = \operatorname{dim}\bar{Y}\]
+finishing the proof.\\\\
+%
+\textbf{2.9}:\\
+\textbf{a)} First we claim $I(\bar{Y}) \subseteq \beta I(Y)$. Let $f = f(x_0,...,x_n)\in I(\bar{Y})$ be homogeneous and consider $f(1,x_1,...,x_n)$. This is such that $\beta f(1,x_1,...,x_n) = f$ and so lies in the image of $\beta$. Moreover, if $P = (P_1,...,P_n) \in Y$ then the element $\bar{P}$ of $\bar{Y}$ given by the set of homogeneous coordings $(1,P_1,...,P_n)$ is such that $f(P) = 0$, or equivalently, $f(1,P_1,...,P_n) = 0$. That is, $f \in \beta I(Y)$. Since the homogeneous elements generate $I(\bar{Y})$ and $\beta I(Y)$ is an ideal, this establishes the claim.\\
+Conversely, let $f \in \beta I(Y)$ and let $g \in I(Y)$ be such that $x_0^{\operatorname{deg}g}g(x_1/x_0,...,x_n/x_0) = f$. For clarity, we distinguish $Y$ from $\varphi_0(Y)$. Since $g \in I(Y)$ we have for any $P = (P_1,...,P_n) \in Y$ that $g(P) = 0$, in other words, $1^{\operatorname{deg}g}g(P_1/1,...,P_n/1) = 0$, and thus $Z(f) \supseteq \varphi_0^{-1}Y$. Since $Z(f)$ is closed this implies $Z(f) \supseteq \bar{Y}$, that is, $f \in I(\bar{Y})$.\\\\
+%
+\textbf{b)} From the previous part, we have that $I(\bar{Y})$ is equal to the ideal generated by $\beta I(Y)$, thus $(\beta f_1,...,\beta f_n) \subseteq I(\bar{Y})$. So the statement of the question is true if and only if the ideal generated by $\beta (f_1,...,f_r)$ is not contained in $(\beta f_1,..., \beta f_r)$. Specialising now to the question at hand, we have $I(Y) = IZ(y - x^2, z - x^3)$ which is radical, and so is equal to $(y-x^2, z-x^3)$. We need an element of the ideal generated by $\beta (y - x^2, z - x^3)$ which is not in $(wy - x^2, w^2z - x^3)$. Consider $x(y - x^2) - (z - x^3) = xy - z \in (y - x^2, z - x^3)$ so that $xy - wz$ is in the ideal generated by $\beta (y - x^2, z-x^3)$. This element is not in $(wy - x^2, w^2z - x^3)$. \textcolor{red}{It remains to find generators for $I\bar{Y}$ but I think $I\bar{Y} = (wy-x^2, xz - y^2, xy - zw)$ works.}\footnote{... This element is not in $(wy - x^2, w^2z - x^3)$. In fact, one has
+\[
+I(\overline{Y}) = (wy-x^2,\; wz-xy,\; xz-y^2)\subset k[w,x,y,z].
+\]
+
+\begin{remark}[Generators for the twisted cubic ideal]
+\label{rem:twisted_cubic_generators}
+Let $\overline{Y}\subset \bb{P}^3$ be the projective closure of the affine curve
+$t\mapsto (t,t^2,t^3)$, so that in homogeneous coordinates $[w:x:y:z]$ we have the parametrisation
+\[
+t\longmapsto [1:t:t^2:t^3].
+\]
+Equivalently, $\overline{Y}$ is the image of the $3$-uple embedding $\rho_3:\bb{P}^1\to \bb{P}^3$,
+\[
+[s:t]\longmapsto [t^3:st^2:s^2t:s^3].
+\]
+Let $S=k[w,x,y,z]$ and define the graded map
+\[
+\psi:S\to k[s,t],\qquad w\mapsto t^3,\ x\mapsto st^2,\ y\mapsto s^2t,\ z\mapsto s^3.
+\]
+Then $I(\overline{Y})=\ker\psi$.
+
+The three quadrics
+\[
+f_1=wy-x^2,\qquad f_2=wz-xy,\qquad f_3=xz-y^2
+\]
+all vanish under $\psi$, hence $(f_1,f_2,f_3)\subseteq \ker\psi$.
+
+To see equality, note that $(f_1,f_2,f_3)$ has the two linear syzygies
+\[
+(-y)f_1 + x f_2 + (-w)f_3 = 0,\qquad
+z f_1 + (-y)f_2 + x f_3 = 0,
+\]
+so there is a graded free resolution
+\[
+0\to S(-3)^2 \to S(-2)^3 \to S \to S/(f_1,f_2,f_3)\to 0.
+\]
+Hence the Hilbert series of $S/(f_1,f_2,f_3)$ is
+\[
+H_{S/(f_1,f_2,f_3)}(t)=\frac{1-3t^2+2t^3}{(1-t)^4}=\frac{1+2t}{(1-t)^2},
+\]
+so $\dim_k(S/(f_1,f_2,f_3))_m = 3m+1$ for all $m\ge 0$.
+
+On the other hand, $\im\psi$ is the $3$rd Veronese subring
+$\bigoplus_{m\ge 0}k[s,t]_{3m}$, whose degree-$m$ piece has dimension $3m+1$.
+Thus $S/(f_1,f_2,f_3)\twoheadrightarrow \im\psi$ is a graded surjection with the same Hilbert function,
+hence an isomorphism. Therefore $\ker\psi=(f_1,f_2,f_3)$ as claimed.
+\end{remark}}\\\\
+%
+\textbf{2.10}:\\
+\textbf{a)} Let $S = k[x_0,...,x_n]$. First notice by Exercise $2.2$ we have for any ideal $\frak{a} \subseteq S$ with $IZ_{\bb{P}^n}(\frak{a}) \neq \varnothing$ that $IZ_{\bb{P}^n}(\frak{a}) \cap k = \lbrace 0 \rbrace $. We therefore assume $I(Y) \cap k = \lbrace 0 \rbrace$. If $I(Y) = \lbrace 0\rbrace$ then $Y = \bb{P}^n$ and so $C(Y) = \bb{A}^{n+1}$ which is algebraic. If $I(Y) \supseteq \lbrace 0 \rbrace$ then any non-zero $f \in I(Y)$ has strictly positive degree and so admits $(0,...,0) \in \bb{A}^{n+1}$ as a zero. Thus if $Y = Z_{\bb{P}^n}(T)$ then $C(Y) = Z_{\bb{A}^{n+1}}(T)$. Moreoever, $IC(Y) = I(Y)$.\\
+\textbf{b)} $Y$ is irreducible iff $I(Y)$ is prime iff $IC(Y)$ is prime iff $C(Y)$ is irreducible.\\
+\textbf{c)} In the case where $Y$ is a projective variety we have
+\[\operatorname{dim}C(Y) = \operatorname{dim}S(C(Y)) = \operatorname{dim}S(Y) = \operatorname{dim}Y + 1\]
+For the general case, we use exercise $2.7$.
+%
+\textbf{2.11}:\\
+\textbf{a)} Say $I(Y)$ can be generated by linear polynomials. Since $S$ is noetherian we can assume there are finitely many such generators, $f_1,...,f_m$. We have
+\[Y = ZI(Y) = Z(f_1,...,f_m) = Z(f_1) \cap ... \cap Z(f_m)\]
+where each $Z(f_i)$ is a hyperplane.\\
+
+Conversely, notice that since $\bb{P}^n$ is noetherian, we can assume $Y$ can be written as the finite intersection of hyperplanes $Z(f_1) \cap ... \cap Z(f_m)$, the result follows from the same calculation as above.\\
+\textbf{b)} We begin by establishing the following lemma:
+\begin{lemma}
+\label{lem:lin_codimension}
+Let $f_1,...,f_m$ be a set of linear polynomials in $S$. Then $\operatorname{dim}S/(f_1,...,f_m) = n + 1 - m$.
+\end{lemma}
+\begin{proof}
+Since $S/(f_1,...,f_m) \cong \big(S/(f_1,...,f_{m-1})\big)/\overline{(f_m)}$ it suffices to prove the case when there is a single $f_i$, say $f$. Write $f = \alpha_0 x_0 + \hdots + \alpha_n x_n$ and by reordering the variables if necessary assume $\alpha_0 \neq 0$. Consider the map $k[x_0,...,x_n] \to k[x_1,...,x_n]$ which maps $x_i \mapsto x_i$ for $i \geq 1$ and $x_0 \mapsto \alpha_0^{-1}(-\alpha_1x_2 - ... - \alpha_nx_n)$. This induces an isomorphism $k[x_0,...,x_n]/(f) \cong k[x_1,...,x_n]$ and the result follows.
+\end{proof}
+Now proceeding with the question at hand. Let $Y$ have dimension $r$ and write $Y = Z(f_1) \cap ... \cap Z(f_m) = Z(f_1,...,f_m)$ where each $Z(f_i)$ is a hyperplane, and moreover assume $m$ is minimal amongst such decompositions. We have:
+\[r + 1 = \operatorname{dim}Y + 1 = \operatorname{dim}S(Y) = n + 1 - m\]
+and thus $m = n - r$.\\
+\textbf{c)}: The solution to this question essentially comes down to the following observation:
+\begin{lemma}
+\label{lem:vectorised_variety}
+A linear variety $Y$ in $\bb{P}^n$ is a $k$-vector subspace of $\bb{A}^{n+1}$ and the dimension of $Y$ as a variety is one less than its dimension as a vector space.
+\end{lemma}
+\begin{proof}
+That $Y$ is a $k$-vector subspace is obvious, we prove the second claim by induction on $n - \operatorname{dim}Y$. If $\operatorname{dim}Y = n$ then $Y$ is the whole space and so as a subspace of $\bb{A}^{n+1}$ has dimesion $n+1$. For the inductive step, assume $\operatorname{dim}Y = k$ and that $\lbrace y_1,...,y_{k+1}\rbrace$ is a basis for $Y$ as a subspace of $\bb{A}^{n+1}$. For a linear polynomial $f$ such that $Z(f) \cap Y \neq Z(f)$ we have $Y \cap Z(f) = \operatorname{Span}\lbrace y_1,...,y_{k+1}\rbrace \cap Z(f)$. Write $f = \alpha_0 x_0 + ... + \alpha_n x_n$, then $Y \cap Z(f)$ is the span of the vectors $y_1,...,y_{k+1}$ subject to the condition $y_i^0 = \alpha_0^{-1}(-\alpha_1 y_i^1 - ... - \alpha_n y_i^n)$, and so has dimension 1 less than that of $Y$. What we have shown is that as $Y$ decreases by 1 in dimension as a variety, so to does it decrease by 1 in dimension as a subspace.
+\end{proof}
+The question at hand is now reduced to elementary linear algebra.\\\\
+%
+\textbf{2.12}:\\
+\textbf{a)} We show that $\frak{a} = \sum_{d \geq 0}(S_d \cap \frak{a})$. The $\supseteq$ direction is obvious. For the reverse, let $f \in \frak{a}$ and write $f = \sum_{j \geq 0}f_j$ where all but finitely many $f_j = 0$ and $\operatorname{deg}f_j = j$ for all $j$. It suffices to show that $\theta(f_j) = 0$ for all $j$, but this follows from $\theta(f) = 0$ as $i \neq j \Rightarrow \operatorname{deg}\theta(f_i) \neq \operatorname{deg}\theta(f_j)$. That $\frak{a}$ is prime follows from the fact that $\theta$ is a ring homomorphism with codomain an integral domain.\\\\
+%
+\textbf{b)} Here we follow the convention that $M_i = x_i^d$ for $i = 0,...,n$. That $\im \rho_d \subseteq Z(\alpha)$ is obvious. For the converse we come up with a description for $\frak{a}$: for every sequence $(j_0,...,j_n)$ of integers such that $j_k < d$ and $\sum_{k = 0}^n j_k = d$ we have that $y_0^{j_0}...y_n^{j_n}$ maps under $\theta$ to a degree $d^2$ homogeneous element of $k[x_0,...,x_n]$. Thus there exists some $m_{(j_0,...,j_n)} > n$ such that $y_0^{j_0}...y_n^{j_n} - y_{m_{(j_0,...,j_n)}}^d$ maps to zero under $\theta$. Thus if $P \in \bb{P}^N$ is such that $P \in Z(\ker \theta)$ we have that $P$ is a root of a polynomials of the form
+\begin{equation}\label{eq:twopointonetwo}
+    y_0^{j_0}...y_n^{j_n} - y_{m_{(j_0,...,j_n)}}^d
+\end{equation}
+First consider the case where $d$ is even. The equations \eqref{eq:twopointonetwo} show that for $l > n$ the element $a_l$ is determined by $a_0,...,a_n$. Thus $P = \rho_d([\sqrt[d]{a_0}:...:\sqrt[d]{a_n}])$. Now consider the case when $d$ is odd. Again we obtain a family of equations which show that for $l > n$ the element $a_l$ is determined \emph{up to sign} by $a_0,...,a_n$. Now, by considering $a_0a_1^{d-2}a_i = a_{m_{1,d-2,0,...,1,...,0}}^d$ we see that $a_0$ and $a_i$ have the same sign. A similar argument shows $a_0$ and $a_1$ have the same sign. Thus by multiplying $(a_0,...,a_N)$ by $-1$ if necessary we again see $P = \rho_d([\sqrt[d]{a_0}:...:\sqrt[d]{a_n}])$.\\\\
+%
+\textbf{c)} In the case that $d$ is odd the preimage of a point $P \in \im \rho_d$ can be recovered by the first $n$ elements of $P$ and so $\rho_d$ is injective. In the case when $d$ is odd we can recover the preimage \emph{up to sign} and then the argument given above shows the first $n$ elements all have the same sign, thus $\rho_d$ is injective.\\\\
+%
+If $P \in \bb{P}^n$ and $f \in k[x_0,...,x_N]$ a polynomial such that $f(\rho_d(P)) = 0$ then the polynomial $f(M_0,...,M_N)$ vanishes at $P$ and conversely. So if we write $\operatorname{mon}f$ for $f(M_0,...,M_N)$ and $\operatorname{mon}I(Y)$ for the ideal generated by $\lbrace \operatorname{mon}f \mid f \in I \rbrace$ then it follows that for an algebraic set $Z(\frak{b})$ we have $\rho_d^{-1}(Z(\frak{b})) = Z(\operatorname{mon}\frak{b})$, thus $\rho_d$ is continuous.\\\\
+%
+Next we show this map is closed. Let $Z(\frak{b})$ be an algebraic subset of $\bb{P}^n$. Then $\rho_d(Z(\frak{b})) = Z(\theta^{-1}(\frak{b})) \cap Z(\ker \theta)$. This is true because for all $g \in \theta^{-1}(\frak{b})$ and all $P \in Z(\frak{b})$ we have $\theta(g)(P) = 0$ if and only if $g(\rho_d(P)) = 0$.\\\\
+%
+\textbf{d)} \textcolor{red}{This amounts to calculating the kernel in this specific case which should be what is written in red in $2.9b$}\footnote{\textbf{d)} In the case $(n,d)=(1,3)$, the map $\rho_3:\bb{P}^1\to\bb{P}^3$ is
+\[
+[s:t]\longmapsto [t^3:st^2:s^2t:s^3].
+\]
+Writing homogeneous coordinates on $\bb{P}^3$ as $[w:x:y:z]$, the kernel ideal is
+\[
+\ker\theta = (wy-x^2,\; wz-xy,\; xz-y^2),
+\]
+i.e. the ideal of the twisted cubic. See Remark \ref{rem:twisted_cubic_generators} for a proof.}.\\\\
+%
+\textbf{2.13}: Since $Z$ is of dimension $1$ which is 1 less than $2 = \operatorname{dim}\bb{P}^2$ we have that $Z = Z(f)$ for some irreducible $f \in S^2$. Let $M_0,...,M_5$ be the degree 2 homogeneous monomials of $S^2$ and write $f = \sum_{j = 0}^5 \alpha_j M_j$. Then let $g = \sum_{j=0}^5\alpha_j y_j$, we claim $Z(g) \cap Y = \rho_2(Z(f))$. By the solution to the previous question this amounts to showing $Z(g) \cap \operatorname{im}\rho_2 = Z(\theta^{-1}(f)) \cap Z(\ker\theta)$. For $P \in \bb{P}^2$ and $h \in \theta^{-1}(f)$ we have
+\begin{align*}
+h(\rho_2(P)) = 0 &\Longleftrightarrow \theta(h)(P) = 0\\
+& \Longleftrightarrow f(P) = 0\\
+&\Longleftrightarrow g(\rho_2(P)) = 0
+\end{align*}
+from which the result follows.\\\\
+%
+\textbf{2.14}:\\
+Let $\theta: k[\lbrace z_{ij}\rbrace_{0\leq i \leq r,0\leq j \leq s}] \lto k[x_0,...,x_r,y_0,...,y_s]$ be the ring homomorphism given by $z_{ij} \mapsto x_iy_j$. Say $P \in \bb{P}^{r + s + rs}$ is such that $P \in Z(\ker \theta)$. Then in particular, $P$ is a root of every polynomial of the form $z_{ij}z_{kl} - z_{il}z_{kj}$, where $0\leq i,k\leq r$ and $0\leq j,l\leq s$. Let $\lbrace P_{ij}\rbrace$ be a set of homogeneous coordinates for $P$ and now fix a pair of integers $(a,b)$ such that $P_{ab} \neq 0$. For all $0 \leq k\leq r$ and all $0 \leq j \leq s$ we have $P_{aj}/P_{ab} = P_{kj}/P_{kb}$ which implies:
+\[\frac{P_{aj}}{P_{ab}}P_{kb} = P_{kj}\]
+Thus we can recover all $P_{kj}$ from the set $\lbrace P_{a0},...,P_{as},P_{0b},...,P_{rb}\rbrace$. We write $P$ as
+\[P = \Big[\frac{P_{aj}}{P_{ab}}P_{kb}\Big]_{0 \leq k \leq r, 0 \leq j \leq s} = \psi\Big(\big[P_{0b}:...:P_{rb}\big], \big[\frac{P_{a0}}{P_{ab}}:...:\frac{P_{as}}{P_{ab}}\big]\Big)\]
+which shows $Z(\ker \theta) \subseteq \im \psi$. The other direction is trivial.\\\\
+
+We observe that the above also implies that $\psi$ is injective: let $(P,Q),(P',Q') \in \bb{P}^r \times \bb{P}^s$ whose image under $\psi$ are equal, for clarity we write
+\begin{align*}
+    \psi(P,Q) &= [P_0Q_0:...:P_0Q_s:......:P_rQ_0:...:P_rQ_s]\\
+    &= [P_0'Q_0':...:P_0'Q_s':......:P_r'Q_0':...:P_r'Q_s'] = \psi(P',Q')
+\end{align*}
+and let $\lambda \neq 0$ be such that 
+\begin{equation}\label{eq:scaler}
+(P_0Q_0:...:P_0Q_s:......:P_rQ_0:...:P_rQ_s) = \lambda (P_0'Q_0':...:P_0'Q_s':......:P_r'Q_0':...:P_r'Q_s')
+\end{equation}
+From the above, there exists pairs of integers $(a,b),(a',b')$ such that
+\begin{equation}\label{eq:image_type}
+    \frac{P_{a}Q_j}{P_{a}Q_b}P_kQ_b = P_kQ_j\qquad\text{and}\qquad \frac{P_{a'}'Q_j'}{P_{a'}'Q_b'}P_k'Q_b' = P_k'Q_j'
+\end{equation}
+Thus for all $0 \leq k \leq r, 0 \leq j \leq s$:
+\begin{align*}
+    P_kQ_j &= \frac{P_{a}Q_j}{P_{a}Q_b}P_kQ_b & \text{by }\eqref{eq:image_type}\\
+    &= \frac{\lambda P'_{a'}Q'_j}{P_{a}Q_b}\lambda P'_kQ_{b'}' & \text{by }\eqref{eq:scaler}\\
+    &= \lambda^2 \frac{P_{a'}'Q_{b'}'}{P_{a}Q_{b}} \Big(\frac{P_{a'}'Q_j'}{P_{a'}'Q_{b'}'}P_k'Q_{b'}'\Big)\\
+    &= \lambda^2 \frac{P_{a'}'Q_{b'}'}{P_{a}Q_{b}} P_k'Q_j' & \text{by }\eqref{eq:image_type}
+\end{align*}
+proving $(P,Q) = (P',Q')$.\\\\
+%
+\textbf{2.15}:\\
+\textbf{a)} Since $\im \psi = Z(\ker \theta)$ ($\theta$ as in the previous question) it suffices to show $\ker \theta = (z_{00}z_{11} - z_{01}z_{10})$. Let $f \in \ker \theta$. We write $f = (z_{00}z_{11} - z_{01}z_{10})^mf_1 + f_2$ for the largest possible integer $m$. Let $\alpha^{d_1d_2d_3d_4}$ be the coefficient in front of $f_2$ in front of $z_{00}^{d_1}z_{01}^{d_2}z_{10}^{d_3}z_{11}^{d_4}$ and let $\beta^{d_1d_2d_3d_4}$ be the coefficient of $\theta(f_2)$ in front of $(x_0y_0)^{d_1}(x_0y_1)^{d_2}(x_1y_0)^{d_3}(x_1y_1)^{d_4}$. We have $\theta(f_2) = 0$ and so by linear independence $\beta^{d_1d_2d_3d_4} = 0$ for all sequences $d_1d_2d_3d_4$. We have $\beta^{1111} = \alpha^{1001} + \alpha^{0110} = 0$ and so $\alpha^{1001} = -\alpha^{0110}$ so either both are zero or neither are. If neither are then $f_2 = (z_{00}z_{11} - z_{01}z_{10})f_3 + f_4$ contradicting maximality of $n$. Thus both are zero. The final claim is for all sequences $d_1d_2d_3d_4$ other than $1111$ we have $\alpha^{d_1d_2d_3d_4} = \beta^{d_1d_2d_3d_4}$ which can be proved by induction on such sequences in lexicographic order. Thus $f_2 = 0$ and $f \in (z_{00}z_{11} - z_{01}z_{10})$.\\\\
+%
+\textbf{2.16}:\\
+%
+\textbf{a)} We have
+\[Q_1 \cap Q_2 = Z(x^2 - yw) \cap Z(xy -zw) = Z(x^2 - yw, xy - zw)\]
+Multiplying $xy - zw = 0$ by $y$ we have $xy^2 - zyw = 0$. Substituting $x^2 - yw = 0$ into $xy^2 - zyw$ we get
+\[xy^2 - zx^2 \Longrightarrow x(y^2 - zx)\]
+which means either $x = 0$ or $y^2 - zx = 0$, we will show that $x = 0$ corresponds to the line, and $y^2 - zx$ corresponds to the twisted cubic curve.
+
+Say $x = 0$. Then since $x^2 - yw = 0$ we have that either $y = 0$ or $w = 0$. If $y = 0$ then since $xy - zw = 0$ we have either $z = 0$ or $w = 0$ with the other variable arbitrary, this corresponds to a line. If $y \neq 0$ then multiplying $xy - zw = 0$ by $x^2$ we have $x^3y - x^2zw = 0$ which by substituting $yw$ for $x^2$ gives
+\[x^3y - zyw^2 = 0 \Longrightarrow y(x^3 - zw^2) = 0\]
+which since $y \neq 0$ implies $zw^2 = 0$ so either $z = 0$ or $w = 0$ with the other arbitrary. This also corresponds to a line.\\\\
+%
+Now say $x \neq 0$ so $y^2 - zx = 0$. Then we have
+\[Q_1 \cap Q_2 = Z(x^2 - yw, xy - zw, y^2 - zw)\]
+which \textcolor{red}{assuming the postulated solution of Exercise $2.9b$ is correct}, gives the twisted cubic curve.\footnote{Now say $x \neq 0$ so $y^2 - zx = 0$. Then we have
+\[Q_1 \cap Q_2 = Z(x^2 - yw, xy -zw, y^2 - zw)\]
+which gives the twisted cubic curve.}\\\\
+%
+\textbf{b)} $I(C) = (x^2 - yz)$, $I(L) = (y)$, and $I(C \cap L) = (x,y)$. Thus we need to show $(x^2 - yz) + (y) \neq (x,y)$ which is clear as $x \neq (x^2 - yz) + (y)$.
+\subsection{\S 3}
+\textbf{3.1}\\
+\textbf{a)} We saw in exercise $1.1$ that there are two possibilities up to isomorphism for the affine coordinate rings, and so there are two possibilities up to isomorphism of corresponding conics. Since $\bb{A}^1$ and $\bb{A}^1\setminus \lbrace (0,0)\rbrace$ are conics, we are done.\\\\
+%
+\textbf{b)} Any open subset of $\bb{A}^1$ is equal to $\bb{A}^1\setminus V$ where $V$ is a finite set of points. Let $v \in V$, then $1/(x-v)$ is an invertible element in $\call{O}(\bb{A}^1\setminus V)$ and is not in $k$, thus $\call{O}(\bb{A}^1\setminus V) \not\cong \call{O}(\bb{A}^1)$.\\\\
+%
+\textbf{c)} Let $f \in k[x_0,x_1,x_2]$ be homogeneous, irreducible and degree 2. Then $f$ can be written as $x^TMx$ where $x^T = (x_0, x_1, x_2)$ and $M$ is some symmetric matrix. Since $M$ is symmetric and $k$ is algebraically closed, there exists an orthogonal matrix $Q$ such that $Q^TMQ$ is diagonal. The matrix $Q$ corresponds to a linear isomorphism $\varphi_Q: \bb{P}^2 \lto \bb{P}^2$ and so is an isomorphism of varieties such that the following diagram commutes:
+\[
+\begin{tikzcd}[column sep = huge]
+\bb{P}^2\arrow[r,"{\varphi_Q}"] & \bb{P}^2\\
+Z(x^TMx)\arrow[u]\arrow[r,"{\varphi_Q\restriction_{Z(x^TMx)}}"] & Z(x^TQ^TMQx)\arrow[u]
+\end{tikzcd}
+\]
+Moreover, $\varphi_Q(Z(x^TMx)) = Z(x^TQ^TMQx)$ because $P \in z(x^TQ^TMQx)$ if and only if $QP \in Z(x^TMx)$ (both of these are the statement: $P^TQ^TMQP = 0$). Thus $\varphi_Q\restriction_{Z(x^TMx)}$ is an isomorphism of varieties.
+
+The upshot is that we may assume $f = \lambda_1 x_0^2 + \lambda_2 x_1^2 + \lambda_3 x_2^2$. There is another linear transformation given by the diagonal matrix with $ii$ entry equal to $1/\lambda_i$ which shows that in fact we can assume $f = x_0^2 + x_1^2 + x_2^2$, that is, all conics are isomorphic to one in particular, thus are all isomorphic to each other. To finish the question, we can simply observe that $\bb{P}^1$ is isomorphic to its image under the $2$-uple embedding and thus is isomorphic to all conics.\\\\
+%
+\textbf{e)} Follows from Theorems $3.2$ and $3.4$.\\\\
+%
+\textbf{3.2}\\
+\textbf{a)} This is clearly bijective. To show bicontinuity it suffices to show that every proper, closed subset of $Z(y^2 - x^3)$ is finite. Let $T$ be such a closed set, then $T = Z(y^2 - x^3) \cap T'$ for some closed set $T'$ which can be written as a finite union of irreducible components, $T' = T'_1 \cup ... \cup T'_n$. Since this union is finite it suffices to show $Z(y^2 - x^3) \cap T'_i$ is finite for each $i$. Fix an $i$. This set can itself be written as the finite union of irreducible elements, $Z(y^2 - x^3) \cap T'_i = Y_1 \cup ... \cup Y_m$ say. We show $\operatorname{dim}Y_i = 0$. Since $T$ is a proper subset, $Y_i \subsetneq Z(y^2 - x^3)$ and so it is sufficient to show $\operatorname{dim}Z(y^2 - x^3) \leq 1$. By considering the map $k[x,y] \to k[t]$ such that $x \mapsto t^3$ and $y \mapsto t^2$ we see that $(y^2 - x^3)$ is prime, and thus $Z(y^2 - x^3)$ is irreducible. This is a proper subset of $\bb{A}^2$ which has dimension $2$ and so $\operatorname{dim}Z(y^2 - x^3) \leq 1$.\\
+
+Now, to see that this is not an isomorphism, we assume to the contrary that it is. The map $\bb{A}^1 \stackrel{\varphi}{\lto} Z(y^2 - x^3) \stackrel{\varphi^{-1}}{\lto} \bb{A}^1$ is regular and so $t = \varphi^{-1}\varphi(t) = \varphi^{-1}(t^2,t^3)$, where $\varphi^{-1}$ must be a polynomial. No such polynomial exists so this is a contradiction.\\\\
+%
+\textbf{b)} This is bijective and thus bicontinuous. That it is not an isomorphism follows from the fact that $t \mapsto t^{1/p}$ is not a polynomial.\\\\
+%
+\textbf{3.3}:\\
+\textbf{a)} For every open set $U \subseteq Y$ there is a map
+\begin{align*}
+    \hat{\varphi}: \call{O}_Y(U) &\lto \call{O}_X(\varphi^{-1}(U))\\
+    f & \mapsto f \circ \varphi
+\end{align*}
+and $\call{O}_X(\varphi^{-1}(U))$ maps to $\operatorname{Colim}_{U \ni p}(\varphi^{-1}(U))$ which by the universal property of this colimit maps to $\call{O}_{X,P}$. Similarly, $\call{O}_Y(U)$ maps to $\call{O}_{Y,\varphi(P)}$ which by the universal property of this colimit maps into $\operatorname{Colim}_{U \ni p}(\varphi^{-1}(U))$ hence we get a map $\call{O}_{Y,\varphi(P)} \lto \call{O}_{X,P}$ given by $[f] \mapsto [f \circ \varphi]$. It remains to show this is a homomorphism of local rings, but this is clear as if $[f] \in \call{O}_{Y,\varphi(P)}$ is such that $f(\varphi(P)) = 0$ then $(f \circ\varphi)(P) = 0$.\\\\
+\textbf{b)} First we show that $\varphi$ is a morphism. Let $U \subseteq Y$ be open, and $f: U \lto \bb{A}^1$ regular. We need to show $f \circ \varphi$ is regular at every point. Let $P \in \varphi^{-1}(U)$ and consider $[f] \in \call{O}_{Y,\varphi(P)}$. The image of $[f]$ under $\varphi_P^\ast$ is represented by $f \circ \varphi$ suitably restricted, thus there is some open subset $W \subseteq X$ containing $P$ such that $(f \circ \varphi)\restriction_W$ is regular, that is to say, $f \circ \varphi$ is regular at $P$.
+
+Now we show $\varphi^{-1}$ is a morphism. First notice that by uniqueness of inverses, $\varphi^{-1}$ can be given explicity by $[f] \mapsto [f \circ \varphi^{-1}]$. The argument is identical to above.\\\\
+%
+\textbf{c)} Let $[f] \neq [g] \in \call{O}_{Y,\varphi(P)}$ be represented by $f:U_1 \lto \bb{A}^1$ and $g: U_2 \lto \bb{A}^1$ respectively. Since $[f] \neq [g]$ we have that $f$ and $g$ are not equal on $U_1 \cap U_2$ so we can assume $U_1 = U_2$, let $U$ denote this set. We see that since $f,g$ are regular, the fact they're unequal on $U$ implies they're unequal on $U \cap \varphi(X)$. This holds true for all $U$ and so $\varphi^\ast_P[f] \neq \varphi^\ast_P[g]$, thus $\varphi^\ast_P$ maps distinct elements to distinct elements and so in injective.\\\\
+%
+\textbf{3.4}:\\
+We will make use of the map $\theta: S^N \lto S^n$ with kernel $\frak{a}$ given in the statement of Exercise $2.12$. We have already shown in exercise $2.12$ that $\rho_d$ is a homeomorphism, so by the previous exercise it suffices to show $\rho_d^\ast: \call{O}_{\im \rho_d, \rho_d(P)} \lto \call{O}_{\bb{P}^n,P}$ is an isomorphism for all $P \in \bb{P}^n$. Let $P \in \bb{P}^n$ and write $Q$ for $\rho_d(P)$. By Theorem \cite[\S I 3.3 3.5]{hartshorne} we have that $\call{O}_{\im \rho_d, Q} \cong (S^N/\frak{a})_{(\frak{m}_{Q})}$ and $\call{O}_{\bb{P}^n,P} \cong S^n_{(\frak{m}_P)}$ where $S^m = k[x_0,...,x_m]$. So the problem is reduced to finding an isomorphism $\eta: (S^N/\frak{a})_{(\frak{m}_{Q})} \lto S^n_{(\frak{m}_P)}$ such that the following diagram commutes:
+\begin{equation}
+\label{eq:threepointfour}
+\begin{tikzcd}
+\call{O}_{\im \rho_d, Q}\arrow[r,"{\rho_d^\ast}"]\arrow[d] & \call{O}_{\bb{P}^n,P}\arrow[d]\\
+(S^N/\frak{a})_{(\frak{m}_{Q})}\arrow[r,"{\eta}"] & S^n_{(\frak{m}_P)}
+\end{tikzcd}
+\end{equation}
+There is an injective map $\bar{\theta}: S^N/\frak{a} \lto S^n$ such that $\bar{\theta}(\frak{m}_{Q}) \subseteq \frak{m}_P$, so this induces a map $(S^N/\frak{a})_{\frak{m}_{Q}} \lto (S^n)_{\frak{m}_P}$ which since $S^N/\frak{a}$ and $S^n$ are integral domains is also injective. Lastly, $\theta$ maps degree $e$ elements to degree $de$ elements, thus the elements of degree $0$ map injectively to those of degree $0$, we thus have a map $(S^N/\frak{a})_{(\frak{m}_{Q})} \lto (S^n)_{(\frak{m}_P)}$ which we take to be $\eta$. Notice that the collection of rational functions in $(S^n)_{(\frak{m}_P)}$ are generated by the quotient of two degree $d$ monomials of $S^n$, which lie in the image of $\eta$, thus this map is surjective and thus an isomorphism.\\\\
+%
+It remains to show commutativity of \eqref{eq:threepointfour}. For any $m \geq 0$ denote $k[x_1,...,x_m]$ by $A^m$, and let pick $i$ such that $P \in U_i$, we have the following isomorphisms: $\call{O}_{\im \rho_d, Q} \stackrel{\sim}{\lto} A^N((\im \rho_d)_i)_{\frak{m}'_{Q}}$ and $\call{O}_{\bb{P}^n,P} \stackrel{\sim}{\lto} (A^n)_{\frak{m}'_P}$ where $\frak{m}'_Q$ is the maximal ideal corresponding to $Q$ and similarly for $\frak{m}'_P$. Now \eqref{eq:threepointfour} can then be extended to the following commuting diagram:
+\begin{equation}
+\label{eq:threepointfoursuper}
+\begin{tikzcd}
+\call{O}_{\im \rho_d, Q}\arrow[r,"{\rho_d^\ast}"]\arrow[d] & \call{O}_{\bb{P}^n,P}\arrow[d]\\
+A^N((\im \rho_d)_i)_{\frak{m}'_{Q}}\arrow[r,dashed]\arrow[d] & (A^n)_{\frak{m}'_P}\arrow[d]\\
+(S^N/\frak{a})_{(\frak{m}_{Q})}\arrow[r,"{\eta}"] & S^n_{(\frak{m}_P)}
+\end{tikzcd}
+\end{equation}
+where the dashed arrow is induced by $\theta$ and the vertical arrows are isomorphism.
+\begin{remark}
+Commutativity of the top square of \eqref{eq:threepointfoursuper} (arguably) should be justified:
+\begin{lemma}
+Let $ \varphi : X\lto Y$ be a morphism of varieties with $X,Y$ affine, then for all $P \in X$ the following diagram commutes:
+\begin{equation}
+\label{eq:germ_commute}
+\begin{tikzcd}
+\call{O}_{Y,\varphi(P)}\arrow[r,"{\varphi^\ast_P}"] & \call{O}_{X,P}\\
+ A(Y)_{\frak{m}_{\varphi(P)}}\arrow[r,"{\hat{\varphi}_{\frak{m}_P}}"]\arrow[u] & A(X)_{\frak{m}_P}\arrow[u]
+ \end{tikzcd}
+\end{equation}
+\end{lemma}
+\begin{proof}
+The morphism $A(Y)_{\frak{m}_{\varphi(P)}} \lto \call{O}_{Y,\varphi(P)}$ is given by $[f]/[g] \mapsto [\gamma_{f/g}]$ where $\gamma_{f/g}: Y \lto \bb{A}^1$ is given by $y \mapsto f(y)/g(y)$. The map $\hat{\varphi}_{\frak{m}_P}$ maps $[f]/[g]$ to $[f \circ \varphi]/[g \circ \varphi]$. Denote by $\gamma_{f\varphi/g\varphi}: X \lto \bb{A}^1$ the map given by $x \mapsto (f\circ\varphi)(x)/(g\circ\varphi)(x)$. Then  the image of $[f \circ \varphi]/[g \circ \varphi]$ under the right, vertical map of \eqref{eq:germ_commute} is $[\gamma_{f\varphi/g\varphi}]$. It remains to show $[\gamma_{f/g}\circ \varphi] = [\gamma_{f\varphi/g\varphi}]$ which is clear.
+\end{proof}
+\end{remark}
+%
+\textbf{3.5}:\\
+Let $f \in S^n$ be a homogeneous, irreducible polynomial such that $H = Z(f)$. Write $f = \sum_{j = 0}^{N}\alpha_j M_j$. Then by the solution to Exercise $2.12c)$ we have that $\rho_d(Z(f)) = Z(\theta^{-1}(f)) \cap \ker \theta$ so it remains to calculate $\theta^{-1}(f)$. This is just the ideal generated by $\sum_{j = 0}^N \alpha_j y_j$ which is linear.\\\\
+%
+There exists a rotation matrix $R_\theta: \bb{P}^N \lto \bb{P}^N$ which maps the hyperplane to $Z(x_i)$ for some $x_i$. Multiplication by this matrix gives a family of polynomials and so zero sets are sent to zero sets and regular functions are mapped to regular functions. Thus this is an isomorphism.\\\\
+%
+\textbf{3.6}:\\
+First we show that $\call{O}(X) \cong k[x,y]$, this isomorphism might seem strange at first because surely $1/(x^2+y^2)$ is a unit in $\call{O}(X)$ but not in $k[x,y]$, however, $1/(x^2 + y^2)$ is not an element of $\call{O}(X)$ as we are working with an algebraically closed field $k$, and so in fact has infinitely many solutions, not just $(0,0)$.\\\\
+%
+First notice that if $Y$ is an affine variety and $Y'$ is an open subset then $K(Y) \cong K(Y')$. Thus $K(X) \cong K(\bb{A}^2) \cong k(x,y)$, also, $\call{O}(X)$ embedds into $k(x,y)$. Now, let $f/g \in \call{O}(X)$ be arbitrary. $g$ can only be $0$ when $f$ is which is finitely many times and so $g$ is a constant \textcolor{red}{this statement follows from Bezout's Theorem}. Thus $\call{O}(X) \cong k[x,y]$.\footnote{Now we compute $\Gamma(X,\mathcal O_X)$ directly. Cover $X$ by the principal opens
+\[
+D(x)=\bb{A}^2\setminus Z(x)\qquad\text{and}\qquad D(y)=\bb{A}^2\setminus Z(y),
+\]
+so $X=D(x)\cup D(y)$ and $D(x)\cap D(y)=D(xy)$.
+
+Then
+\[
+\Gamma(D(x),\mathcal O)=k[x,y]_x,\qquad
+\Gamma(D(y),\mathcal O)=k[x,y]_y,\qquad
+\Gamma(D(xy),\mathcal O)=k[x,y]_{xy}.
+\]
+By the sheaf condition,
+\[
+\Gamma(X,\mathcal O_X)=k[x,y]_x\cap k[x,y]_y\subset \operatorname{Frac}(k[x,y])=k(x,y).
+\]
+
+\begin{lemma}
+\label{lem:intersection_localisations}
+Let $R$ be a UFD and let $f,g\in R$ be coprime. Then inside $\operatorname{Frac}(R)$ one has
+\[
+R_f\cap R_g = R.
+\]
+\end{lemma}
+\begin{proof}
+If $h\in R_f\cap R_g$, write $h=a/f^m=b/g^n$ with $a,b\in R$. Then $g^n a=f^m b$.
+Since $\gcd(f^m,g^n)=1$ in a UFD, we have $f^m\mid a$, say $a=f^m c$. Hence $h=c\in R$.
+\end{proof}
+
+Applying Lemma \ref{lem:intersection_localisations} with $R=k[x,y]$, $f=x$, $g=y$ gives
+\[
+k[x,y]_x\cap k[x,y]_y = k[x,y],
+\]
+so $\Gamma(X,\mathcal O_X)=k[x,y]$.}\\\\
+%
+To finish the question, we notice that the identity map $k[x,y] \lto k[x,y]$ corresponds under the equivalnce $\operatorname{Hom}(\bb{A}^2,X) \cong \operatorname{Hom}(k[x,y],k[x,y])$ to the inclusion function $X \rightarrowtail \bb{A}^2$ which is clearly not an isomorphism\footnote{
+A common pitfall: $1/(x^2+y^2)$ is not a regular function on $X=\bb{A}^2\setminus\{0\}$
+(over algebraically closed $k$) because $x^2+y^2$ vanishes on the curve $Z(x^2+y^2)$, which contains
+infinitely many points of $X$.}.\\\\
+%
+\textbf{3.7}:\\
+\textbf{b)} (which implies $a$) we make use of the following lemma:
+\begin{lemma}
+\label{lem:another_irred}
+If $Y$ is an irreducible subset of a toplogical space $X$ and $Y' \subseteq Y$ is also an irreducible subset of $X$ then $Y'$ is irreducible as a subset of $Y$.
+\end{lemma}
+\begin{proof}
+    Let $Y' = U \cup V$ where $U = U' \cap Y'$, $V = V' \cap Y'$ with $U',V' \subseteq X$ closed. Then
+    \[Y = Y' \cup Y = \big( (U' \cap Y') \cup (V' \cap Y')\big) \cup Y = (U' \cap Y) \cup (V' \cup Y) = U' \cup V'\]
+    which implies that $U'= Y$, say. Thus $Y' = Y' \cap U' = U$ which shows that $Y'$ is irreducible.
+    \end{proof}
+Now onto the quesiton at hand. Say $H \cap Y = \varnothing$. Then $Y \subseteq \bb{P}^n\setminus H$. By Lemma \ref{lem:another_irred} we have that $Y$ is an irreducible, closed subset of $\bb{P}^n\setminus H$ which by Exercise $3.5$ is affine. Thus $Y$ is both affine and projective so by $3.1e$ it is thus a point. This means $\operatorname{dim}Y = 0$.\\\\
+%
+\textbf{3.8}:\\
+We prove something more general, that if $Y \subseteq \bb{P}^n$ is an open set then the regular functions on $Y$ are constants. First notice that in this setting, $K(Y) \cong K(\bb{P}^n)$. We also have that $\call{O}(Y)$ embeds into $K(Y)$, so since $K(\bb{P}^n) \cong S^n_{((0))}$, a regular function $f: Y \lto \bb{A}^1$ can be thought of as a fraction $f_1/f_2$ where $f_1,f_2 \in S^n$ and $\operatorname{deg}f_1 = \operatorname{deg}f_2$. Using that $k$ is infinite and again \textcolor{red}{using Bezout's Theorem} we have that $f_2$ is a constant which implies $\operatorname{deg}f_1 = 0$ and so is also a constant.\footnote{\textbf{3.8}:\\
+We prove the correct statement:
+\[
+\Gamma(\bb{P}^n,\mathcal O_{\bb{P}^n})=k.
+\]
+Let $f\in \Gamma(\bb{P}^n,\mathcal O)$.
+Viewing $f$ in the function field $K(\bb{P}^n)$, we can write
+\[
+f=\frac{F}{G}
+\]
+with $F,G\in k[x_0,\dots,x_n]$ homogeneous of the same degree and $\gcd(F,G)=1$.
+Since $f$ is regular everywhere, $G$ must be nowhere zero on $\bb{P}^n$.
+
+If $\deg G>0$, then $G$ is a nonconstant homogeneous polynomial. Over an algebraically closed field,
+any nonconstant polynomial has a zero in affine space, hence $G$ vanishes somewhere on some chart $U_i$,
+so $Z_{\bb{P}^n}(G)\neq\varnothing$, contradiction.
+Therefore $\deg G=0$, so $G\in k^\times$, and then also $\deg F=0$, so $F\in k$.
+Thus $f\in k$ as required.
+
+\begin{remark}
+The analogous statement for an arbitrary open subset $Y\subset \bb{P}^n$ is false:
+for example $\bb{P}^n\setminus Z(x_0)\cong \bb{A}^n$ has many nonconstant regular functions.
+\end{remark}}\\\\
+%
+\textbf{3.9}:\\
+$S(X) \cong S^1$ and $S(Y) \cong S^2/(x_0x_1 - x_2^2)$, the former is a UFD and the latter is not, as $x_2^2 = x_0x_1$.\\\\
+%
+\textbf{3.10}:\\
+Let $U \subseteq Y'$ be open and $f: U \lto \bb{A}^1$ regular. Write $f = f_1/f_2$ where $f_2$ is nowhere zero on $U$, and $U = U' \cap Y'$ where $U' \subseteq Y$ is open. Then $U' \cap Z(f_2)^c$ is an open subset which extends $f$, and so $f \circ \varphi: U' \cap Z(f_2)^c \lto \bb{A}^1$ is regular as $\varphi$ is a morphism and thus so is its restriction to $X'$.\\\\
+%
+\textbf{Observation}: The fact that $X',Y'$ are locally closed is not integral to the restriction of $\varphi$ respecting regular functions, this assumption is here so that $X',Y'$ are varieties in their own right.\\\\
+%
+\textbf{3.11}:\\
+For each closed subvariety $X' \subseteq X$ containing $P$ define the set $\frak{p}_{X'} := \lbrace [(U,f)] \in \call{O}_P \mid f\restriction_{X'} = 0\rbrace$, we claim the map given by $X' \lto \frak{p}_{X'}$ is a bijection.\\\\
+%
+We use the following Lemma:
+\begin{lemma}
+\label{lem:torture}
+Let $X$ be an affine variety and $U \subseteq X$ a quasi-affine variety. Write $U = Z(\frak{a})^c$ There is a bijection:
+\begin{align*}
+    \psi: \lbrace \text{Irreducible, closed subsets }V \subseteq U\rbrace &\lto \lbrace \text{Irreducible closed subsets }V \subseteq X\text{ such that }V \not\subseteq Z(\frak{a})\rbrace\\
+    V &\mapsto \operatorname{Cl}_X(V)
+\end{align*}
+\end{lemma}
+\begin{proof}
+First we show this map is well defined. Irreducibility is transitive (Lemma \cite[\S Irreducible sets]{alggeonotes}) so since $V$ is an irreducible subset of $U$ it is also of $X$, moreover the closure of an irreducible space is irreducible, thus $\bar{V}$ is irreducible. It is clearly also closed and not contained in $Z(\frak{a})$ otherwise it must have been the empty set which is not irreducible.
+
+There is an inverse $\varphi$ to this function which maps $V$ to $V \cap U$. This is also clearly well defined, where we note that $V \cap U \neq \varnothing$ as $V \not\subseteq Z(\frak{a})$.
+
+Now we show this is in fact a bijection. $\varphi \psi (V) = \operatorname{Cl}_X(V) \cap U$. Since $V \subseteq U$ is closed, write $V = V' \cap U$ where $V' \subseteq X$ is closed. We claim $\operatorname{Cl}_X(V' \cap U) \cap U = V$. We have $V \subseteq U$ and $V = V' \cap U$ so $V \subseteq \operatorname{Cl}_X(V' \cap U) \cap U$. We show the reverse inclusion. $V'$ is a closed set containing $V' \cap U$ and so $\operatorname{Cl}_X(V' \cap U) \subseteq V'$, thus $\operatorname{Cl}_X(V' \cap U) \cap U \subseteq V' \cap U = V$. Thus $\varphi\psi(V) = V$.
+
+Conversely, we need to show $\operatorname{Cl}_X(W \cap U) = W$, but this is true as $U$ is open and thus dense.
+\end{proof}
+In particular, Lemma \ref{lem:torture} implies that fpr any $P \in U$, there is a bijection between the irreducible, closed neighbourhoods of $P \in U$ and the irreducible, closed neighbourhoods of $P \in X$.\\\\
+%
+Now back to the question at hand. Assume $X$ is affine. There is a bijection between the prime ideals of $A(X)$ containing $\frak{m}_P$ and the irreducible, closed neighbourhoods of $P$ in $X$, so the affine and quasi-affine cases are solved.
+
+In the projective case, for any $U_i$ such that $P \in U_i$ we have:
+\begin{align*}
+    \psi': \lbrace \text{Irreducible, closed nbhds }V \subseteq U_i\text{ of }P\rbrace &\to \lbrace \text{Irreducible, closed nbhds }V \subseteq X\text{ of }P\rbrace\\
+    V &\mapsto \operatorname{Cl}_X(V)
+\end{align*}
+which is a bijection (proof left to reader). Since $U_i$ is affine this reduces to the previous case.\\\\
+%
+\textbf{3.12}:\\
+There are three cases to consider. First assume $X$ is a quasi-affine variety. Then $\operatorname{dim}X = \operatorname{dim}\bar{X}$ by Prop 1.10 and $\operatorname{dim}\bar{X} = \operatorname{dim}\call{O}_{\bar{X},P}$ by 3.2c and stalks can be calculated locally so $\operatorname{dim}\call{O}_{\bar{X},P} = \operatorname{dim}\call{O}_{X,P}$.
+
+Say $X$ is a projective variety. Then cover $X$ by affine $U_i$ and note that from Exercise $2.6$ we have $\operatorname{dim}X = \operatorname{dim}X_i$. We thus have by $3.2c$ that $\operatorname{dim}X_i = \operatorname{dim}\call{O}_{X_i,\varphi_{i}(P)}$ and again stalks can be calculated locally so $\operatorname{dim}\call{O}_{X_i,\varphi_i(P)} = \operatorname{dim}\call{O}_{X,P}$.
+
+Lastly, say $X$ is a quasi-projective variety. Then by Exercise $2.7b$ we have $\operatorname{dim}X = \operatorname{dim}\bar{X}$ and so we have reduced to the previous case.\\\\
+%
+\textbf{3.13}: Define $\frak{m}_Y := \lbrace [(U,f)] \in \call{O}_{Y,X} \mid f\restriction_Y = 0\rbrace$. We claim this is the unique maximal ideal of $\call{O}_{Y,X}$. Let $[(U,f)] \in \call{O}_{Y,X}$ which is not an element of $\frak{m}_Y$, then there exists some $y \in Y$ such that $f(y) \neq 0$, let $V_y \ni y$ be an open neighbourhood of $y$ such that $f = f_1/f_2$ in $V_y$. Then $V_y \cap Y \cap Z(f_2)^c$ is an open set containing $y$ and so in particular is non-empty. Thus $[(V_y \cap Y \cap Z(f_2)^c, f_2/f_1)]$ is inverse to $[(U,f)]$.
+
+There is a ring homomorphism $\call{O}_{Y,X} \lto K(Y)$ such that $[(U,f)] \mapsto [(U \cap Y), f\restriction_{U \cap Y}]$. Say we have a representative $(U,f)$ of an element $[(U,f)] \in K(Y)$. There exists an open subset $U' \subseteq U$ on which $f = f_1/f_2$ with $f_2$ nowhere zero on $U'$. $U' = U'' \cap Y$ for some open subset $U'' \subseteq Y$ and so $f$ extends to a regular function $\hat{f}$ on the open subset $U'' \cap Z(f_2)^c$ of $X$. The element $[(U'' \cap Z(f_2)^c, \hat{f})]$ maps to $[(U,f)]$ and so this map is surjective. The kernel is $\frak{m}_Y$ and so we have $\call{O}_{Y,X}/\frak{m}_Y \cong K(Y)$.\\\\
+%
+For the dimension claim, we cover $X$ with open affines and appeal to Exercise 2.6 and Proposition 1.10 to reduce to the case where $X$ is affine. We use Proposition 1.10 again to replace $Y$ with $\bar{Y}$ which is to say we can assume $Y$ is also affine.
+
+First notice that there is a projection map $A(X) \lto A(Y)$ with kernel $\frak{m}_Y$ and so $A(X)/\frak{m}_Y \cong A(Y)$, so in particular $\operatorname{dim}A(X)/\frak{m}_Y = \operatorname{dim}Y$. Next we have $\operatorname{ht.}\frak{m}_Y + \operatorname{dim}A(X)/\frak{m}_Y = \operatorname{dim}A(X)$, and so $\operatorname{ht.}\frak{m}_Y = \operatorname{dim}X - \operatorname{dim}Y$. It remains to show $\operatorname{ht.}\frak{m}_Y = \operatorname{dim}\call{O}_{Y,X}$ but this follows from $\call{O}_{Y,X}/\frak{m}_Y \cong K(Y)$ just established.\\\\
+%
+\textbf{3.15}:\\
+\textbf{a)} Let $X \times Y = Z_1 \cup Z_2$ with $Z_i$ closed. Write $Z_i = Z(\frak{a}_i)$ where the $\frak{a}_i$ are ideals in $k[x_1,...,x_n]$ and $k[x_1,...,x_m]$ respectively.
+
+Consider $X_i := \lbrace x \in X \mid \lbrace x \rbrace \times Y \subseteq Z_i \rbrace$. First we show $X_1 \cup X_2 = X$. Let $\alpha \in X$ and consider the sets $Y^\alpha_i = \lbrace y \in Y \mid (\alpha,y) \in Z_i\rbrace$. These are closed as $Y^\alpha_i = Z(\operatorname{ev}_\alpha\frak{a}_i)$ where $\operatorname{ev}_\alpha\frak{a}_i := \lbrace f(\alpha,y) \mid f \in \frak{a}_i\rbrace$. Since $Y$ is irreducible we have $Y^\alpha_1 = Y$ say, and so $\alpha \in X_1 \subseteq X_1 \cup X_2$.
+
+Now we show that $X_i$ are closed. This is easy as $X_i = Z(\cup_{\beta \in Y}\operatorname{ev}_\beta\frak{a}_i)$. Thus $X_1 = X$ say (as $X$ is irreducible) and so $X \times Y = Z_1$.\\
+%
+\textbf{b)} We show that $A(X\times Y)$ along with the obvious projection maps satisfy the universal property of the coproduct in the category of commutative $k$-algebras.
+
+Assume given maps $\varphi_1:A(X) \lto B$ and $\varphi_2: A(Y) \lto B$ where $B$ is some $k$-algebra. Let $\psi: A(X \times Y) \lto B$ be the map satisfying $[x_i] \mapsto \varphi_1([x_i])$ for $i \leq n$ and $[x_i] \mapsto \varphi_2([x_i])$ if $i > n$. This is well defined as if $f \in I(X \times Y)$ then for each monomial $[x_1^{j_1}...x_{n_m}^{j_{n+m}}]$ we have
+\[f([x_1^{j_1}...x_{n_m}^{j_{n+m}}]) = f([x_1])^{j_1}...f([x_{n_m}])^{j_{n+m}} = \varphi_1 [x_1]^{j_1}...\varphi_2[x_{n_m}]^{j_{n+m}} = 0\]
+Uniqueness of this map follows from linearity and commutativity with the projection maps. Thus $A(X \times Y) \cong A(X )\otimes_k A(Y)$.\\
+%
+\textbf{c)} Follows from Proposition $3.5$ and the previous part.\\\\
+%
+\textbf{d)} 
+%We use the following Lemma:
+%\begin{lemma}
+%\label{lem:induced} Let $A,B,C,D$ be $k$-algebras. If $\varphi: A \lto B$ is an isomorphism, %and $\psi: C \lto D$ is an isomorphism then $\varphi \otimes_k \psi: A \otimes_k B \lto C %\otimes_k D$ is an isomorphism.
+%\end{lemma}
+%\begin{proof}
+%Surjectivity is clear as $\varphi \otimes_k \psi$ maps onto a set of generators. For %injectivity, let $\d$
+%\end{proof}
+We need:
+%
+\begin{lemma}
+\label{lem:int_implies_alg} Let $A \lto B$ be integral where $A,B$ are $k$-algebras. Then $\operatorname{Frac}A \lto \operatorname{Frac}B$ is algebraic.
+\end{lemma}
+\begin{proof}
+Let $a/b \in \operatorname{Frac}A$ and $f = x^n + \sum_{j = 0}^{n-1}\alpha_j x^j \in k[x]$ such that $f(a) = 0$. Then
+\[0 = (1/b^n)(a^n/1) + (1/b^n)\sum_{j = 0}^{n-1}\alpha_j(a^j/1) = (a/b)^n + \sum_{j = 0}^{n-1}\alpha_j/b^{n-j} (a/b)^j\]
+\end{proof}
+%
+This problem reduces to proving $\operatorname{dim}(A \otimes_k B) = \operatorname{dim}A + \operatorname{dim}B$ for finiately generated $k$-integral domains $A,B$. Notice that we have know $A \otimes_k B$ is an integral domain by part $b)$. Using Noether Normalisation there exists sets of algebraically independent elements $\gamma_1,...,\gamma_r \in A$ and $\delta_1,...,\delta_s \in B$ with $\operatorname{dim}A = r$ and $\operatorname{dim}B = s$ such that $A$ is a finitely generated $k[\gamma_1,...,\gamma_r]$-module and $B$ is a finitely generated $k[\delta_1,...,\delta_s]$-module. We next claim the map determined by
+\begin{align*}
+    k[x_1,...,x_r,y_1,...,y_s] &\lto A\otimes_k B\\
+    x_i &\mapsto \gamma_i \otimes_k 1\\
+    y_i &\mapsto 1 \otimes_k \delta_i
+\end{align*}
+is injective. \textcolor{red}{Say we have this}\footnote{We next claim the map determined by
+\begin{align*}
+    k[x_1,\dots,x_r,y_1,\dots,y_s] &\lto A\otimes_k B\\
+    x_i &\mapsto \gamma_i \otimes 1\\
+    y_j &\mapsto 1 \otimes \delta_j
+\end{align*}
+is injective.
+
+\begin{remark}
+Since $k$ is a field, tensoring over $k$ is exact. The inclusions
+$k[\gamma_1,\dots,\gamma_r]\hookrightarrow A$ and $k[\delta_1,\dots,\delta_s]\hookrightarrow B$
+are injective (the $\gamma_i$ and $\delta_j$ are algebraically independent).
+Thus
+\[
+k[\gamma]\otimes_k k[\delta]\hookrightarrow A\otimes_k k[\delta]
+\]
+is injective, and then
+\[
+A\otimes_k k[\delta]\hookrightarrow A\otimes_k B
+\]
+is injective as well. Composing gives an injection
+\[
+k[\gamma]\otimes_k k[\delta]\cong k[\gamma,\delta]\hookrightarrow A\otimes_k B,
+\]
+which is exactly the claimed map.
+\end{remark}}. Thus we have an $(r + s)$-variable polynomial subalgebra of $A\otimes_k B$. It remains to show that $\operatorname{tr.deg}_k(A\otimes_kB) = r + s$. Since $A\otimes_k B$ is an integral domain (see the comment at the start of this proof), we reduce to showing $k[\lbrace \gamma_i \otimes_k 1\rbrace, \lbrace 1 \otimes_k \delta_i\rbrace]\lto A\otimes_k B$ is an integral extension, in fact we show it is a finite morphism. We know that all products of all powers of elements in $\lbrace \gamma_i \otimes_k 1\rbrace \cup \lbrace 1 \otimes_k \delta_i\rbrace$ form a generating set for $A\otimes_k B$, it remains to show that a finite subset will do. The modules $A$ and $B$ over $k[\gamma_1,...,\gamma_r]$ and $k[\delta_1,...,\delta_s]$ are finite, thus for all pairs $(\gamma_i, \delta_j)$ there exists a least integer $n_{ij}$ such that $\gamma_i^{n_{ij}}$ and $\delta_j^{n_{ij}}$ can both be written as a linear combination of products of powers of the $\gamma_i$ and $\delta_i$ respectively with powers less than $n_{ij}$. Thus finitely many elements generate all elements of the form $(\gamma_i \otimes_k \delta_j)^n$. Thus finitely many elements generate all products of such elements. Thus finitely many elements generate all of $A \otimes_k B$.\\\\
+%
+\textbf{3.16}:\\
+%
+\textbf{a), b)} Both $a)$ and $b)$ follow from the following observation: let $X = Z(\frak{a})$, $Y = Z(\frak{b})$, $(P_1,P_2) \in X \times Y$, $(f_1, f_2) \in \frak{a} \times \frak{b}$. Then write $f_1(x_0,...,x_n)f_2(y_0,...,y_m)$ as $\sum_{i = 0}^n\sum_{j = 0}^m \alpha_{ij}x_iy_j$. Define $g(\lbrace z_{ij}\rbrace) = \sum_{i = 0}^n\sum_{j = 0}^m \alpha_{ij}z_{ij}$. We have $f_1(P_1)f_2(P_2) = 0$ if and only if $g(\psi(P_1,P_2)) = 0$.\\\\
+%
+\textbf{3.17}:\\
+\textbf{a)} By Exercise $3.3b)$ it suffices to consider an isomorphic variety. By Exercise $3.1c$ we know that every conic in $\bb{P}^2$ is isomorphic to $\bb{P}^1$ so it suffices to show this is normal. Indeed $\call{O}_{\bb{P}^1,P} \cong k[x_0,x_1]_{(\frak{m}_P)}$ which is normal if $k[x_0,x_1]$ is. Indeed $k[x_0,x_1]$ is normal as it is a UFD.\\\\
+%
+\textbf{b)} 
+\textbf{Attempt at a direct approach}\footnote{\textbf{b)} Let $Q\subset \bb{P}^3$ be the quadric surface $Q=Z(x_0x_1-x_2x_3)$.
+Set $F=x_0x_1-x_2x_3$.
+Then
+\[
+\partial_{x_0}F=x_1,\quad \partial_{x_1}F=x_0,\quad \partial_{x_2}F=-x_3,\quad \partial_{x_3}F=-x_2.
+\]
+These partial derivatives vanish simultaneously only at $(0,0,0,0)$, which is not a point of $\bb{P}^3$.
+Hence $Q$ is nonsingular.
+
+A nonsingular variety has regular local rings, and regular local domains are integrally closed.
+Therefore $Q$ is normal.}: First notice that $(x_0x_1 - x_2x_3)$ is prime and so $S(Q_1)_{(\frak{m}_p)} \cong k[x_0,x_1,x_2,x_3]/(x_0x_1 - x_2x_3)_{(\frak{m}_P)}$. Let $f \in S(Q_1)_{(\frak{m}_p)}[X]$ by a monic polynomial and $g \in S(Q_1)_{(0)}$ be such that $f(g) = 0$. We write $g = g_1/g_2$ with $g_2 \neq 0$ so that:
+\[f(g) = (g_1/g_2)^n + \sum_{j = 0}^{n-1}\alpha_j (g_1/g_2)^j = 0\]
+We clear denominators to obtain
+\[-g_1^n = \sum_{j = 0}^{n-1}\alpha_j g_2^{n-j}g_1^j = g_2\sum_{j=0}^{n-1}\alpha_j g_2^{n-j-1}g_1^j\]
+and so $g_2(P) = 0 \Rightarrow g_1(P) = 0$. It thus remains to show $g_1(P) \neq 0$ and to show this we claim $g_1(P) = 0 \Rightarrow g_1 = 0$, that is $g_1 \in (x_0x_1 - x_2x_3)$ (by sloppy notation). \textcolor{red}{Incomplete}.\\\\
+%
+\textbf{c)} We claim this variety is not normal at the point $P = (0,0)$. We need to come up with a monic polynomial $f \in A(y^2 - x^3)_{\frak{m}_P}[X]$ and $a \in \operatorname{Frac}A(y^2 - x^3)$ such that $f(a) = 0$, with $a \not\in A(y^2 - x^3)_{\frak{m}_P}[X]$. Take $f = X^2 - x^2$ and $a = y/x$, we have
+\[f(a) = a^2 - x^2 = y^2/x^2 - x^2 = y^2/x^2 - x^3/x = (y^2 - x^3)/x = 0\]
+\textbf{3.21}:\\
+\textbf{a)} This reduces to showing that for polynomials $f_1,f_2 \in k[x]$ we have $f_1(-x)/f_2(-x)$ is a quotient of polynomials.\\
+\textbf{b)} This reduces to showing that for polynomials $f_1,f_2 \in k[x]$ we have $f_1(x^{-1})/f_2(x^{-1})$ is a quotient of polynomials which is true as this equals $x^n f_3(x)/f_4(x)$ for polynomials $f_3,f_4 \in k[x]$.\\
+\textbf{c)} Given $\varphi_1,\varphi_2 \in \operatorname{Hom}(X,G)$ we define $\varphi_1\cdot\varphi_2: X \to G$ to have action on $x \in X$ given by $\varphi_1(x)\cdot\varphi_2(x)$.\\
+\textbf{d)} We know $\operatorname{Hom}(X,\bb{A}^1) \cong \operatorname{Hom}(k[x], \call{O}(X)) \cong \call{O}(X)$ so it remains to show this is a group homomorphism which is an easy check.\\
+\textbf{e)} Similar to $d)$.\\\\
+%
+\subsection{\S 4}
+\textbf{4.1} Let $h$ be the function described by the question. Let $P \in U \cup V$ and assume without loss of generality that $P \in U$. Since $f$ is regular on $U$ there exists an open neighbourhood $V \subseteq U$ of $P$ for which $f\restriction_{V} = f_1/f_2$, with $f_2$ nowhere zero on $V$. This same neighbourhood $V \subseteq U \subseteq U \cup V$ can be taken to show that $h$ is regular at $P$.\\\\
+%
+\textbf{4.2} First we show the same claim for morphisms. Let $X,Y$ be varieties, $U_1,U_2 \subseteq X$ be open subsets of $X$ and let $\varphi_i: U_i \lto Y$, $i = 1,2$, be morphisms of varieties which agree on $U_1 \cap U_2$. Let $h$ denote the function which is equal to $\varphi_i$ on $U_i$. Say $V \subseteq Y$ is an open subset and $\gamma: V \lto k$ a regular function. We obtain regular functions $\gamma \circ \varphi_i: U_i \lto k$ which glue to a regular function $U_1 \cup U_2 \lto k$ by the previous question. Thus $h$ is a morphism.
+
+The question at hand reduces to this previous considering by picking representatives of the two rational maps.\\\\
+%
+\textbf{4.3}:\\
+\textbf{a)} This function is defined on $U_0$ and the corresponding regular function is given by the same rule.\\\\
+%
+\textbf{b)} This extends to $$\bb{P}^2\setminus\lbrace [0:0:1]\rbrace \lto \bb{P}^1, [P_0,P_1,P_2] \longmapsto [P_0,P_1]$$
+This cannot be extended further lest $[0:0:1] \mapsto [0:0] \not\in \bb{P}^1$.\\\\
+%
+\textbf{4.4}:\\
+\textbf{a)} Recall that any conic is isomorphic to $\bb{P}^1$ and so in particular is birationally equivalent to it.\\\\
+%
+\textbf{b)} Define the map
+\begin{align*}
+    Z(y^2 - x^3)\setminus \lbrace (0,0) \rbrace &\lto \bb{P}^1\\
+    (x,y) &\longmapsto [x:y]
+\end{align*}
+This clearly pulls back regular maps. Define also isomorphism with inverse:
+\begin{align*}
+    \bb{P}^1\setminus Z(x) &\lto Z(y^2 - x^3)\\
+    [x:y] &\longmapsto \big((y/x)^2,(y/x)^3\big)
+\end{align*}
+These maps induce birational maps.\\\\
+%
+\textbf{c)} This map can be given explicitly. If $[P_0:P_1:P_2] \in Y$ then its image is \\\\
+%
+\subsection{\S 5}
+\textbf{5.9}: Using Exercise $2.5b$ we write $Z(f) = Z(f_1) \cup \hdots \cup Z(f_r) = Z(f_1...f_r)$, assume that $r > 1$. Now, using exercise $3.7$ we have that $Z(f_1) \cap Z(f_2) \neq \varnothing$, so let $P \in Z(f_1) \cap Z(f_2)$. We have:
+\begin{equation}\label{eq:partial}
+\frac{\partial f}{\partial x} = \frac{\partial f_1}{\partial x}(f_2\hdots f_r) + \hdots + (f_1\hdots f_{r-1})\frac{\partial f_r}{\partial x}
+\end{equation}
+Evaluating \eqref{eq:partial} at $P$ yields the value $0$. Likewise, $\frac{\partial f}{\partial y}(P) = \frac{\partial f}{\partial z}(P) = 0$, contradicting the hypothesis. Thus $r = 1$.
+\section{Chapter 2}
+\subsection{\S 1}
+The question labelling is taken from \cite[II \S 1]{hartshorne}\\
+\textbf{1.1}:\\
+%
+We denote the constant presheaf associated to $A$ by $C_A$ and the constant sheaf $\scr{A}$. We construct a third sheaf $\scr{F}$ and show $C_A^+ \cong \scr{F} \cong \scr{A}$.
+
+For an open set $U$ with connected components $\lbrace U_i \rbrace_{i \in I}$ define $\scr{F}(U) = \coprod_{i \in I}A$. Let $V \supseteq U$ is an open superset of $U$ with connected components $\lbrace V_j \in J\rbrace_{j \in J}$. There is a collection of maps $\varphi_{ij}: \scr{F}(V_j) = A \to A = \scr{F}(U_i)$ which is the identity if $U_i \subseteq V_j$ and the zero map otherwise. Composing these with the inclusions $\scr{F}(U_i) \rightarrowtail \scr{F}(U)$ induces a morphism $\scr{F}(V) \to \scr{F}(U)$ which we take as the restriction map corresponding to $U \subseteq V$. This is clearly a sheaf.
+
+To see that $\scr{F} \cong \scr{A}$, notice that a function $s: U \to A$ in $\scr{A}(U)$ is clearly equivalent to giving an element of $A$ for each connected component of $U$.
+
+To see that $C_A^+ \cong \scr{F}$ let $U$ be a connected open subset and $s$ an element of $C_A^+(U)$. There exists a cover of opens $\lbrace U_i\rbrace_{i \in I}$ and elements $a_i \in A$ such that if $u \in U_i$ then $s(u) = (a_i)_u$. For all $U_i \cap U_j \neq \varnothing$ we have $a_i = a_j$ and $U$ is connected, so the data of $s$ amounts to a single element $a \in A$.\\
+\textbf{1.2a}:\\
+By essential uniquenes of colimits it suffices to show that $\im\varphi_p$ is a colimit $\operatorname{Colim}_{U \ni p}\im\varphi^+(U)$. Let $s \in \im\varphi^+(U)$ and take $V \ni p$ and $t \in \im\varphi(U)$ to be such that for all $v \in V$ we have $s(v) = t_v$. Then the equivalence class $[(V,t)]$ gives an element of $\im\varphi_p$ and so we have a collection of maps $\im\varphi^+(U) \to \im\varphi_p$. Thus $\im\varphi_p$ is a cocone. Now say that $K$ were any abelian group and there was a collection of morphisms $\psi_U: (\im\varphi^+)U \to K$ coherent with the restriction morphisms. Coherency here ensures that the image of any lift $t \in \im\varphi(V)$ of any $[(V,t)] \in \im\varphi_p$ under $\im\varphi(U) \lto \im\varphi^+(U) \lto K$ is mapped to the same element. That is, there is a well defined morphism $\im\varphi_p \to K$, which indeed is unique.\\
+\textbf{1.2b}\\
+This follows easily from the definition of monomorphism/epimorphism combined with the fact that for any pair of morphisms $\gamma,\gamma': \scr{H} \to \scr{J}$ subject to $\gamma_p = \gamma'_p$ for all $p$ then $\gamma = \gamma'$.\\
+\textbf{1.2c}\\
+Essentially an application of the previous two parts. The forward direction is by 1.2a: taking stalks at $p$ at all parts of the diagram yields a sequence
+\[\hdots\lto \scr{F}^{i-1}_p \stackrel{\varphi^{i-1}_p}{\lto} \scr{F}^i_p \stackrel{\varphi^i_p}{\lto}\scr{F}^{i+1}_p \lto \hdots\]
+Since $\ker\varphi^i = \im\varphi^{i-1}$ it follows that $\ker\varphi^i_p \cong (\ker\varphi^i)_p = (\im\varphi^{i-1})_p \cong \im\varphi^{i-1}_p$.
+
+The converse is by 1.2b: since $(\ker\varphi^i)_p \cong (\im\varphi^{i-1})_p$ for all $p$, we have that $\ker\varphi^i = \im\varphi^{i-1}$.
+
+\subsection{\S 2}
+\textbf{2.1}\\
+Let $l: A \lto A_f$ be the localisation map and $\hat{l}: \operatorname{Spec}A_f \lto \operatorname{Spec}A$ the induced map on spectrum. We first claim that this factors through a bijection $\hat{l}: \operatorname{Spec}A_f \lto D(f)$.
+
+To see that this is well defined, notice that if $\frak{p} \subseteq A_f$ is prime, then $\frak{p} \cap A \subseteq A$ is also prime and does not contain $f$, so $\frak{p} \cap A \in D(f)$.
+
+To see that this map is bijective, notice that if $\frak{q} \in D(f)$ then $\frak{q}A_f$ is prime and so we have a map $\hat{l}^{-1}: D(f) \lto \operatorname{Spec}A_f$. It is easy to show that for $\frak{p} \in D(f)$ we have $\frak{p}A_f \cap \frak{p} = \frak{p}$ and for $\frak{q} \in \operatorname{Spec}A_f$ we have $(\frak{q} \cap A)A_f = \frak{q}$, and so $\hat{l}$ is a bijection of sets.
+
+To show bicontinuity we show that both $\hat{l}$ and $\hat{l}^{-1}$ are closed maps.
+
+Let $\frak{a} \subseteq A_f$ be an ideal and consider the closed set $V(\frak{a}) \subseteq \operatorname{Spec}A_f$. Then it is easy to show that $\hat{l}(V(\frak{a})) = V(\frak{a} \cap A) \cap D(f)$ (show that if $\frak{p} \in D(f)$ then $\frak{p} \supseteq \frak{a}$ if and only if $\frak{p} \cap A \supseteq \frak{a} \supseteq A$). On the other hand, if $\frak{a} \subseteq A$ is an ideal, then it is easy to show that $\hat{l}^{-1}(V(\frak{a}) \cap D(f)) = V(\frak{a}A_f)$ (show that if $\frak{q} \in \operatorname{Spec}A_f$ then $\frak{q} \supseteq \frak{a}$ if and only if $\frak{q}A_f \supseteq \frak{a}A_f$).
+
+It remains to show that $\hat{l}^{\#}$ is an isomorphism of sheaves. Let $U \subseteq D(f)$ be open. Let $s: U \lto \coprod_{\frak{p} \in U}A_\frak{p}$ be an element of $\mathcal{O}_{D(f)}$. We need to show the mapping from $s$ to the composite
+\begin{equation}
+    \hat{l}^{-1}(U) \lto U \lto \coprod_{\frak{p} \in U}A_\frak{p} \lto \coprod_{\frak{q} \in \hat{l}^{-1}(U)}(A_f)_{\frak{q}},
+\end{equation}
+where the latter map is given by post composing with the localisation maps $l_{\frak{q}}: A_{\hat{l}(\frak{q})} \lto (A_f)_{\frak{q}}$, is an isomorphism.
+
+Since $\hat{l}$ is a bijection it suffices to show that the localisation maps $l_{\frak{q}}$ are isomorphisms. This is easy (rewrite $(a/f^n)/b$ as $a/f^nb$).\\\\
+%
+\textbf{2.2}\\
+Let $x \in U$. Since $(X,\mathcal{O}_X)$ is a scheme there exists an open neighbourhood $V$ containing $x$ such that $(V, \mathcal{O}_X\vert_V) \cong (\operatorname{Spec}R, \mathcal{O}_{\operatorname{Spec}R})$ for some ring $R$. Since the set $\{D(f) \mid f \in R\}$ forms a topological basis for $V$, it follows that there exists $f \in R$ such that $x \in D(f) \subseteq V \cap U$. Since $(D(f), \mathcal{O}_X\vert_{D(f)})$ is affine, as shown in the previous exercise, this shows that $(U, \mathcal{O}_X\vert_{U})$ is a scheme.\\\\
+%
+\textbf{2.3}\\
+\begin{enumerate}
+    \item[(a)] In general, any morphism of rings $\varphi: A \lto B$ preserves nilpotency, I.E., if $a \in A$ is nilpotent then $\exists n >0: a^n = 0$ and so
+    \begin{equation}
+        0 = \varphi(0) = \varphi(a^n) = \varphi(a)^n.
+    \end{equation}
+    If $x \in X$ is a point and $x \in U \subseteq X$ is an open neighbourhood, then we can apply the above to the morphism $\mathcal{O}(U) \lto \mathcal{O}_{X,x}$ to see that $\mathcal{O}_{X,x}$ containing no nilpotent elements for any $x$ implies $(X, \mathcal{O}_X)$ is reduced.
+
+    Conversely, if $f \in \mathcal{O}_{X,x}$ is nilpotent, then there exists an open neighbourhood $U$ of $x$ such that $f \in \mathcal{O}_X(U)$ is nilpotent.
+    \item[(b)] Since $X$ is a scheme, for any point $x \in X$ there exists a neighbourhood $U$ of $x$ such that $(U, \mathcal{O}_X\vert_U)$ is affine. If $(U, (\mathcal{O}_X)_{\text{red}}\vert_U)$ is a scheme then so is $(X, (\mathcal{O}_X)_{\text{red}})$, and so we reduce to the case where $X$ is affine.
+
+    Say $X = \operatorname{Spec}R$ for some ring $R$. Consider the projection homomorphism $\pi: R \lto R/\sqrt{0}$ and let
+    \begin{equation}
+        f: \operatorname{Spec}(R/\sqrt{0}) \lto \operatorname{Spec}R
+    \end{equation}
+    be the induced morphism of schemes. We claim first that this is a homeomorphism of topological spaces.
+
+    The correspondence Theorem gives a bijection between the ideals of $R$ containing $\sqrt{0}$ and the ideals of $R/\sqrt{0}$ induced by $\pi$. This bijection in fact preserves order and maps prime ideals to prime ideals. This implies $f$ is a homeomorphism.
+
+    Now, let $U \subseteq X$ be open and consider the homomorphism of rings
+    \begin{equation}
+        f^{\#}_U: \mathcal{O}_{\operatorname{Spec}R}(U) \lto \mathcal{O}_{\operatorname{Spec}(R/\sqrt{0})}(f^{-1}(U)).
+    \end{equation}
+    We claim that 
+    \begin{equation}
+        \ker f^{\#}_U = \sqrt{0} \subseteq \mathcal{O}_{\operatorname{Spec}R}(U).
+    \end{equation}
+    The map $f^{\#}_U$ maps a section $s: U \lto \coprod_{\frak{p} \in U}R_{\frak{p}}$ to the composition
+    \begin{equation}
+        f^{-1}(U) \lto U \lto \coprod_{\frak{p} \in U}R_{\frak{p}} = \coprod_{\frak{q} \in f^{-1}(U)}R_{f(\frak{q})} \lto \coprod_{\frak{q} \in f^{-1}(U)}(R/\sqrt{0})_{\frak{q}},
+    \end{equation}
+    where the equality follows from the fact that $f$ is a homeomorphism.
+
+    Thus, if $s$ is nilpotent then $\forall \frak{q} \in f^{-1}(U), f_U^{\#}(s)(\frak{q}) = 0$ and so $\sqrt{0} \subseteq \ker f_U^{\#}$.
+
+    On the other hand, if $s \in \mathcal{O}_{\operatorname{Spec}R}(U)$ and $f^{\#}_U(s) = 0$ then consider 
+    \end{enumerate}
+\textbf{2.4}\\
+Let $\varphi \in \operatorname{Hom}_{Ring}(A, \Gamma(X,\call{O}_X))$, we define a corresponding morphism of schemes $\beta(\varphi) = (\psi, \psi^{\#})$. Fix an open affine cover $\lbrace U_i = \operatorname{Spec}A_i\rbrace$ of $X$ and for each pair $(i,j)$ let $\lbrace U^{ij}_k = \operatorname{Spec}A^{ij}_k\rbrace$ be open affines covering $U_i \cap U_j$. By Proposition \cite[2.3]{hartshorne} the ring homomorphisms \[\varphi_i: A \lto \Gamma(X, \call{O}_X) \stackrel{\operatorname{Res}^X_{U_i}}{\lto} A_i\] give rise to a family of morphisms $(\gamma_i,\gamma^{\#}_i)$ of schemes $\operatorname{Spec}A_i \to \operatorname{Spec}A$.
+
+Since $\operatorname{Res}^{U_i}_{U^{ij}_k}\varphi_i = \operatorname{Res}^{U_j}_{U^{ij}_k}\varphi_j$ and the $U_k^{ij}$ cover $U_i \cap U_j$ we have that $\gamma_i\restriction_{U_i \cap U_j} = \gamma_j\restriction_{U_i \cap U_j}$, thus we have a well defined continuous function $\psi: X \to \operatorname{Spec}A$.
+
+Now we define $\psi^{\#}: \call{O}_{\operatorname{Spec}A} \to \psi_\ast\call{O}_{X}$ for which by the sheaf condition on $\call{O}_X$ it suffices to give a family $\psi^{\#}_i: \call{O}_{\operatorname{Spec}A} \to \psi_\ast\call{O}_X \to \operatorname{Res}^X_{U_i}\psi_\ast\call{O}_X$ such that $\operatorname{Res}^{U_i}_{U_i \cap U_j}\psi^{\#}_i = \operatorname{Res}^{U_j}_{U_i \cap U_j}\psi_i^{\#}$. However this is exactly given by the $\gamma_i^{\#}$.\\\\
+%
+\textbf{2.7}\\
+Let $(f,f^{\#}): \operatorname{Spec}K \to X$ be a morphism of schemes. Write $x := f((0))$. We have a ring homomorphism $f^{\#}_x: \call{O}_{X,x}\lto  K_{(0)} \cong K$. This is a local ring homomorphism and so $\big(f^{\#}_x((0))\big)^{-1} = \operatorname{ker}(f^{\#}_x) = \frak{m}_x$ and so we have a homomorphism $k(x) \lto K$ which being a ring homomorphism with domain a field, is injective.
+
+Conversely, a point $x \in X$ is equivalent to a continuous function $f: \operatorname{Spec}K \to X$. Given an open subset $U \subseteq X$ which does not contain $x$ the function $f^{\#}_U: \call{O}_X(U) \to f_\ast\call{O}_{\operatorname{Spec}K}U = \call{O}_{\operatorname{Spec}K}(\varnothing) = 0$ is the unique such. If $x \in U$ then we have the function $f_U^{\#}: \call{O}_X(U) \to \call{O}_{X,x} \to k(x) \to K \cong \call{O}_{\operatorname{Spec}K}(\operatorname{Spec}K) = \call{O}_{\operatorname{Spec}K}(f_\ast(U))$.\\\\
+%
+\textbf{2.8}:\\
+Say we have a commuting diagram
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXG9wZXJhdG9ybmFtZXtzcGVjfShrW1xcZXBzaWxvbl0vXFxlcHNpbG9uXjIpIl0sWzEsMCwiWCJdLFsxLDEsIlxcb3BlcmF0b3JuYW1le3NwZWN9ayJdLFswLDJdLFsxLDJdLFswLDEsImYiXV0=
+\[\begin{tikzcd}
+	{\operatorname{Spec}(k[\epsilon]/\epsilon^2)} & X \\
+	& {\operatorname{Spec}k}
+	\arrow["f", from=1-1, to=1-2]
+	\arrow[from=1-1, to=2-2]
+	\arrow[from=1-2, to=2-2]
+\end{tikzcd}\]
+Notice that $\operatorname{Spec}k[\epsilon]/\epsilon^2 = \{(\epsilon)\}$, and so $f$ is equivalent to a point $x \in X$. We consider next the morphism of sheaves $f^{\#}: \mathcal{O}_{X} \lto f_\ast\mathcal{O}_{\operatorname{Spec}k[\epsilon]/\epsilon^2}$. We have a morphism
+\begin{equation}
+\label{eq:local_map_rationa}
+    f^{\#}_x: \mathcal{O}_{X,x} \lto k[\epsilon]/\epsilon^2
+\end{equation}
+which is local. Thus, the composition
+% https://q.uiver.app/#q=WzAsMyxbMCwwLCJcXG1hdGhjYWx7T31fe1gseH0iXSxbMSwwLCJrW1xcZXBzaWxvbl0vXFxlcHNpbG9uXjIiXSxbMiwwLCJcXGZyYWN7a1tcXGVwc2lsb25dL1xcZXBzaWxvbl4yfXtcXGVwc2lsb259IFxcY29uZyBrIl0sWzEsMl0sWzAsMV1d
+\[\begin{tikzcd}
+	{\mathcal{O}_{X,x}} & {k[\epsilon]/\epsilon^2} & {\frac{k[\epsilon]/\epsilon^2}{\epsilon} \cong k}
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-2, to=1-3]
+\end{tikzcd}\]
+is has kernel $\frak{m}_x$. Since this morphism is surjective, we get an isomorphism
+% https://q.uiver.app/#q=WzAsMixbMCwwLCJcXG1hdGhjYWx7T31fe1gseH0vXFxmcmFre219X3giXSxbMSwwLCJrIl0sWzAsMV1d
+\[\begin{tikzcd}
+	{\mathcal{O}_{X,x}/\frak{m}_x} & k
+	\arrow[from=1-1, to=1-2]
+\end{tikzcd}\]
+proving that $x$ is rational over $k$.
+
+Considering again \eqref{eq:local_map_rationa}, we have the following commuting diagram:
+% https://q.uiver.app/#q=WzAsNSxbMCwwLCJcXG1hdGhjYWx7T31fe1gseH0iXSxbMSwwLCJrW1xcZXBzaWxvbl0vXFxlcHNpbG9uXjIiXSxbMCwxLCJcXGZyYWt7bX1feCJdLFsxLDEsIihcXGVwc2lsb24pKGtbXFxlcHNpbG9uXS9cXGVwc2lsb25eMikiXSxbMiwxLCJrIl0sWzMsNCwiXFxjb25nIl0sWzMsMV0sWzIsMF0sWzIsM10sWzAsMV1d
+\[\begin{tikzcd}
+	{\mathcal{O}_{X,x}} & {k[\epsilon]/\epsilon^2} \\
+	{\frak{m}_x} & {(\epsilon)(k[\epsilon]/\epsilon^2)} & k
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=2-1, to=1-1]
+	\arrow[from=2-1, to=2-2]
+	\arrow[from=2-2, to=1-2]
+	\arrow["\cong", from=2-2, to=2-3]
+\end{tikzcd}\]
+where the left-most bottom arrow has kernel $\frak{m}_x^2$, and the right most bottom arrow is a linear isomorphism. We thus obtain a morphism
+\begin{equation}
+    \frak{m}_x/\frak{m}_x^2 \lto k
+\end{equation}
+as required.
+
+Conversely, say we have a point $x \in X$ which is rational over $k$, along with an element $\alpha$ of $T_x$. We first note that $\operatorname{Spec}k[\epsilon]/(\epsilon^2)$ contains a single element $(\epsilon)$. So we obtain a morphism of topological spaces
+\begin{align*}
+    f: \operatorname{Spec}k[\epsilon]/(\epsilon^2) &\lto X\\
+    (\epsilon) &\longmapsto x.
+\end{align*}
+We then need to define a natural transformation
+\begin{equation*}
+    f^{\#}: \mathcal{O}_{X} \lto f_\ast(\mathcal{O}_{\operatorname{spec}k[\epsilon]/(\epsilon^2)}).
+\end{equation*}
+Notice that if $U \subseteq X$ is open an $x \not\in U$ then we necessarily have
+\begin{equation*}
+    f_\ast(\mathcal{O}_{\operatorname{spec}k[\epsilon]/(\epsilon^2)})(U) = 0.
+\end{equation*}
+On the other hand, if $x \in U$ then
+\begin{equation*}
+    f_\ast(\mathcal{O}_{\operatorname{spec}k[\epsilon]/(\epsilon^2)})(U) = k[\epsilon]/(\epsilon^2).
+\end{equation*}
+Thus, we only need to define a morphism
+\begin{equation}
+\label{eq:critical_morphism}
+    \psi: \mathcal{O}_{X,x} \lto k[\epsilon]/(\epsilon^2).
+\end{equation}
+To do this, we begin by considering the following short exact sequence
+\begin{equation*}
+    0\lto \frak{m}_x/\frak{m}_x^2 \lto \mathcal{O}_{X,x}/\frak{m}_x^2 \lto \mathcal{O}_{X,x}/\frak{m}_x \cong k \lto 0
+\end{equation*}
+where the isomorphism $\mathcal{O}_{X,x}/\frak{m}_x \cong k$ is due to $x$ being rational over $k$. Then we obtain the following decomposition:
+\begin{equation*}
+    \varphi: \mathcal{O}_{X,x}/\frak{m}_x^2 \cong k \oplus \frak{m}_x/\frak{m}_{x}^2.
+\end{equation*}
+Thus we can define \eqref{eq:critical_morphism} as follows: let $\rho: \mathcal{O}_{X,x} \lto \mathcal{X}_{X,x}/\frak{m}_x^2$ be the projection map. If $y \in \mathcal{O}_{X,x}$ and $(a,b) \in k \oplus \frak{m}_x/\frak{m}_x^2$ is such that $\varphi \rho (x) = (a,b)$, then
+\begin{equation*}
+    \psi(y) = a + \alpha(b)\epsilon \in k[\epsilon]/(\epsilon^2).
+\end{equation*}
+%
+\textbf{2.8}\\
+First we consider the case where $X = \operatorname{Spec}R$ is affine. We begin with a lemma:
+\begin{lemma}
+    Let $I \subseteq R$ be an ideal, then $V(\sqrt{I})$ is irreducible if and only if $\sqrt{I}$ is prime.
+\end{lemma}
+\begin{proof}
+    Say $V(\sqrt{I})$ is irreducible and let $ab \in \sqrt{I}$. Then
+    \begin{equation}
+        V(\sqrt{I}) \subseteq V(ab) = V(a) \cup V(b)
+    \end{equation}
+    which by irreducibility implies $V(\sqrt{I}) \subseteq V(a)$ or $V(\sqrt{I}) \subseteq V(b)$. Without loss of generality assume $V(\sqrt{I}) \subseteq V(a)$. Then $a$ is an element of every prime ideal containing $I$. Recall the general fact that
+    \begin{equation}
+        \sqrt{I} = \cap_{\frak{p} \stackrel{\text{prime}}{\supseteq}I}\frak{p}.
+    \end{equation}
+    Thus we have $a \in \sqrt{I}$.
+
+    Conversely, say $\sqrt{I} = \frak{p}$ is prime. Since $V(I) = V(\sqrt{I}) = V(\frak{p}) = \overline{\{\frak{p}\}}$ we have that $V(\sqrt{I})$ is the closure of a singleton set, which implies $V(\sqrt{I})$ is irreducible.
+\end{proof}
+Now we apply this to the case where $X = \operatorname{Spec}R$ is affine. Consider an irreducible closed subset $Z = V(I)$. Since this is irreducible, by the above lemma we have that $\sqrt{I}$ is prime. In fact, in that proof we showed $Z = \overline{\sqrt{I}}$. For uniqueness, if $\frak{p}_1, \frak{p}_2 \subseteq R$ are such that
+\begin{equation}
+    \overline{\{\frak{p}_1\}} = \overline{\{\frak{p}_2\}} = Z
+\end{equation}
+then $V(\frak{p}_1) = V(\frak{p}_2)$ which since $\frak{p}_1, \frak{p}_2$ are themselves prime, implies $\frak{p}_1 = \frak{p}_2$.
+
+Now assume $X$ is an arbitrary scheme and let $Z \subseteq X$ be a closed irreducible subset. Let $\{U_i\}_{i \in I}$ be an open affine cover. Let $i$ be such that $U_i \cap Z \neq \varnothing$. Then $U_i \cap Z$ is a closed subset of $U_i$ and so is itself affine. By the first half of this proof there therefore exists a unique generic point $\xi_i$ of $U_i \cap Z$.
+
+Now, if $i \neq j$, then we claim $\xi_i \in Z \cap U_j$. Assume otherwise. Then $\xi_i \in U_i \setminus U_j$ which is a closed subset of $U_i$, and so $\overline{\{\xi_i\}} = U_i \setminus U_j$. Consequently,
+\begin{equation}
+    Z \cap U \cap V = \overline{\{\xi_i\}} \cap U \cap V = \varnothing.
+\end{equation}
+However, $U,V$ are open subsets of irreducible $Z$, and so necessarily have non-empty intersection. Thus $\xi_i \in U_j$.
+
+So, if $V \subseteq U_i \cap U_j$ is an open affine, we have
+\begin{equation}
+    \overline{\xi_i} \cap V = (Z \cap U_i \cap U_j) \cap V = \overline{\xi_j} \cap V
+\end{equation}
+and so $\xi_i = \xi_j$ by the above. Let us write $\xi$ for the common element $\xi_i$, $i \in I$.
+
+We have
+\begin{equation*}
+    Z = \bigcup_{i \in I}(U_i \cap Z) = \bigcup_{i \in I}\overline{\{\xi_i\}} = \bigcup_{i \in I}\overline{\{\xi\}} = \overline{\{\xi\}},
+\end{equation*}
+proving existence.
+
+Lastly, if $Z = \overline{\xi} = \overline{\xi'}$ for some pair of generic points $\xi,\xi'$, then for any open affine $U$ we have
+\begin{equation}
+    Z \cap U = \overline{\xi} \cap U = \overline{\xi'} \cap U
+\end{equation}
+which implies $\xi = \xi'$ from uniqueness of the affine case.
+
+\textbf{2.11}\\
+We have:
+\begin{equation}
+    \operatorname{Spec}\mathbbm{F}_p[x] = \{(0)\} \cup \{(x-\alpha) \mid \alpha \in \mathbbm{F}_p\}
+\end{equation}
+The inclusion $\supseteq$ is clear as for all $\frak{p}$ in the set on the right, we have $\mathbbm{F}_p[x]/\frak{p}$ is either a field or an integral domain. The reverse inclusion follows from the fact that $\operatorname{dim}\mathbbm{F}_p[x] = \text{tr.deg}\mathbbm{F}_p = 1$.
+
+For the residue fields, let $\alpha \in \mathbbm{F}_p$ and consider $\frak{p} = (x-\alpha)$. Define
+\begin{align*}
+    \varphi: \mathbbm{F}_p[x] &\lto \mathbbm{F}_p\\
+    f &\longmapsto f(p)
+\end{align*}
+Then for all $\beta \not\in \frak{p}$ we have $\varphi(\beta) \neq 0$ and so $\varphi(\beta)$ is a unit. This induces the following
+\begin{align*}
+    \hat{\varphi}: (\mathbbm{F}_p[x])_{\frak{p}} &\lto \mathbbm{F}_p\\
+\end{align*}
+satisfying $\ker\hat{\varphi} = \frak{p}\mathbbm{F}_p[x]$. Noting that this morphism is surjective, we obtain an isomorphism:
+\begin{align*}
+    (\mathbbm{F}_p[x])_{\frak{p}}/\frak{p}\mathbbm{F}_p[x] \lto \mathbbm{F}_p.
+\end{align*}
+If $\frak{p} = (0)$, then clearly
+\begin{equation}
+    (\mathbbm{F}_p[x])_{\frak{p}}/\frak{p}\mathbbm{F}_p[x] = (\mathbbm{F}_p[x])_{(0)} = \operatorname{Frac}(\mathbbm{F}_p[x]).
+\end{equation}
+%
+\textbf{2.16}\\
+\textbf{a)}\\
+Let $\varphi: U \lto \operatorname{Spec}B$ be an isomorphism. For all $x$ we have an isomorphism $\call{O}_{X,x} \cong B_{\varphi(x)}$. Thus $f_x \not\in \frak{m}_x \Leftrightarrow \bar{f} \not\in \varphi(x)$ and so $U \cap X_f \cong D(\bar{f})$.\\\\
+%
+\textbf{b)}\\
+Let $\lbrace U_i = \operatorname{Spec}A_i\rbrace_{i= 1}^n$ be a finite open affine cover of $X$. From part $(a)$ we know $X_f \cap U_i = D(f_i)$, where $f_i$ is the image of $f$ under $A \lto A_i$, thus $a\restriction_{D(f_i)} = 0$ for all $i$, that is, $\frac{a\restriction_{U_i}}{1} = 0$ in $(A_i)_{f_i}$. Thus there exists $n_i >0$ such that $f_i^{n_i}a\restriction_{U_i} = 0$. Since there are finitely many $U_i$ we can set $n = \max_i{n_i}$ so that for each $i$ we have $f_i^n a\restriction_{U_i} = 0$. We then have by the sheaf condition that $f^n a= 0$.\\\\
+%
+\textbf{c)}\\
+We need to define an element $a \in \Gamma(X,\call{O}_X)$, we do this by defining an element of $A_i$ for each $i$ which agree on the overlaps. Consider $b\restriction_{X_f \cap U_i}$ for each $i$. We know that $X_f \cap U_i = D(f\restriction_{U_i})$ so we can write $b\restriction_{X_f \cap U_i} = \frac{a_i}{f\restriction_{U_i}^{n_i}} \in (A_i)_{f\restriction_{U_i}}$. Since there are finitely many $U_i$ we can write $n = \sum_i n_i$ and let $b_i = f\restriction_{U_i}^{n-n_i} a_i \in A_i$. Let $W_{ij} = X_f \cap U_i \cap U_j$ and notice that \[(b_i - b_j)\restriction_{W_{ij}} = (f^{n-n_i}f^{n_i}b-f^{n-n_j}f^{n_j}b)\restriction_{W_{ij}} = 0\]
+So by part $(b)$ there is $d_{ij}>0$ such that $f^{d_{ij}}(b_i - b_j)\restriction_{U_{i} \cap U_j} = 0$ as an element of $\Gamma(U_i \cap U_j, \call{O}_{U_i \cap U_j})$. Letting $d = \max_{i,j}\lbrace d_{ij}\rbrace$ we have $f^d(b_i - b_j)\restriction_{U_{i} \cap U_j} = 0$, so by the sheaf condition there is an element $a \in \Gamma(X,\call{O}_X)$ such that $a\restriction_{U_i} = f^db_i$ and $a\restriction_{X_f} = b$.\\\\
+%
+\textbf{2.17}\\
+\textbf{a)}\\
+The collection of continuous functions $(f\restriction_{U_i})^{-1}: U_i \lto f^{-1}(U_i) \rightarrowtail X$ agree on overlaps as they are the inverse of restrictions of a common function. Thus we obtain a continuous function $Y \to X$ which is locally an inverse and thus an inverse to $f$.
+
+Let $g_i$ denote the inverse of $f^{\#}\restriction_{U_i}: \call{O}_Y\restriction_{U_i} \lto f_\ast\call{O}_X\restriction_{U_i}$. We need to show that $(g_i)_{U_i \cap U_j} = (g_j)_{U_i \cap U_j}$. Both of these maps are equal to $(f^{\#}\restriction_{U_i \cap U_j})^{-1}$ so we are done.\\\\
+%
+Notice that a corollary of the proof of this exercise is the following:
+\begin{lemma}
+Let $\lbrace U_i \rbrace$ be an open cover of $Y$ and $f_i: X\restriction_{f^{-1}(U_i)} \to Y\restriction_{U_i}$ a collection of scheme morphisms such that $(f_i)\restriction_{U_i \cap U_j} = (f_j)\restriction_{U_i \cap U_j}$. Then there exists a morphism $f: X \to Y$ such that $f\restriction_{U_i} = f_i$. Moreover, $f$ is an isomorphism if and only if all the $f_i$ are.
+\end{lemma}
+\textbf{b)}\\
+For any sheaf $X$ there is the unit map $X \lto \operatorname{Spec}\Gamma(X,\call{O}_X)$. This morphism is an isomorphism if $X$ is affine, thus we have a collection of isomorphisms $X_{f_i} \lto \operatorname{Spec}\Gamma(X_{f_i},\call{O}_{X_{f_i}})$. Since $f_1,...,f_r$ generate $1$ we have that $\operatorname{Spec}X_{f_i}$ cover $\operatorname{Spec}X$. The result then follows from part $(a)$.
+\\\\
+\textbf{2.18b)}\\
+We let $\hat{\varphi}: \operatorname{Spec}B \lto \operatorname{Spec}A$ denote the continuous map induced by $\varphi:A \lto B$. Assume that $\varphi$ is injective. As the collection $\lbrace D(f)\rbrace_{f \in A}$ form a base for the topology on $\operatorname{Spec}A$, it suffices to show that for all $f\in A$, the morphism $\hat{\varphi}^{\#}_{D(f)}: \call{O}_{\operatorname{Spec}A}D(f) \lto \hat{\varphi}_\ast\call{O}_{\operatorname{Spec}B}D(f) = \call{O}_{\operatorname{Spec}B}D(\varphi(f))$ is injective. Let $f\in A$. It's easy to show that since $\varphi:A \lto B$ is injective, so is $\varphi_f: A_f \lto B_{\varphi(f)}$. Thus it remains to show commutativity of the following diagram:
+\[
+\begin{tikzcd}
+\call{O}_{\operatorname{Spec}A}D(f)\arrow[r,"{\hat{\varphi}^{\#}_{D(f)}}"] & \call{O}_{\operatorname{Spec}B}D(\varphi(f))\\
+A_f\arrow[r,swap,"{\varphi_f}"]\arrow[u,"{\cong}"] & B_{\varphi(f)}\arrow[u,swap,"{\cong}"]
+\end{tikzcd}
+\]
+Which can be established by a direct calculation.
+%
+\subsection{\S 3}
+\begin{exercise}
+Hartshorne 3.1
+\end{exercise}
+\begin{proof}
+We use the following fact from commutative algebra:
+\begin{lemma}\label{lem:algebra_fin_gen}
+Let $A,B$ be rings and $f \in A$ an element of $A$. Then $B$ is a finitely generated $A$-algebra if and only if it is a finitely generated $A_f$-algebra. (Note: we mean finitely generated as \emph{algebras}, the corresponding statement for modules is false)
+\end{lemma}
+Throughout, a \emph{cover} of an open set $U$ means a collection of open subsets $\lbrace U_i \subseteq U\rbrace_{i \in I}$ of $U$ such that $\bigcup_{i \in I}U_i$ = U. For an open affine subset $U = \operatorname{Spec}A$ of $Y$ let $P(U)$ be the proposition ``there exists a cover $\lbrace \operatorname{Spec}B_i\rbrace_{i\in I}$ of $f^{-1}(U)$ such that each $B_i$ is a finitely generated $A$-algebra". Let $\lbrace U_i = \operatorname{Spec}A_i\rbrace_{i \in I}$ be an open affine cover of $Y$ such that $P(U_i)$ holds for each $i$, and let $U = \operatorname{Spec}A$ be an open affine subset of $Y$. First we show that $U$ can be covered by open affines $\lbrace U_i\rbrace_{i \in I}$ satisfying $P(U_i)$ for each $i$.
+
+Fix $i \in I$, let $\lbrace \operatorname{Spec}B_{ij}\rbrace_{j \in J}$ be a cover of $f^{-1}(U_i)$ such that each $B_{ij}$ is a finitely generated $A_i$-algebra, and let $a_i \in A_i$ be such that $D(a_i) \subseteq U_i$.  Let $\varphi_{ij}: A_i \to B_{ij}$ be the ring homomorphism corresponding to the scheme morphism $\operatorname{Spec}B_{ij} \to \operatorname{Spec}A_i$. $B_{ij}$ is a finitely generated $A_{i}$-algebra, so by Lemma \ref{lem:algebra_fin_gen}, $B_{ij,\varphi_{ij}(a_i)}$ is a finitely generated $A_{i}$-algebra. The collection $\lbrace \operatorname{Spec}B_{ij,\varphi_{ij}(a_i)}\rbrace$ cover $f^{-1}(D(a_i))$ and so proposition $P(D(a_i))$ holds.
+
+We now have the following statement to prove: let $U = \operatorname{Spec}A \subseteq Y$ be an open affine subset of $Y$ which can be covered by open affines $U_i = \operatorname{Spec}A_i$ such that $P(U_i)$ holds for all $i$, then $P(U)$ holds. But this follows easily from Lemma \ref{lem:algebra_fin_gen}.
+\end{proof}
+%
+\begin{exercise}[Hartshorne 3.14]
+Let $X$ be a scheme of finite type over a field $k$. Then the closed points of $X$ are dense.
+\end{exercise}
+\begin{proof}
+We cover $X$ by finitely many open affines $\lbrace U_i = \operatorname{Spec}A_i\rbrace_{i = 1}^n$ where each $A_i$ is a finitely generated $k$-algebra. Notice that by Theorem \ref{thm:fin_gen_jacob} each $A_i$ is jacobson. Fix an $i$ and let $f \in A_i$ be such that $D(f) \subseteq U_i$. Assume that $x$ is closed in $D(f)$, that is, $x$ is a maximal ideal of $(A_i)_f$. We show first that $x$ is closed in $X$. The inclusion $D(f) \subseteq \operatorname{Spec}A_i$ induces a ring homomorphism $A_i \to (A_i)_f$ which in fact is a $k$-algebra homomorphism as $X$ is over $k$. Combining this with the fact that $(A_i)_f$ is a finitely generated $k$-algebra gives that $(A_i)_f$ is a finitely generated $A_i$-algebra and so the preimage of $x$ in $A_i$ is maximal, by Theorem \ref{thm:jacob_preimage}. This holds for any $i$, and so $x$ is closed in all $U_i \ni x$, and thus is closed in $X$ (\textcolor{red}{this step here doesn't seem to require that there were finitely many such $U_i$}\footnote{\begin{remark}[Why the point is closed in $X$]
+Being closed in an open subscheme does \emph{not} automatically imply being closed in $X$ in general topological spaces
+(or even in general schemes). Here is the correct finite type argument:
+
+If $X$ is of finite type over a field $k$ and $x\in X$ corresponds (in some affine neighbourhood) to a maximal ideal,
+then $\kappa(x)$ is a finite extension of $k$ (Zariski's Lemma).
+Let $Z=\overline{\{x\}}$ be the closure of $x$ in $X$. Then $Z$ is integral and of finite type over $k$,
+with function field $\kappa(x)$. Hence
+\[
+\dim Z=\operatorname{tr.deg}_k \kappa(x)=0,
+\]
+so $Z$ is a single point and $x$ is closed in $X$.
+
+Also, quasi-compactness of $X$ (automatic for finite type over $k$) lets one take a finite affine cover,
+but finiteness of the cover is not the subtle point; the closure argument above is.
+\end{remark}}). It thus suffices to show that every $D(f)$ contains a maximal ideal. If $f$ is contained in every maximal ideal then it is nilpotent (Lemma \ref{lem:jacob_easy}) and thus $D(f)$ is empty.
+\end{proof}
+
+%============================================================
+% Appendix: Corrected Solutions (copy/paste at end of document)
+%============================================================
+\appendix
+
+\section{Corrections}
+
+%--------------------------
+% Chapter I, \S 1
+%--------------------------
+\subsection{Chapter I, \S 1}
+
+\textbf{1.4}: 
+We compare the Zariski topology on $\mathbb A^2$ with the product of the Zariski topologies on
+$\mathbb A^1\times \mathbb A^1$.
+
+Let
+\[
+\Delta:=\{(t,t)\mid t\in k\}\subset \mathbb A^1\times \mathbb A^1.
+\]
+Viewed as a subset of $\mathbb A^2$, we have $\Delta=Z(y-x)$, hence $\Delta$ is Zariski-closed in $\mathbb A^2$.
+
+We claim $\Delta$ is \emph{not} closed in the product Zariski topology.
+Equivalently, $\mathbb A^1\times \mathbb A^1\setminus \Delta$ is not open in the product topology.
+Any nonempty basic open set in the product topology has the form $U\times V$, where $U,V\subset \mathbb A^1$ are nonempty
+Zariski-open subsets, hence $U=\mathbb A^1\setminus F$ and $V=\mathbb A^1\setminus G$ for finite sets $F,G$.
+Since $k$ is infinite, $U\cap V$ is nonempty, so choose $t\in U\cap V$. Then $(t,t)\in (U\times V)\cap \Delta$.
+Thus \emph{every} nonempty basic open $U\times V$ meets $\Delta$, so no union of such opens can equal the complement of $\Delta$.
+Hence $\Delta$ is not closed in the product topology, and the two topologies differ.
+
+
+%--------------------------
+% Chapter I, \S 2
+%--------------------------
+\subsection{Chapter I, \S 2}
+
+\textbf{2.2}:
+Let $\mathfrak a\subset S=k[x_0,\dots,x_n]$ be a homogeneous ideal and let $S_+=(x_0,\dots,x_n)$.
+
+We prove the equivalences:
+\begin{enumerate}
+\item[(i)] $Z_{\mathbb P^n}(\mathfrak a)=\varnothing$;
+\item[(ii)] $\sqrt{\mathfrak a}\supseteq S_+$ (equivalently $\sqrt{\mathfrak a}=S_+$ or $\sqrt{\mathfrak a}=S$);
+\item[(iii)] $\mathfrak a\supseteq S_d$ for some $d>0$.
+\end{enumerate}
+
+\emph{(i)$\Rightarrow$(ii).}
+If $Z_{\mathbb P^n}(\mathfrak a)=\varnothing$, then the affine zero set $Z_{\mathbb A^{n+1}}(\mathfrak a)$
+is either empty or $\{0\}$.
+If $Z_{\mathbb A^{n+1}}(\mathfrak a)=\varnothing$, then by the affine Nullstellensatz $\sqrt{\mathfrak a}=S$.
+If $Z_{\mathbb A^{n+1}}(\mathfrak a)=\{0\}$, then $\sqrt{\mathfrak a}=I(\{0\})=S_+$.
+In either case $\sqrt{\mathfrak a}\supseteq S_+$.
+
+\emph{(ii)$\Rightarrow$(iii).}
+Assume $\sqrt{\mathfrak a}\supseteq S_+$.
+Then in $R:=S/\mathfrak a$ each $\overline{x_i}$ is nilpotent, so the ideal
+\[
+\overline{S_+}=(\overline{x_0},\dots,\overline{x_n})\subset R
+\]
+is a nil ideal.
+Since $R$ is Noetherian, every nil ideal is nilpotent, hence $(\overline{S_+})^m=0$ for some $m$.
+Pulling back to $S$ gives $(S_+)^m\subset \mathfrak a$.
+In particular, the degree-$m$ part satisfies $S_m\subset (S_+)^m\subset \mathfrak a$, so (iii) holds.
+
+\emph{(iii)$\Rightarrow$(i).}
+If $S_d\subset \mathfrak a$ for some $d>0$ and $P=[p_0:\cdots:p_n]\in \mathbb P^n$,
+choose $i$ with $p_i\neq 0$.
+Then $x_i^d\in S_d\subset \mathfrak a$ but $x_i^d(P)=p_i^d\neq 0$, so $P\notin Z_{\mathbb P^n}(\mathfrak a)$.
+Hence $Z_{\mathbb P^n}(\mathfrak a)=\varnothing$.
+
+
+\bigskip
+
+\textbf{2.6}:
+Let $S=k[x_0,\dots,x_n]$ and let $Y\subset \mathbb P^n$ be a projective variety with homogeneous ideal $I(Y)$.
+Set $R:=S(Y)=S/I(Y)$.
+
+\medskip
+\textbf{Claim 1.} For each $i$,
+\[
+A(Y\cap U_i)\;\cong\; (R_{x_i})_0,
+\]
+where $(R_{x_i})_0$ denotes the degree-$0$ part of the graded localization.
+
+\begin{proof}
+On $U_i=\{x_i\neq 0\}$ write $u_j=x_j/x_i$ ($j\neq i$). Dehomogenization at $x_i$ gives a surjection
+\[
+(S_{x_i})_0 \twoheadrightarrow k[u_0,\dots,\widehat{u_i},\dots,u_n],
+\]
+and one checks that the kernel is exactly $(I(Y)S_{x_i})_0$ (a homogeneous polynomial vanishes on $Y$ iff its
+dehomogenization vanishes on $\varphi_i(Y\cap U_i)$).
+Therefore
+\[
+(R_{x_i})_0 \;=\; ((S/I(Y))_{x_i})_0 \;\cong\; (S_{x_i})_0/(I(Y)S_{x_i})_0 \;\cong\; A(Y\cap U_i).
+\]
+\end{proof}
+
+\medskip
+\textbf{Claim 2.} If $Y$ is irreducible of dimension $r$, then $\dim R=r+1$.
+
+\begin{proof}
+Choose $i$ such that $Y\cap U_i\neq\varnothing$. Then $Y\cap U_i$ is nonempty open in $Y$, hence $\dim(Y\cap U_i)=r$.
+Since $Y$ is irreducible, $R$ is a finitely generated $k$-domain and so is $(R_{x_i})_0\cong A(Y\cap U_i)$.
+For finitely generated $k$-domains, $\dim(\cdot)=\operatorname{tr.deg}_k\operatorname{Frac}(\cdot)$.
+
+Because $x_i$ is homogeneous of degree $1$, there is an isomorphism of graded rings
+\[
+R_{x_i}\;\cong\; (R_{x_i})_0[x_i,x_i^{-1}],
+\]
+so on fraction fields,
+\[
+\operatorname{Frac}(R)\cong \operatorname{Frac}(R_{x_i})\cong \operatorname{Frac}((R_{x_i})_0)(x_i).
+\]
+Hence
+\[
+\operatorname{tr.deg}_k\operatorname{Frac}(R)
+=
+\operatorname{tr.deg}_k\operatorname{Frac}((R_{x_i})_0)+1
+=
+\dim (R_{x_i})_0 +1
+=
+\dim(Y\cap U_i)+1
+=
+r+1,
+\]
+so $\dim R=r+1$.
+\end{proof}
+
+\bigskip
+
+\textbf{2.7(b)}:
+Let $Y\subset \mathbb P^n$ be a quasi-projective variety (hence locally closed), and let $\overline Y$ be its closure in $\mathbb P^n$.
+Since $Y$ is locally closed, there exists an open $U\subset \mathbb P^n$ such that $Y=\overline Y\cap U$.
+Thus $Y$ is a nonempty open subset of the irreducible closed set $\overline Y$.
+By Proposition I.1.10 (dimension is unchanged upon passing to a nonempty open subset),
+\[
+\dim Y = \dim \overline Y.
+\]
+
+\bigskip
+
+\textbf{2.9(b)} (twisted cubic closure):
+Let $Y\subset \mathbb A^3$ be the affine curve $t\mapsto (t,t^2,t^3)$ and let $\overline Y\subset \mathbb P^3$ be its projective closure.
+Write homogeneous coordinates on $\mathbb P^3$ as $[w:x:y:z]$, so that $Y$ sits in the chart $w\neq 0$ via
+\[
+t\longmapsto [1:t:t^2:t^3].
+\]
+
+\medskip
+\textbf{Claim.} 
+\[
+I(\overline Y)=(wy-x^2,\; wz-xy,\; xz-y^2)\subset k[w,x,y,z].
+\]
+
+\begin{proof}
+Let $S=k[w,x,y,z]$ and consider the graded map
+\[
+\psi:S\to k[s,t],\qquad
+w\mapsto t^3,\; x\mapsto st^2,\; y\mapsto s^2t,\; z\mapsto s^3,
+\]
+corresponding to the $3$-uple embedding $\mathbb P^1\to\mathbb P^3$.
+Let $J=\ker\psi$, so $\overline Y=Z_{\mathbb P^3}(J)$.
+
+Set $f_1=wy-x^2$, $f_2=wz-xy$, $f_3=xz-y^2$ and $I=(f_1,f_2,f_3)$.
+A direct computation shows $\psi(f_i)=0$, so $I\subseteq J$.
+
+We compute Hilbert series. The polynomials $f_1,f_2,f_3$ satisfy two linear syzygies:
+\[
+(-y)f_1 + x f_2 + (-w)f_3 = 0,\qquad
+z f_1 + (-y)f_2 + x f_3 = 0,
+\]
+giving a graded free resolution
+\[
+0\to S(-3)^2 \to S(-2)^3 \to S \to S/I \to 0.
+\]
+Hence
+\[
+H_{S/I}(t)=\frac{1-3t^2+2t^3}{(1-t)^4}=\frac{(1-t)^2(1+2t)}{(1-t)^4}=\frac{1+2t}{(1-t)^2},
+\]
+so $\dim_k(S/I)_m=3m+1$ for all $m\ge 0$.
+
+On the other hand, $\operatorname{im}\psi$ is the $3$-rd Veronese subring $k[s,t]^{(3)}=\bigoplus_{m\ge 0}k[s,t]_{3m}$,
+whose degree-$m$ piece has dimension $3m+1$. Thus $H_{\operatorname{im}\psi}(t)=\frac{1+2t}{(1-t)^2}$ as well.
+Since $S/I\twoheadrightarrow \operatorname{im}\psi$ is a graded surjection with equal Hilbert series, it is an isomorphism.
+Therefore $\ker\psi=I$, i.e. $J=I$.
+\end{proof}
+
+\bigskip
+
+\textbf{2.12} (Veronese embedding, corrected):
+Let $S=k[x_0,\dots,x_n]$ and let $M_0,\dots,M_N$ be the degree-$d$ monomials in $S$.
+Define $\rho_d:\mathbb P^n\to \mathbb P^N$ by
+\[
+\rho_d([x_0:\cdots:x_n])=[M_0(x):\cdots:M_N(x)].
+\]
+Let $T=k[y_0,\dots,y_N]$ and define the graded map
+\[
+\theta:T\to S,\qquad y_i\mapsto M_i.
+\]
+Let $\mathfrak a=\ker\theta$.
+
+\medskip
+\textbf{(a)} $\mathfrak a$ is homogeneous and prime:
+$\theta$ multiplies degrees by $d$, so $\ker\theta$ is homogeneous, and $T/\mathfrak a\cong \operatorname{im}\theta\subset S$ is a domain.
+
+\medskip
+\textbf{(b)} \textbf{Claim.} $I(\rho_d(\mathbb P^n))=\mathfrak a$, hence $\rho_d(\mathbb P^n)=Z(\mathfrak a)$ (image is closed).
+
+\begin{proof}
+If $F\in\mathfrak a$, then for all $P\in\mathbb P^n$,
+\[
+F(\rho_d(P))=F(M_0(P),\dots,M_N(P))=(\theta F)(P)=0,
+\]
+so $\mathfrak a\subseteq I(\rho_d(\mathbb P^n))$.
+
+Conversely, let $F\in I(\rho_d(\mathbb P^n))$ be homogeneous. Then $(\theta F)(P)=0$ for all $P\in\mathbb P^n$.
+Thus $\theta F$ is a homogeneous polynomial in $S$ vanishing on all of $\mathbb P^n$, hence vanishing on $k^{n+1}\setminus\{0\}$,
+and by homogeneity also at $0$. Since $k$ is infinite, this forces $\theta F=0$, i.e. $F\in\ker\theta=\mathfrak a$.
+\end{proof}
+
+\medskip
+\textbf{(c)} \textbf{Injective.}
+If $\rho_d(P)=\rho_d(Q)$, choose $i$ such that $P\in U_i$ and $Q\in U_i$.
+In the chart of $\mathbb P^N$ where the coordinate corresponding to $x_i^d$ is nonzero, we can recover
+\[
+\frac{x_j}{x_i}=\frac{x_i^{d-1}x_j}{x_i^d}
+\]
+as a ratio of coordinates of $\rho_d(P)$ (and similarly for $Q$). Hence all ratios $x_j/x_i$ agree and $P=Q$.
+
+\medskip
+\textbf{(c') Homeomorphism onto image.}
+By (b) the image is closed, and by the chart description above $\rho_d$ restricts on each $U_i$ to a morphism of affine varieties
+which is injective and identifies $U_i$ homeomorphically with a closed subset of the corresponding affine chart of $\mathbb P^N$.
+Since the $U_i$ cover $\mathbb P^n$, it follows that $\rho_d$ is a homeomorphism onto the closed subset $Z(\mathfrak a)$.
+
+\medskip
+\textbf{(d)} For $(n,d)=(1,3)$ one has
+\[
+\rho_3([s:t])=[s^3:s^2t:st^2:t^3]\subset \mathbb P^3,
+\]
+and the kernel ideal is the twisted cubic ideal
+\[
+\ker\theta=(wy-x^2,\; wz-xy,\; xz-y^2).
+\]
+
+\bigskip
+
+\textbf{2.15(a)} (Segre $\mathbb P^1\times\mathbb P^1\to\mathbb P^3$ kernel):
+Let $S=k[z_{00},z_{01},z_{10},z_{11}]$ and $T=k[x_0,x_1,y_0,y_1]$.
+Define
+\[
+\theta:S\to T,\qquad z_{ij}\mapsto x_i y_j,
+\]
+and let $\Delta=z_{00}z_{11}-z_{01}z_{10}$.
+
+\medskip
+\textbf{Claim.} $\ker\theta=(\Delta)$.
+
+\begin{proof}
+We have $\Delta\in\ker\theta$ since
+\[
+\theta(\Delta)=(x_0y_0)(x_1y_1)-(x_0y_1)(x_1y_0)=0,
+\]
+so $(\Delta)\subseteq\ker\theta$.
+
+The image of $\theta$ is the diagonal bihomogeneous subring
+\[
+R:=\bigoplus_{d\ge 0} T_{(d,d)},
+\]
+so $\theta$ induces a graded surjection $S/(\Delta)\twoheadrightarrow R$.
+
+Compute Hilbert functions. For $d\ge 0$,
+\[
+\dim_k R_d=\dim_k T_{(d,d)}=(d+1)(d+1)=(d+1)^2.
+\]
+Also
+\[
+\dim_k(S/(\Delta))_d=\dim_k S_d-\dim_k S_{d-2}=\binom{d+3}{3}-\binom{d+1}{3}=(d+1)^2.
+\]
+Thus the induced graded surjection is an isomorphism in every degree, hence $\ker\theta=(\Delta)$.
+\end{proof}
+
+%--------------------------
+% Chapter I, \S 3
+%--------------------------
+\subsection{Chapter I, \S 3}
+
+\textbf{3.6}:
+Let $X=\mathbb A^2\setminus\{(0,0)\}$ over an algebraically closed field $k$.
+
+\medskip
+\textbf{Claim 1.} $\Gamma(X,\mathcal O_X)=k[x,y]$.
+
+\begin{proof}
+Cover $X$ by $D(x)$ and $D(y)$. Then
+\[
+\Gamma(D(x),\mathcal O)=k[x,y]_x,\qquad \Gamma(D(y),\mathcal O)=k[x,y]_y,
+\]
+and on the overlap $D(xy)$,
+\[
+\Gamma(D(xy),\mathcal O)=k[x,y]_{xy}.
+\]
+By the sheaf condition,
+\[
+\Gamma(X,\mathcal O)=k[x,y]_x\cap k[x,y]_y \subset k(x,y).
+\]
+Take $f\in k[x,y]_x\cap k[x,y]_y$. Write $f=a/x^m=b/y^n$ with $a,b\in k[x,y]$.
+Then $y^n a=x^m b$. Since $k[x,y]$ is a UFD and $(x,y)=1$, we have $x^m\mid a$.
+Write $a=x^m c$, so $f=c\in k[x,y]$. Hence the intersection equals $k[x,y]$.
+\end{proof}
+
+\medskip
+\textbf{Claim 2.} $X$ is not affine.
+
+\begin{proof}
+If $X$ were affine, then $X\cong \operatorname{Spec}\Gamma(X,\mathcal O_X)\cong \operatorname{Spec}k[x,y]=\mathbb A^2$,
+contradiction since $X\neq \mathbb A^2$ (it is missing a closed point).
+\end{proof}
+
+\bigskip
+
+\textbf{3.8} (correct statement):
+\[
+\Gamma(\mathbb P^n,\mathcal O_{\mathbb P^n})=k.
+\]
+
+\begin{proof}
+Let $f\in \Gamma(\mathbb P^n,\mathcal O)$.
+In the function field $K(\mathbb P^n)$ we can write $f=F/G$ with $F,G\in k[x_0,\dots,x_n]$ homogeneous of equal degree and
+$\gcd(F,G)=1$.
+Since $f$ is regular everywhere, $G$ is nowhere zero on $\mathbb P^n$.
+If $\deg G>0$, then $Z(G)\subset \mathbb P^n$ is a nonempty hypersurface (over an algebraically closed field), contradiction.
+Hence $\deg G=0$, so $G\in k^\times$, and then $\deg F=0$ as well, so $F\in k$.
+Thus $f\in k$.
+\end{proof}
+
+\bigskip
+
+\textbf{3.15(d)} (dimension of product):
+Let $X,Y$ be irreducible affine varieties over $k$ with coordinate rings $A=A(X)$ and $B=A(Y)$.
+Then $A,B$ are finitely generated $k$-domains and
+\[
+A(X\times Y)\cong A\otimes_k B.
+\]
+We show $\dim(A\otimes_k B)=\dim A+\dim B$.
+
+\begin{proof}
+Let $r=\dim A$ and $s=\dim B$.
+By Noether normalization, there exist algebraically independent elements $u_1,\dots,u_r\in A$ such that
+$A$ is integral over $k[u_1,\dots,u_r]$, and similarly $v_1,\dots,v_s\in B$ such that
+$B$ is integral over $k[v_1,\dots,v_s]$.
+
+Set $R:=k[u_1,\dots,u_r,v_1,\dots,v_s]\cong k[u_1,\dots,u_r]\otimes_k k[v_1,\dots,v_s]$.
+The natural map $R\to A\otimes_k B$ (sending $u_i\mapsto u_i\otimes 1$, $v_j\mapsto 1\otimes v_j$) is injective.
+
+Since $A$ is integral over $k[u]$, each $a\otimes 1\in A\otimes B$ is integral over $R$.
+Similarly, each $1\otimes b$ is integral over $R$.
+Because $A\otimes_k B$ is generated over $R$ by $A\otimes 1$ and $1\otimes B$, it follows that $A\otimes_k B$ is integral over $R$.
+
+Integral extensions preserve Krull dimension, hence
+\[
+\dim(A\otimes_k B)=\dim R=r+s=\dim A+\dim B.
+\]
+Therefore $\dim(X\times Y)=\dim X+\dim Y$.
+\end{proof}
+
+\bigskip
+
+\textbf{3.17(b)} (quadric surface is normal):
+Let $Q\subset \mathbb P^3$ be $Q=Z(x_0x_1-x_2x_3)$.
+
+\begin{proof}
+Let $F=x_0x_1-x_2x_3$. Then
+\[
+\partial_{x_0}F=x_1,\quad \partial_{x_1}F=x_0,\quad \partial_{x_2}F=-x_3,\quad \partial_{x_3}F=-x_2.
+\]
+These vanish simultaneously only at $(0,0,0,0)$, which is not a point of $\mathbb P^3$.
+Hence $Q$ is nonsingular.
+
+All local rings of a nonsingular variety are regular local domains, hence integrally closed.
+Therefore $Q$ is normal.
+\end{proof}
+
+\bigskip
+
+\textbf{3.17(c)} (cusp is not normal):
+Let $C=Z(y^2-x^3)\subset \mathbb A^2$ and $P=(0,0)$.
+Set $A=k[x,y]/(y^2-x^3)$ and localize at $\mathfrak m=(x,y)$.
+
+\begin{proof}
+Embed $A$ into $k[t]$ via $x\mapsto t^2$, $y\mapsto t^3$, identifying $A\cong k[t^2,t^3]$.
+Under this embedding, $A_{\mathfrak m}$ maps into $k[t]_{(t)}$ and consists of fractions
+\[
+\frac{f(t^2,t^3)}{g(t^2,t^3)}\quad\text{with }g(0)\neq 0.
+\]
+Let $u:=y/x\in \operatorname{Frac}(A)$. In $k(t)$ this is $u=t^3/t^2=t$.
+Moreover $u$ is integral over $A_{\mathfrak m}$ since
+\[
+u^2 = \frac{y^2}{x^2}=\frac{x^3}{x^2}=x,
+\]
+so $u$ satisfies the monic polynomial $T^2-x\in A_{\mathfrak m}[T]$.
+
+We claim $u\notin A_{\mathfrak m}$. Indeed, any element of $A_{\mathfrak m}$ has the form
+$f(t^2,t^3)/g(t^2,t^3)$ with $g(0)\neq 0$.
+Expanding in $k[[t]]$, both $f(t^2,t^3)$ and $g(t^2,t^3)$ involve only exponents in the semigroup
+$\langle 2,3\rangle=\{0,2,3,4,5,\dots\}$, hence have no $t^1$ term.
+Since $g(0)\neq 0$, $1/g(t^2,t^3)$ is a power series also with no $t^1$ term.
+Therefore the product $f/g$ has no $t^1$ term.
+But $u=t$ \emph{does} have a $t^1$ term, contradiction.
+Thus $u\notin A_{\mathfrak m}$.
+
+Hence $A_{\mathfrak m}$ is not integrally closed, so $C$ is not normal at $P$.
+\end{proof}
+
+%--------------------------
+% Chapter II, \S 1
+%--------------------------
+\subsection{Chapter II, \S 1}
+
+\textbf{1.1} (constant sheaf):
+Let $A$ be an abelian group. Let $C_A$ denote the constant presheaf:
+$C_A(\varnothing)=0$ and $C_A(U)=A$ for $U\neq\varnothing$, with restriction maps the identity.
+Let $\mathscr A$ denote the constant sheaf associated to $A$.
+
+\medskip
+\textbf{Claim.} If $U=\bigsqcup_{i\in I}U_i$ is the decomposition of $U$ into connected components, then
+\[
+\mathscr A(U)\cong \prod_{i\in I} A.
+\]
+
+\begin{proof}
+A section of $\mathscr A$ over $U$ is a locally constant map $s:U\to A$.
+Any locally constant map is constant on each connected component $U_i$, hence determines an element $a_i\in A$ for each $i$.
+Conversely, given $(a_i)_{i\in I}\in \prod_{i\in I}A$, define $s$ by $s|_{U_i}\equiv a_i$; this is locally constant.
+These constructions are inverse and are compatible with restriction maps, giving the desired identification.
+
+In particular, if $U$ is connected then $\mathscr A(U)\cong A$.
+Moreover, one checks directly from the sheafification universal property that $C_A^+$ is precisely this sheaf of locally constant
+$A$-valued functions, so $C_A^+\cong \mathscr A$.
+\end{proof}
+
+%--------------------------
+% Chapter II, \S 2
+%--------------------------
+\subsection{Chapter II, \S 2}
+
+\textbf{2.11}:
+Let $k=\mathbb F_p$ and consider $k[x]$.
+
+\medskip
+\textbf{Prime ideals.}
+Since $k[x]$ is a PID, every nonzero prime ideal is generated by an irreducible polynomial.
+Thus
+\[
+\operatorname{Spec}(k[x])=\{(0)\}\ \cup\ \{(f)\mid f\in k[x]\ \text{irreducible}\}.
+\]
+The generic point is $(0)$, and the closed points are exactly the maximal ideals $(f)$ with $f$ irreducible.
+
+\medskip
+\textbf{Residue fields.}
+If $\mathfrak p=(f)$ with $f$ irreducible of degree $d$, then
+\[
+k(\mathfrak p)\cong k[x]/(f)\cong \mathbb F_{p^{d}}.
+\]
+If $\mathfrak p=(0)$, then
+\[
+k(\mathfrak p)=\operatorname{Frac}(k[x])=k(x).
+\]
+
+\section{B\'ezout's Theorem (plane curves)}
+\label{sec:bezout}
+
+\begin{thm}
+Let $k$ be algebraically closed and let $F,G\in k[x,y,z]$ be homogeneous polynomials of degrees
+$m=\deg F$ and $n=\deg G$. Assume $F$ and $G$ have no common component (equivalently, $\gcd(F,G)=1$ in $k[x,y,z]$).
+Let
+\[
+Z = Z_{\bb{P}^2}(F)\cap Z_{\bb{P}^2}(G)=\operatorname{Proj}\big(k[x,y,z]/(F,G)\big).
+\]
+Then $Z$ is $0$-dimensional and
+\[
+\sum_{P\in |Z|}\operatorname{length}_{\mathcal{O}_{\bb{P}^2,P}}\big(\mathcal{O}_{\bb{P}^2,P}/(F,G)\big)=mn.
+\]
+In particular, the set-theoretic intersection is finite.
+\end{thm}
+
+\begin{proof}
+Let $S=k[x,y,z]$.
+Since $F\neq 0$ and $S$ is a domain, multiplication by $F$ is injective, giving the graded exact sequence
+\[
+0\to S(-m)\xrightarrow{\cdot F} S \to S/(F)\to 0.
+\]
+Hence
+\[
+H_{S/(F)}(t)=(1-t^m)H_S(t).
+\]
+
+We claim that $G$ is not a zero-divisor in $S/(F)$.
+Indeed, if $HG\in (F)$ in $S$ with $H\notin (F)$, then $F\mid HG$.
+Since $\gcd(F,G)=1$ in the UFD $S$, it follows that $F\mid H$, contradiction. Thus multiplication by $G$ on $S/(F)$ is injective.
+
+Therefore we have another graded exact sequence
+\[
+0\to (S/(F))(-n)\xrightarrow{\cdot G} S/(F) \to S/(F,G)\to 0,
+\]
+so
+\[
+H_{S/(F,G)}(t)=(1-t^n)H_{S/(F)}(t)=(1-t^m)(1-t^n)H_S(t).
+\]
+Since $H_S(t)=\frac{1}{(1-t)^3}$, we get
+\[
+H_{S/(F,G)}(t)=\frac{(1-t^m)(1-t^n)}{(1-t)^3}.
+\]
+
+Let $h(d)=\dim_k (S/(F,G))_d$ be the Hilbert function.
+For $d\gg 0$, $h(d)$ equals the Hilbert polynomial, and because $Z$ is $0$-dimensional this polynomial is constant
+and equals $\deg(Z)$ (the degree/length of the $0$-dimensional projective scheme).
+
+Using $\dim_k S_d=\binom{d+2}{2}$ and the above Hilbert series identity, for all $d\gg 0$ one has
+\[
+h(d)=\binom{d+2}{2}-\binom{d-m+2}{2}-\binom{d-n+2}{2}+\binom{d-m-n+2}{2}=mn.
+\]
+Hence $\deg(Z)=mn$.
+
+Finally, for a $0$-dimensional projective scheme, the degree equals the sum of the lengths of the local rings at its points:
+\[
+\deg(Z)=\sum_{P\in |Z|}\operatorname{length}_{\mathcal{O}_{\bb{P}^2,P}}\big(\mathcal{O}_{Z,P}\big)
+=\sum_{P\in |Z|}\operatorname{length}_{\mathcal{O}_{\bb{P}^2,P}}\big(\mathcal{O}_{\bb{P}^2,P}/(F,G)\big).
+\]
+Thus the sum of intersection multiplicities is $mn$.
+\end{proof}
+
+\begin{remark}
+This is the scheme-theoretic version of B\'ezout for plane curves:
+it counts intersection points with multiplicity. The finiteness of $Z(F)\cap Z(G)$ follows immediately.
+\end{remark}
+
+%------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{hartshorne}
+R.~Hartshorne,
+\emph{Algebraic Geometry},
+Graduate Texts in Mathematics \textbf{52},
+Springer--Verlag, 1977.
+
+\bibitem{atiyah-macdonald}
+M.~F.~Atiyah and I.~G.~Macdonald,
+\emph{Introduction to Commutative Algebra},
+Addison--Wesley, 1969.
+
+\bibitem{eisenbud}
+D.~Eisenbud,
+\emph{Commutative Algebra with a View Toward Algebraic Geometry},
+Graduate Texts in Mathematics \textbf{150},
+Springer--Verlag, 1995.
+
+\bibitem{alggeonotes}
+W.~Troiani,
+\emph{Notes on Algebraic Geometry},
+unpublished notes (draft), 2020.
+
+\bibitem{varieties}
+W.~Troiani,
+\emph{Varieties},
+unpublished notes (draft), 2020.
+
+\end{thebibliography}
+
+\end{document}

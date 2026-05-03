@@ -1,0 +1,1186 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{units}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+\usepackage{nicefrac}
+\usepackage{hyperref}
+\usepackage{bbm}
+\usepackage{color}
+\usepackage{tensor}
+\usepackage{tipa}
+\usepackage{bussproofs}
+\usepackage{ stmaryrd }
+\usepackage{ textcomp }
+\usepackage{leftidx}
+\usepackage{afterpage}
+\usepackage{varwidth}
+\usepackage{physics}
+\usepackage{lscape}
+
+\newcommand\blankpage{
+	\null
+	\thispagestyle{empty}
+	\addtocounter{page}{-1}
+	\newpage
+}
+
+\graphicspath{ {images/} }
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[subsection] % reset theorem numbering for each chapter
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{cor}[thm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem{exmp}[thm]{Example} % same for example numbers
+\newtheorem{notation}[thm]{Notation}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{condition}[thm]{Condition}
+\newtheorem{question}[thm]{Question}
+\newtheorem{construction}[thm]{Construction}
+\newtheorem{exercise}[thm]{Exercise}
+\newtheorem{example}[thm]{Example}
+\newtheorem{observation}[thm]{Observation}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\call}[1]{\mathcal{#1}}
+\newcommand{\psheaf}{\text{\underline{Set}}^{\scr{C}^{\text{op}}}}
+\newcommand{\und}[1]{\underline{\hspace{#1 cm}}}
+\newcommand{\adj}[1]{\text{\textopencorner}{#1}\text{\textcorner}}
+\newcommand{\comment}[1]{}
+\newcommand{\lto}{\longrightarrow}
+
+\newenvironment{scprooftree}[1]%
+{\gdef\scalefactor{#1}\begin{center}\proofSkipAmount \leavevmode}%
+	{\scalebox{\scalefactor}{\DisplayProof}\proofSkipAmount \end{center} }
+
+\usepackage[margin=1cm]{geometry}
+
+\title{G\"{o}del's First Incompleteness Theorem}
+\author{Will Troiani}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	\tableofcontents
+	
+	\section{Introduction}
+	G\"{o}del's First Incompleteness Theorem holds in a very broad setting, indeed, observe the following vague statement.
+	\begin{proposition}\label{prop:Godel}[G\"{o}del's First Incompleteness Theorem (vague)]
+		Let $L$ be any formal system of arithmetic (at least strong enough to describe the basic statements about addition and multiplication) whose set of axioms and set of deduction rules are both computable. Then $L$ is necessarily either incomplete, or inconsistent.
+	\end{proposition}
+	We progressively make this statement more precise. To begin, we define the first order language which we will be working with (see \cite{first_order_logic} for Definitions of a \emph{first order language} and a \emph{first order theory}).
+	\begin{defn}
+		The first order language $Q$ consists of the following.
+		\begin{itemize}
+			\item A single sort $A$.
+			\item Four function symbols:
+			\begin{align*}
+				0: &A\\
+				S: &A \lto A\\
+				+: &A \times A \lto A\\
+				\times: &A \times A \lto A
+			\end{align*}
+			\item No relation symbols.
+		\end{itemize}
+		The first order theory $Q$ consists of the following axioms.
+		\begin{align}
+			&\forall x, \neg(x = S(x)),\\
+			&\forall x, \neg(S(x) = 0)\\
+			&\forall x \forall y, S(x) = S(y) \Longrightarrow x = y\\
+			&\forall x, \neg(x = 0) \Longrightarrow \exists y, x = S(y)\\
+			&\forall x, x + 0 = x\\
+			&\forall x \forall y, x + S(y) = S(x + y)\\
+			&\forall x, x \times 0 = 0\\
+			&\forall x \forall y, x \times S(y) = (x \times y) + x
+		\end{align}
+	\end{defn}
+	\begin{remark}
+		The first order theory $Q$ is the familiar first order theory of Peano arithmetic but with the axiom schema corresponding to induction omitted. This theory $Q$ is often called \textbf{Robinson arithmetic} in literature.
+	\end{remark}
+	Since $Q$ does not admit the inductive axiom, it is hardly surprising that $Q$ is incomplete, indeed, one can prove rather simply that $Q$ cannot prove nor disprove the statement
+	\begin{equation}
+		\forall x, 0 + x = x
+	\end{equation}
+	see \cite[\S 8.4]{smith} for a proof. The more interesting question is whether $Q$ can be \emph{consistently completed}, a notion we now make precise.
+	\begin{defn}
+		Let $L$ be a consistent first order theory (see \cite{Billy} for the basic definitions, complete, consistent, etc). The system $L$ is \textbf{consistently completable} if there exists a first order theory $L'$ satisfying the following.
+		\begin{itemize}
+			\item Every axiom of $L$ is provable in $L'$.
+			\item $L'$ is consistent and complete.
+		\end{itemize}
+	\end{defn}
+	A common miss-understanding of G\"{o}del's First Incompleteness Theorem is that $Q$ (and hence the first order theory of Peano arithmetic) is not consistently completable. This is not true, as the following Example demonstrates.
+	\begin{example}\label{ex:is_doable}
+		Given a consistent first order theory $L$, it was shown in \cite[Theorem 1]{Billy} how to construct a new first order theory $L^\ast$ satisfying the following.
+		\begin{itemize}
+			\item Every axiom of $L$ is provable in $L^\ast$,
+			\item $L^\ast$ is consistent and complete (and saturated, which won't be used here).
+		\end{itemize}
+		Applying this to $Q$ and we obtain $Q^\ast$, which contains $Q$, is consistent, and complete. Hence, $Q$ is consistently completable (assuming it is consistent).
+	\end{example}
+	Indeed, the phrase ``...whose set of axioms and set of deduction rules are both computable" in Proposition \ref{prop:Godel} cannot be ignored. We make this phrase precise by working with \emph{general recursive functions} and \emph{relations}. We define ``general recursive" in Definition \ref{def:primitive_recursive}. Indeed, the general recursive functions and relations play an important role in the theory of computation more broadly, but this is not necessary to understand G\"{o}del's Theorem. For the current purposes, the role of general recursive functions and relations will be to carve out a subset of formulas which satisfy a representability criteria (Proposition \ref{lem:strongly_representable_intro} below).
+	
+	In the following lemma, we denote the formula in $Q$ corresponding to a natural number $n$ by $\underline{n}$, for example, $\underline{2}$ denotes $S(S(0))$.
+	\begin{proposition}\label{lem:strongly_representable_intro}
+		Let $f: \bb{N}^m \lto \bb{N}$ be a general recursive function. Then there exists a relation $F$ with free variables $x_1,\ldots, x_m, y$ satisfying:
+		\begin{equation}
+			\text{If }f(n_1,...,n_m) = k \text{ then }Q\vdash \forall y, F[x_i := \underline{n_i}]_{i = 1}^m\Longleftrightarrow y = \underline{k}
+		\end{equation}
+	where $F[x_i := \underline{n_i}]_{i = 1}^m$ denotes the formula $F$ with $\underline{n_i}$ substituted for all free occurrences of $x_i$ for $i = 1,\ldots, m$.
+	
+	Moreover, if a relation $r \subseteq \bb{N}^m$ is general recursive, then there exists a formula $R$ in $Q$ with free variables $x_1,...,x_n$ satisfying the following.
+	\begin{align*}
+		\text{If }(n_1,...,n_m) \in r &\text{ then }Q\vdash R[x_i := \underline{n_i}]_{i = 1}^m\\
+		\text{If }(n_1,...,n_m) \not\in r &\text{ then }Q\vdash\neg R[x_i := \underline{n_i}]_{i = 1}^m
+	\end{align*}
+	\end{proposition}
+	Proposition \ref{lem:strongly_representable_intro} is in fact the core of the argument for G\"{o}del's First Incompleteness Theorem. It is proved and discussed further in Section \ref{sec:prim_rec}. This is where the class of general recursive relations is paramount, a similar statement to Proposition \ref{lem:strongly_representable_intro} but without the hypothesis that $R$ is general recursive is \emph{false}.
+	
+	We are now cornered into making a very precise definition of ``computable sets", as if all sets are defined to be computable, then G\"{o}del's First Incompleteness Theorem does not hold.
+	
+	A set will be \emph{computable} if there exists a general recursive funciton which in some way ``recognises" the elements. General recursive functions have the natural numbers as their domains though, so we need to encode the elements of the set into natural numbers first, but not any encoding will do as what if this encoding itself is non-computable?
+	
+	Thus we will fix a particular encoding of first order formulas into natural numbers. This is done using G\"{o}del numbers, defined in the following way.
+	
+	\begin{defn}\label{def:godel_numbering}
+		Given a term or formula $\varphi$ of $Q$, we associate a natural number $\adj{\varphi} \in \bb{N}$ in the following way.
+		\begin{itemize}
+			\item To each letter in the alphabet associated to $Q$ we associate an integer according to the following table.
+			\begin{align*}
+				\gamma(0) &= 1 & \gamma(S) &= 3 & \gamma(+) &= 5 & \gamma(\times) &= 7\\
+				\gamma(() &= 9 & \gamma()) &= 11 & \gamma(\neg) &= 13 & \gamma(\wedge) &= 15\\
+				\gamma(\vee) &= 17 & \gamma(\Longrightarrow) &= 19 & \gamma(\forall) &= 21 & \gamma(\exists) &= 23\\
+				\gamma(=) &= 25 & \gamma(x_1) &= 2 & \gamma(x_2) &= 4 & \hdots
+			\end{align*}
+		\end{itemize}
+		\item To each term or formula $\varphi$ is an associated sequence of symbols $s_1\ldots s_n$ which spell out $\varphi$, that is, as words $\varphi = s_1 \ldots s_n$. Denoting the $i^\text{th}$ (in magnitude) prime number by $p_i$, we define:
+		\begin{equation}
+			\adj{\varphi} = p_1^{\gamma(s_1)}\cdots p_n^{\gamma(s_n)}
+		\end{equation}
+	\end{defn}
+	\begin{example}
+		We calculate the G\"{o}del number associated to the formula $S(0)=0+1$.
+		\begin{align*}
+			\adj{S(0)=0+1} &= \adj{S(0)=0+S(0)}\\
+			&= 2^{\gamma(S)}3^{\gamma(()}5^{\gamma(0)}7^{\gamma())}11^{\gamma(=)}13^{\gamma(0)}17^{\gamma(+)}19^{\gamma(S)}23^{\gamma(()}29^{\gamma(0)}31^{\gamma())}\\
+			&= 2^3 3^9 5^1 7^{11} 11^{23} 13^1 17^5 19^3 23^9 29^1 31^{11}\\
+			&= 191352835104285876966611134901860756135433453873754327850773507007732920
+		\end{align*}
+	\end{example}
+	
+	\begin{defn}
+		Let $X$ be a set, and for each $x \in X$ assume there is some integer $\underline{x}$ uniquely associated to $x$. The \textbf{characteristic function} of $X$ is the function $\chi_X: \bb{N} \lto \bb{N}$ which for every $x \in X$ is such that $\chi_X(\underline{x}) = 0$ and for all other $x \in \bb{N}$ is such that $\chi_X(x) = 1$.
+		
+		A set of first order formulas $X$ is \textbf{general recursive} if the characteristic function of the set of G\"{o}del numbers of the formulas of $X$ is general recursive.
+		\end{defn}
+	
+	\begin{defn}
+		A first order theory $\bb{T}$ is \textbf{effectively, consistently, completable} if there exists a first order theory $\bb{T}'$ satisfying the following.
+		\begin{itemize}
+			\item The set of axioms in $\bb{T}'$ is general recursive.
+			\item The set of deduction rules in $\bb{T}'$ is general recursive.
+			\item Every axiom rule of $\bb{T}$ is provable in $\bb{T}'$.
+			\item $\bb{T}'$ is consistent and complete.
+		\end{itemize}
+	\end{defn}
+	Before stating our version of G\"{o}del's First Incompleteness Theorem, we make a historical remark. Proposition \ref{prop:Godel} stated that $L$ is either incomplete or inconsistent, but in fact this is \emph{not} what was first proved by G\"{o}del. The original paper \cite{Godel} instead proves the weaker claim where the word ``inconcistent" is replaced by ``$\omega$-inconsistent", which we define precisely in Definition \ref{def:omega_inconsistent}. It was Rosser who in \cite{Rosser} relinquished G\"{o}del's Theorem of the assumption of $\omega$-consistency. The important fact for now is that $\omega$-consistency implies consistency, but the converse does not hold, so Rosser's result is strictly stronger than what G\"{o}del original wrote.
+	
+	We can now state our version of G\"{o}del's First Incompleteness Theorem precisely.
+	\begin{thm}[G\"{o}del's First Incompleteness Theorem (precise)]
+		If $Q$ is $\omega$-consistent, then $Q$ is not effectively, consistently completable.
+	\end{thm}
+	The argument will proceed by first defining a particular first order sentence, the G\"{o}del sentence $G_Q$. This sentence will have the following properties.
+	\begin{align}
+		\text{If }Q\text{ is consistent, then }Q &\not\vdash G_Q\label{eq:consistent}\\
+		\text{If }Q\text{ is }\omega\text{-consistent, then }Q &\not\vdash \neg G_Q\label{eq:omega_consistent}
+	\end{align}
+That such a sentence exists is remarkable. It is not simple to write $G_Q$ down. We discuss this sentence and its construction more carefully in Section \ref{sec:godel_sentence}.
+	
+	\section{General Recursive Functions and Relations}\label{sec:prim_rec}
+	First we define which functions constitue the ``computable" ones. These will be the \emph{general recursive} functions.
+	\begin{defn}\label{def:primitive_recursive}
+		The set $\Psi$ of \textbf{general recursive functions} is defined inductively.
+		\begin{itemize}
+			\item First, the base cases.
+			\begin{itemize}
+				\item The constantly $0$ function $\bold{z}: \bb{N} \lto \bb{N},\text{ }\bold{z}(n) = 0$ is in $\Psi$.
+				\item The successor function $\bold{s}: \bb{N} \lto \bb{N},\text{ }\bold{s}(n) = n+1$ is in $\Psi$.
+				\item For any natural number $n$ let $m \leq n$ and denote by $\pi_m^n: \bb{N}^n \lto \bb{N}$ the projection onto the $m^\text{th}$ component. For each such pair $(n,m)$ the function $\pi^n_m$ is in $\Psi$.
+			\end{itemize}
+			\item Now the inductive cases.
+			\begin{itemize}
+				\item If $g: \bb{N}^m \lto \bb{N}^r$ and $h_1,...,h_m: \bb{N}^t \lto \bb{N}$ are in $\Psi$, then the composite $g \circ (h_1,...,h_m)$ is in $\Psi$.
+				\item Say $f: \bb{N}^{m+1} \lto \bb{N}$ is a function for which there exists $g,h \in \Psi$ are such that
+				\begin{align}
+					f(0,n_1,...,n_m) &= h(n_1,...,n_m)\label{eq:pr_base}\\
+					f(k+1,n_1,...,n_m) &= g(k, f(k, n_1,...,n_m),n_1,...,n_m)\label{eq:pr_induct}
+				\end{align}
+				then $f$ is in $\Psi$.
+			\end{itemize}
+		\end{itemize}
+		A function $f$ for which there exists functions $g,h \in \Psi$ adhering to conditions \eqref{eq:pr_base} and \eqref{eq:pr_induct} is said to be defined by \textbf{primitive recursion} via $g,h$. A function defined inductively by the axioms thus given along with the following extra axiom is \textbf{general recursive}.
+		\begin{itemize}
+			\item Let $f: \bb{N}^m \lto \bb{N}$ be a function in $\Psi$ such that for all $(n_2,...,n_m) \in \bb{N}^{m-1}$ there exists $n_1 \in \bb{N}$ such that $f(n_1,...,n_m) = 0$. Consider the function denoted $\mu f: \bb{N}^{m-1} \lto \bb{N}$ which maps $(n_2,...,n_m)$ to the least $n \in \bb{N}$ such that $f(n,n_2,...,n_m) = 0$. All such $\mu f$ are in $\Psi$.
+		\end{itemize}
+		
+		A \textbf{general recursive relation} $R \subseteq \bb{N}^{m}$ is a relation for which there exists a general recursive function $f: \bb{N}^{m} \lto \bb{N}$ satisfying:
+		\begin{equation}\label{eq:characteristic}
+			f(n_1,...,n_m) = \begin{cases}
+				0, & (n_1,...,n_m) \in R\\
+				1, & (n_1,....,n_m) \not\in R
+			\end{cases}
+		\end{equation}
+	\end{defn}
+	\begin{remark}
+		Notice the slight oddity that $f$ in \eqref{eq:characteristic} maps to $0$ if $(n_1,...,n_m)$ \emph{is} an element of $R$, and maps to $1$ if $(n_1,...,n_m)$ is \emph{not} an element of $R$.
+	\end{remark}
+	\begin{remark}
+		Note, in the penultimate clause of Definition \ref{def:primitive_recursive}, we allow for the case that $m = 0$. In this situation, this clause becomes the following.
+		\begin{itemize}
+			\item Say $f: \bb{N} \lto \bb{N}$ is a function for which there exists $g \in \Psi$ and $h \in \bb{N}$ such that
+			\begin{align}
+				f(0) &= h\\
+				f(k+1) &= g(k,f(k))
+			\end{align}
+		\end{itemize}
+		This allows for definitions of general recursive functions of the following form. These two examples will be used later.
+		\begin{align*}
+			\operatorname{sg}(0) &= 0 & \overline{\operatorname{sg}}(0) &= 1\\
+			\operatorname{sg}(k+1) &= 1 & \overline{\operatorname{sg}}(k+1) &= 0
+		\end{align*}
+		Note: one may wonder if the case when $m = 1$ is allowed in the final clause of Definition \ref{def:primitive_recursive}, but this just states again that the zero function is general recursive.
+	\end{remark}
+	\begin{example}\label{ex:basic_prim_rec}
+		The \textbf{predecessor function} is general recursive.
+		\begin{align*}
+			P(0) &= 0\\
+			P(k+1) &= k
+		\end{align*}
+		Here, the constant function $n \longmapsto k$ is general recursive because it is the composite of $k$ copies of the successor function composed with the zero function.
+		
+		The \textbf{cut-off subtraction function} is general recursive.
+		\begin{align*}
+			-(0,x) &= x\\
+			-(k+1,x) &= P(-(k,x))
+		\end{align*}
+		We will write $x - y$ for $-(y,x)$.
+		
+		The \textbf{distance function} is general recursive.
+		\begin{align*}
+			d(0,x) &= x\\
+			d(y,x) &= (x - y) + (y - x)
+		\end{align*}
+	\end{example}
+Note the distance function is not the zero function (read carefully!)
+
+We establish some general methods for constructing general recursive functions/relations.
+	\begin{lemma}
+		If $f: \bb{N} \lto \bb{N}$ is a general recursive function, then the relation $R$ defined by
+		\begin{equation}
+			(n,m) \in R \text{ iff } f(n) = m
+		\end{equation}
+		is a general recursive relation.
+	\end{lemma}
+	\begin{proof}
+		The characteristic function $\chi_R$ of $R$ is given by the following.
+		\begin{equation}
+			\chi_R(n,m) = \operatorname{sg}(d(f(n),m))
+		\end{equation}
+	\end{proof}
+	\begin{example}
+		The formulas $n = m$ and $n < m$ are general recursive. They respectively have characteristic functions given $\operatorname{sg}(d(n,m))$ and $ \operatorname{sg}(m-n)$.
+	\end{example}
+	\begin{lemma}\label{lem:and_or}
+		If $R,S \subseteq \bb{N}$ are general recursive relations, then so are $R^c$ and $R \cup S$.
+	\end{lemma}
+	\begin{proof}
+		Let $\chi_R,\chi_S$ be the characteristic functions of $R,S$ respectively. The characteristic function of $R^c$ is equal to $\overline{\operatorname{sg}}(\chi_R)$. The characteristic function of $R \cup S$ is equal to the product $\chi_R \times \chi_S$, and it can be shown that multiplication is a general recursive function.
+	\end{proof}
+	\begin{remark}
+		A helpful way to think about Lemma \ref{lem:and_or} is in the special case where $R,S$ are defined by \emph{properties} $P,Q$. Lemma \ref{lem:and_or} in this case says that if $R,S$ are general recursive, then so are the relations defined by the properties ``not $P$", ``$P$ and $Q$", ``$P$ or $Q$", ``$P$ implies $Q$".
+	\end{remark}
+	\begin{lemma}
+		Let $R \subseteq \bb{N}$ be a general recursive relation and $f: \bb{N} \lto \bb{N}$ a general recursive function. The following two relations are general recursive.
+		\begin{center}
+			$E \subseteq \bb{N},\text{ where }n \in E\text{ iff there exists }x \in \bb{N}, x \leq f(n)\text{ such that }x \in R$\\
+			$F \subseteq \bb{N},\text{ where }n \in F\text{ iff for all }x\in \bb{N}\text{ such that }x \leq f(n)\text{ we have }x \in R$
+		\end{center}
+	\end{lemma}
+	\begin{proof}
+		It can easily be shown that the factorial function $n \longmapsto n!$ is general recursive. Let $\chi_R$ denote the characteristic function of $R$. We first define the following general recursive function.
+		\begin{align*}
+			\hat{\chi}_E(0) &= \chi_R(f(0)) \times \chi_R(f(0) - 1) \times \hdots \times \chi_R(0)\\
+			\hat{\chi}_E(j+1) &= \chi_R(j+1) \times \hat{\chi}_E(j)
+		\end{align*}
+		The characteristic function of $E$ is then equal to the general recursive function $\hat{\chi}(f(\und{0.2}))$ which maps $n \longmapsto \hat{\chi}(f(n))$.
+		
+		For $F$, we first define the following general recursive function.
+		\begin{align*}
+			\hat{\chi}_F(0) &= \chi_R(0)\\
+			\hat{\chi}_F(j+1) &= \chi_R(j+1) + \hat{\chi}_F(j)
+		\end{align*}
+		The characteristic function of $F$ is then equal to the general recursive function $\operatorname{sg}(\hat{\chi}_F(f(\und{0.2})))$ which maps $n \longmapsto \operatorname{sg}(\hat{\chi}_F(f(n)))$.
+	\end{proof}
+	
+	\section{The general recursive functions and the general recursive relations are representable}
+	\begin{defn}
+		A $f:\bb{N}^m \lto \bb{N}$ is \textbf{representable} if there exists a formula $F(x_1,...,x_m,y)$ in $Q$ with free variables $x_1,...,x_m,y$ such that $F$ satisfies the following.
+		\begin{equation}
+			\text{If }f(n_1,...,n_m) = k \text{ then }Q\vdash \forall y, F(\underline{n_1},...,\underline{n_m},y)\Longleftrightarrow y = \underline{k}
+		\end{equation}
+		We say that $f$ is \textbf{strongly represented} by $F$.
+		
+		A relation $r \subseteq \bb{N}^m$ is \textbf{representable} if there exists a formula $R(x_1,...,x_m)$ in $Q$ with free variables $x_1,...,x_n$ such that $R$ satisfies the following.
+		\begin{align*}
+			\text{If }(n_1,...,n_m) \in r &\text{ then }Q\vdash R(\underline{n_1},...,\underline{n_m})\\
+			\text{If }(n_1,...,n_m) \not\in r &\text{ then }Q\vdash\neg R(\underline{n_1},...,\underline{n_m})
+		\end{align*}
+		We say that $r$ is strongly represented by $R$.
+	\end{defn}
+	The main result of this Section is the following.
+	\begin{lemma}\label{lem:strongly_representable}
+		The general recursive functions and the general recursive relations are representable.
+	\end{lemma}
+	Our method of proof will be to focus on the general recursive functions, and then prove the statement about general recursive relations as a Corollary. We begin with a general recursive function $f:\bb{N}^m \lto \bb{N}$ and mimic the construction of $f$ to construct the required formula $F$. However, we wish to avoid proving directly that if $f$ is defined by primitive recursion via $g,h$, that such an $F$ exists, as this turns out to be difficult. So, we begin with a new classification of the general recursive functions.
+	\subsection{The $\beta$-function}
+	\begin{defn}\label{def:prim_rec_reduct}
+		Let $\Phi$ denote the set constructed inductively from the following.
+		\begin{itemize}
+			\item First, the base cases.
+			\begin{itemize}
+				\item The constantly $0$ function $\bold{z}: \bb{N} \lto \bb{N}$ is in $\Phi$.
+				\item The successor function $\bold{s}: \bb{N} \lto \bb{N}, \bold{s}(n) = n+1$ is in $\Phi$.
+				\item For any natural number $n$ let $m \leq n$ and denote by $\pi_m^n: \bb{N}^n \lto \bb{N}$ the projection onto the $m^\text{th}$ component. For each such pair $(n,m)$ the function $\pi^n_m$ is in $\Phi$.
+				\item The addition function $\bold{a}: \bb{N} \times \bb{N} \lto \bb{N}, \bold{a}(n,m) = n+m$.
+				\item The multiplication function $\bold{m}: \bb{N} \times \bb{N} \lto \bb{N}, \bold{m}(n,m) = nm$ is in $\Phi$.
+				\item The characteristic function $\chi_\Delta$ of the diagonal relation $\Delta\subseteq \bb{N} \times \bb{N}$ defined by
+				\begin{equation}
+					(n,m) \in \Delta\text{ if and only if } n = m
+				\end{equation}
+				is in $\Phi$.
+			\end{itemize}
+			\item Now the inductive cases.
+			\begin{itemize}
+				\item If $g: \bb{N}^m \lto \bb{N}$ and $h_1,...,h_m: \bb{N}^r \lto \bb{N}$ are in $\Phi$, then the composite $g(h_1,...,h_r)$ is in $\Phi$.
+				\item Let $f: \bb{N}^m \lto \bb{N}$ be a function in $\Psi$ such that for all $(n_2,...,n_m) \in \bb{N}^{m-1}$ there exists $n_1 \in \bb{N}$ such that $f(n_1,...,n_m) = 0$. Consider the function denoted $\mu f: \bb{N}^{m-1} \lto \bb{N}$ which maps $(n_2,...,n_m)$ to the least $n \in \bb{N}$ such that $f(n,n_2,...,n_m) = 0$, we denote this natural number $n$ by $\mu n. f(n,n_2,...,n_m)$. All such $\mu f$ are in $\Phi$.
+			\end{itemize}
+		\end{itemize}
+	\end{defn}
+	\begin{lemma}\label{lem:prim_rec_alt_defn}
+		In the notation of Definitions \ref{def:primitive_recursive}, \ref{def:prim_rec_reduct} we have that $\Psi = \Phi$. In other words, the inductive definition of the set $\Phi$ gives an alternate definition of the general recursive functions.
+	\end{lemma}
+	It is relatively straight forward to prove that the extra base cases of Definition \ref{def:prim_rec_reduct} are general recursive, the real work in proving Lemma \ref{lem:prim_rec_alt_defn} will come from showing that the inductive clauses are sufficient for describing a general recursive function $f: \bb{N}^{m+1} \lto \bb{N}$ which is defined from primitive recursion via $g,h$. We sketch the argument now: for every natural number $k \in \bb{N}$ and every sequence $(n_1,...,n_m) \in \bb{N}^m$ of natural numbers, there is a finite sequence associated to $h(k,(n_1,...,n_m))$:
+	\begin{equation}\label{eq:prim_rec_seq}
+		\big(f(0,\underline{n}), f(1,(n_1,...,n_m)),...,f(k,(n_1,...,n_m))\big)
+	\end{equation}
+	Next, we develop a family of functions $\lbrace \alpha_k: \bb{N}^k \lto \bb{N}\rbrace_{k = 1}^\infty$ and another function $\beta: \bb{N} \times \bb{N} \lto \bb{N}$ subject to the following: if $(y_0,...,y_m)$ is a sequence of natural numbers, then for all $i = 0,...,m$ we have:
+	\begin{equation}
+		\beta(\alpha_{m+1}(y_0,...,y_m),i) = y_i
+	\end{equation}
+	Hence, if $d \in \bb{N}$ encodes sequence \eqref{eq:prim_rec_seq}, then the function $\beta$ can be used to describe $h$:
+	\begin{equation}
+		h(k,(n_1,...,n_m)) = \beta(d,k+1)
+	\end{equation}
+	It then will remain to show that $\beta \in \Phi$. In fact, many such $\beta$ exist, we present a particular choice in Definition \ref{def:the_beta_function}, while Definition \ref{def:beta_function} defines the general class of suitable functions.
+	
+	\begin{defn}\label{def:beta_function}
+		Let $A := \lbrace \alpha_k: \bb{N}^{k} \lto \bb{N}\rbrace_{k = 1}^\infty$ be a family of functions. A \textbf{$\beta$-function} corresponding to $A$ is a function $\bb{N} \times \bb{N} \lto \bb{N}$ satisfying the following properties.
+		\begin{enumerate}
+			\item\label{beta_code} For every length $m+1$ sequence $(y_0,...,y_m)$ of natural numberswe have $\beta(\alpha_{m+1}(y_0,...,y_m),i) = y_i$.
+			\item In the notation of Lemma \ref{lem:prim_rec_alt_defn}, we have $\beta \in \Phi$.
+		\end{enumerate} 
+	\end{defn}
+	\begin{remark}
+		Notice that we do not ask that the $\alpha_k$ are in $\Phi$. Also, we do not have any requirement in Definition \ref{def:beta_function} on the behaviour $\beta$ when applied to elements $(d, i)$ where $d$ is not in the image of any $\alpha_k$. Hence, a $\beta$-function should be though of as a \emph{computable decoder}, even in the presence of \emph{non-computable encoders $\alpha_k$}.
+	\end{remark}
+	We begin with a particular construction of the family $\lbrace \alpha_k\rbrace_{k = 1}^\infty$. Since we wish to describe a sequence of natural numbers via a single natural number, the Chinese Remainder Theorem is a natural place to begin.
+	\begin{thm}[Chinese Remainder Theorem]\label{thm:chinese}
+		Let $x_0,...,x_m$ be a sequence of coprime natural numbers. Denote by $x$ the product $x_0\hdots x_m$. The following is an isomorphism, where we write $[l]_k$ for the integer $l$ modulo $k$.
+		\begin{align}
+			c: \bb{Z}/x\bb{Z} &\lto \bb{Z}/x_0\bb{Z} \times \hdots \times \bb{Z}/x_m\bb{Z}\\
+			[m]_{x} &\longmapsto ([m]_{x_0},...,[m]_{x_m})
+		\end{align}
+	\end{thm}
+	We will have to calculate a suitable choice for $x_0,...,x_m$ before the Chinese Remainder Theorem can be used. The following Lemma tells us our choice.
+	\begin{lemma}
+		Let $y_0,...,y_m$ be a sequence of natural numbers. Denote by $j$ the following natural number.
+		\begin{equation}
+			j = \operatorname{max}(m,y_0,...,y_m) + 1
+		\end{equation}
+		and for $i = 0,...,m$ define the following:
+		\begin{equation}\label{eq:x}
+			x_i = 1 + (i + 1)j!
+		\end{equation}
+		Then the following properties are satisfied.
+		\begin{itemize}
+			\item The $x_0,...,x_m$ are relatively prime.
+			\item For each $i=0,...,m$ we have $y_i < x_i$.
+		\end{itemize}
+	\end{lemma}
+	\begin{proof}
+		Let $i \neq k$ and consider the difference $x_i - x_k$:
+		\begin{equation}
+			(1 + i)j! - (1 + k)j! = (i - k)j!
+		\end{equation}
+		Say $p$ divides $(i - k)j!$. Notice that $i - k$ is at most $n$ and we have chosen $j > n$, so if $p$ divides $i - k$ then $p$ divides $j!$. Thus it suffices to assume $p$ divides $j!$. We thus have that division of $1 + (i+1)j!$ by $p$ is $1$, so in particular $p$ does \emph{not} divide $1 + (i+1)j! = x_i$ for any $i \neq k$.
+		
+		We have shown that if $p$ divides $x_k$ and $x_i - x_k$ then $p$ does not divide $x_i$, a contradiction.
+		
+		The second clause is easy, we notice that $y_i < j < j! < x_i$.
+	\end{proof}
+	We now outline our method for representing a sequence $(y_0,...,y_m)$ of natural numbers via a single natural number $d$. First we construct a $(x_0,...,x_m)$ as given in \eqref{eq:x}, then we calculate $c^{-1}([y_0]_{x_0},...,[y_m]_{x_m})$, where $c^{-1}$ is the inverse of the isomorphism given by the Chinese Remainder Theorem \ref{thm:chinese}. Notice that $c^{-1}([y_0]_{x_0},...,[y_m]_{x_m})$ is an element of $\bb{Z}/x\bb{Z}$ (where $x = x_0 \hdots x_m$), we let $d$ denote the least, positive representative of the equivalence class $c^{-1}([y_0]_{x_0},...,[y_m]_{x_m})$. Hence, we have described a family of functions:
+	\begin{align}
+		\alpha_{k+1}: \bb{N}^{k+1} &\lto \bb{N}\\
+		(y_0,...,y_m) &\longmapsto d
+	\end{align}
+	Now we show the existence of a corresponding $\beta$-function, we sketch the general idea here. Let $(y_0,...,y_m)$ be a sequence of natural numbers and let $y$ denote $\alpha_{m+1}(y_0,...,y_m)$. We require a function $\beta: \bb{N} \times \bb{N} \lto \bb{N}$ so that for all such sequences we have $\beta(y,i) = y_i$. By the discussion above, we can recover $y_i$ from $y$ by constructing $x_0,...,x_m$ and then $y_i = [y]_{x_i}$. Now a subtlety arises, the integer $x_i$ is defined as $1 + (i + 1)j!$ where $j$ is defined as $\operatorname{max}(m,y_0,...,y_m) + 1$, hence, if we were to construct $y_i$ from $y$ alone we would need a way to construct $y_0,...,y_m$, so this is a circular approach!
+	
+	However, if we already had access to the integer $j!$ then this problem would go away. So, we can define a function $\beta^*: \bb{N} \times \bb{N} \times \bb{N} \lto \bb{N}$ subject to $\beta^\ast(y,j!,i) = y_i$. Then it is simply a matter of finding a way to encode the pair $(y,j!)$ as a single integer, in other words, we need to define an injective function $J:\bb{N} \times \bb{N} \rightarrowtail \bb{N}$ such that $J \in \Phi$. We do this in Definition \ref{def:intermediate_beta_func}.
+	
+	\begin{defn}\label{def:intermediate_beta_func}
+		Define the following functions.
+		\begin{align}
+			J: \bb{N} \times \bb{N} &\lto \bb{N}\\
+			(x,y) &\longmapsto \frac{1}{2}(x + y)(x + y + 1) + x\\
+			K: \bb{N} \times \bb{N} &\lto \bb{N}\\
+			(x,y) &\longmapsto \operatorname{min}x' \leq y, \exists y' \leq x, x = J(x',y')\\
+			L: \bb{N} \times \bb{N} &\lto \bb{N}\\
+			(x,y) &\longmapsto \operatorname{min}y' \leq y, \exists y' \leq x, x = J(x',y')
+		\end{align}
+	\end{defn}
+	\begin{lemma}
+		In the notation of Definition \ref{def:intermediate_beta_func}, the function $J$ is injective, and for all $(x,y) \in \bb{N} \times \bb{N}$ we have:
+		\begin{align}
+			\label{eq:K_proj}K(J(x,y),J(x,y)) &= x\\
+			\label{eq:L_proj}L(J(x,y),J(x,y)) &= y
+		\end{align}
+	\end{lemma}
+	\begin{remark}
+		The exact definition of the functions $J,K,L$ are not important, we just need them to be functions in $\Phi$ (see Definition \ref{def:prim_rec_reduct}) and equations \eqref{eq:K_proj}, \eqref{eq:L_proj} to hold.
+		
+		Also, one might wonder why we didn't define $K(x,y) = \mu x'. \exists y' \leq x, x = J(x',y')$, this is because if we did, then $K$ would be in $\Phi$ only if $J$ is surjective, which we wish not to check.
+	\end{remark}
+	We can now define our $\beta$-function.
+	\begin{defn}\label{def:the_beta_function}
+		Define the following.
+		\begin{align}
+			\beta^\ast: \bb{N} \times \bb{N} \times \bb{N} &\lto \bb{N} & \beta: \bb{N} \times \bb{N} &\lto \bb{N}\\
+			(l,y,i) &\longmapsto \operatorname{rem}(1 + (i + 1)l!,y) & (y,i) &\longmapsto \beta^\ast(K(y),L(y),i)
+		\end{align}
+	\end{defn}
+	\begin{lemma}
+		Let $(y_0,...,y_m)$ be a sequence of natural numbers, $j = \operatorname{max}(m,y_0,...,y_m) + 1$, $y = \alpha_m(y_0,...,y_m)$, $d = J(j,y)$ $\beta: \bb{N} \times \bb{N} \lto \bb{N}$ be as given in Definition \ref{def:the_beta_function}. Then for all $i = 0,...,m$ we have:
+		\begin{equation}
+			\beta(d,i) = y_i
+		\end{equation}
+	\end{lemma}
+	\begin{proof}
+		This is a simple calculation.
+		\begin{align*}
+			\beta(d,i) &= \beta^\ast(K(d),J(d),i)\\
+			&= \beta^\ast(j,y,i)\\
+			&= \operatorname{rem}(1 + (i + 1)j!,y)\\
+			&= y_i
+		\end{align*}
+	\end{proof}
+	We now use the function $\beta$ to prove Lemma \ref{lem:prim_rec_alt_defn}.
+	\begin{proof}[Proof of Lemma \ref{lem:prim_rec_alt_defn}]
+		We leave as an exercise the fact that the functions defined in the base case are elements of $\Psi$. We prove here that if $f: \bb{N}^{m+1} \lto \bb{N}$ is a function defined by primitive recursion via $g,h$ then $f \in \Phi$.
+		
+		First define the relation $R \subseteq \bb{N}^{m+2}$ where $(d,y,n_1,...,n_m) \in R$ if and only if the following holds.
+		\begin{equation}
+			\beta(d,0) = f(n_1,...,n_m)\text{ and for all }k < y, \beta(d,k+1) = g(k,\beta(d,k),n_1,...,n_m)
+		\end{equation}
+		We observe that the relation $R$ is general recursive, and let $\chi_R:\bb{N}^{m+2} \lto \bb{N}$ denote its characteristic function and define the following.
+		\begin{align}
+			\hat{h}: \bb{N}^{m+1} &\lto \bb{N}\\
+			(y,n_1,...,n_m) &\lto \mu d. \chi_R(d,y,n_1,...,n_m)
+		\end{align}
+		We then have:
+		\begin{equation}
+			h(y,n_1,...,n_m) = \beta(\hat{h}(y,n_1,...,n_m),y)
+		\end{equation}
+	\end{proof}
+	
+	
+	
+	
+	\subsection{Representability}
+	Now we can prove that the general recursive functions are representable in $Q$.
+	\begin{lemma}\label{lem:basic_rep}
+		In the notation of Definition \ref{def:prim_rec_reduct}, the functions $\bold{z},\bold{s},\pi_m^n,\bold{a},\bold{m},\chi_{\Delta}$ are all representable in $Q$.
+	\end{lemma}
+	\begin{proof}
+		First, consider the function $\bold{z}: \bb{N} \lto \bb{N}$. We claim this is represented by the formula $\varphi_{\bold{z}}$ given by $y = 0$. We must show that for any $n \in \bb{N}$ we have $Q\vdash \varphi_{\bold{z}}(\underline{n},y) \Longleftrightarrow y = 0$. We have taken $\varphi_{\bold{z}}$ to be $y = 0$, so in fact we must show $Q\vdash y = 0 \Longleftrightarrow y = 0$. We consider the following prooftree.
+		\begin{center}
+			\AxiomC{$[y = 0]^1$}
+			\RightLabel{$(\Longrightarrow I)^1$}
+			\UnaryInfC{$y = 0 \Longrightarrow y = 0$}
+			\AxiomC{$[y = 0]^2$}
+			\RightLabel{$(\Longrightarrow I)^2$}
+			\UnaryInfC{$y = 0 \Longrightarrow y = 0$}
+			\RightLabel{$\wedge I$}
+			\BinaryInfC{$y = 0 \Longrightarrow y = 0 \wedge y = 0 \Longrightarrow y = 0$}
+			\noLine
+			\UnaryInfC{$\varphi_{\bold{z}}(\underline{n},y) \Longleftrightarrow y = 0$}
+			\RightLabel{$(\forall I)$}
+			\UnaryInfC{$\forall y, \varphi_{\bold{z}}(\underline{n},y) \Longleftrightarrow y = 0$}
+			\DisplayProof
+		\end{center}
+		It is similarly trivial to show the following.
+		\begin{itemize}
+			\item The function $\bold{s}$ is represented by $\varphi_{\bold{s}}(x,y)$ defined as $y = x + 1$.
+			\item The function $\pi_n^m$ is represented by $\varphi_{\pi_n^m}(x_1,...,x_n,y)$ defined as $y = x_m$.
+			\item The function $\bold{a}$ is represented by $\varphi_{\bold{a}}(x_1,x_2,y)$ defined as $x_1 + x_2 = y$.
+			\item The function $\bold{m}$ is represented by $\varphi_{\bold{m}}(x_1,x_2,y)$ defined as $x_1 \times x_2 = y$.
+		\end{itemize}
+		It is also simple to prove that $\chi_\Delta$ is representable, but it requires an intermediate step. First we show that if $n \neq m$ then $Q \vdash \neg(\underline{n} = \underline{m})$.
+		
+		To this end, say $n \neq m$ and assume further that $n > m$. We construct a proof with premise $\underline{n} = \underline{m}$ and then use finitely many applications of the axiom $\forall x \forall y, S(x) = S(y) \Longrightarrow x = y$ to deduce that $Q \vdash S(\hdots S(0)) = 0$. Using $(\exists I)$ we can thus infer that $Q\vdash \exists x, S(x) = 0$ which contradicts the axiom $\forall x, \neg(S(x) = 0)$. This establishes the claim.
+		
+		It is now straight forward to show that $\chi_\Delta$ is represented by $\varphi_{\chi_{\Delta}}(x_1,x_2,y)$ defined as $(x_1 = x_2 \wedge y = 0) \vee (\neg (x_1 = x_2) \wedge y = 1 )$.
+	\end{proof}
+	\begin{lemma}\label{lem:rep_comp_single}
+		If $g,h: \bb{N} \lto \bb{N}$ are represented by $G(x,y)$ and $H(x,y)$ respectively, then the composite $g h$ is represented in $Q$ by the following term which we denote by $F(x,y)$.
+		\begin{equation}
+			\exists z, H(x,z) \wedge G(z,y)
+		\end{equation}
+	\end{lemma}
+	\begin{proof}
+		Say $n,m \in \bb{N}$ are such that $gh(n) = m$. Let $k \in \bb{N}$ be such that $h(n) = k$. Then by assumption, we have the following.
+		\begin{align}
+			Q &\vdash \forall y, H(\underline{n},y) \Longleftrightarrow y = \underline{k}\\
+			Q &\vdash \forall y, G(\underline{k},y) \Longleftrightarrow y = \underline{m}\label{eq:second_comp}
+		\end{align}
+		We then have the following prooftree.
+		\begin{center}
+			\begin{scprooftree}{0.64}
+				\AxiomC{$\underline{k} = \underline{k}$}
+				\AxiomC{$\forall y, H(\underline{n},y) \Leftrightarrow y = \underline{k}$}
+				\RightLabel{$(\forall E)$}
+				\UnaryInfC{$H(\underline{n}, \underline{k}) \Leftrightarrow \underline{k} = \underline{k}$}
+				\RightLabel{$(\wedge E)$}
+				\UnaryInfC{$\underline{k} = \underline{k} \Rightarrow H(\underline{n}, \underline{k})$}
+				\RightLabel{$(\Rightarrow E)$}
+				\BinaryInfC{$H(\underline{n}, \underline{k})$}
+				\AxiomC{$[y = \underline{m}]^1$}
+				\AxiomC{$\underline{m} = \underline{m}$}
+				\AxiomC{$\forall y, G(\underline{k}, y) \Leftrightarrow y = \underline{m}$}
+				\RightLabel{$(\forall E)$}
+				\UnaryInfC{$G(\underline{k}, \underline{m}) \Leftrightarrow \underline{m} = \underline{m}$}
+				\RightLabel{$(\wedge E)$}
+				\UnaryInfC{$\underline{m} = \underline{m} \Rightarrow G(\underline{k}, \underline{m})$}
+				\RightLabel{$(= E)$}
+				\BinaryInfC{$G(\underline{k}, \underline{m})$}
+				\RightLabel{$(\wedge I)$}
+				\BinaryInfC{$G(\underline{k}, y)$}
+				\RightLabel{$(\wedge I)$}
+				\BinaryInfC{$H(\underline{n},\underline{k}) \wedge G(\underline{k}, y)$}
+				\RightLabel{$\exists I$}
+				\UnaryInfC{$F(\underline{n}, y)$}
+				\RightLabel{$(\Rightarrow I)^1$}
+				\UnaryInfC{$y = \underline{m} \Rightarrow F(\underline{n}, y)$}
+				\AxiomC{$[F(\underline{n},y)]^2$}
+				\AxiomC{$H(\underline{n}, \underline{k}) \wedge G(\underline{k}, y)$}
+				\RightLabel{$(\wedge E)$}
+				\UnaryInfC{$G(\underline{k}, y)$}
+				\AxiomC{$\forall y, G(\underline{k}, y) \Leftrightarrow y = \underline{m}$}
+				\RightLabel{$(\forall E)$}
+				\UnaryInfC{$G(\underline{k}, y) \Leftrightarrow y = \underline{m}$}
+				\RightLabel{$(\forall E)$}
+				\UnaryInfC{$G(\underline{k}, y) \Leftrightarrow y = \underline{m}$}
+				\RightLabel{$(= E)$}
+				\BinaryInfC{$y = \underline{m}$}
+				\RightLabel{$\exists E$}
+				\BinaryInfC{$y = \underline{m}$}
+				\RightLabel{$(\Rightarrow E)^2$}
+				\UnaryInfC{$F(\underline{n}, y)\Rightarrow y = \underline{m}$}
+				\RightLabel{$(\wedge I)$}
+				\BinaryInfC{$F(\underline{n}, y) \Leftrightarrow y = \underline{m}$}
+				\RightLabel{$(\forall I)$}
+				\UnaryInfC{$\forall y, F(\underline{n}, y) \Leftrightarrow y = \underline{m}$}
+			\end{scprooftree}
+		\end{center}
+	We have shown:
+		\begin{equation}
+			\text{If }gh(n) = m\text{ then }Q\vdash \forall y, F(\underline{n},y) \Longleftrightarrow y = \underline{m}
+		\end{equation}
+		as required.
+	\end{proof}
+	\begin{lemma}\label{lem:rep_comp_multi}
+		Let $g: \bb{N}^m \lto \bb{N}^r$ and $h_1,...,h_m: \bb{N} \lto \bb{N}^r$ be representable functions. Then the composite $g(h_1,...,h_m)$ is representable.
+	\end{lemma}
+	\begin{proof}
+		Similar to the proof of Lemma \ref{lem:rep_comp_single} and is left as an exercise. 
+	\end{proof}
+	In what follows, we write $w < \underline{n + 1}$ for $\exists w', w' + w = \underline{n+1}$.
+	\begin{lemma}\label{lem:minimisation_rep}
+		Let $f: \bb{N}^m \lto \bb{N}$ be a representable function, represented by $F(x_1,...,x_m,y)$ say. The function $\mu f$ is represented by the following formula which we denote by $G$.
+		\begin{equation}
+			G(x_2,...,x_m,y) := F(y,x_2,...,x_m,0) \wedge \forall w, w < y \Longrightarrow \neg F(w,x_2,...,x_m,0)
+		\end{equation}
+	\end{lemma}
+	Before proving Lemma \ref{lem:minimisation_rep}, we prove some preliminary lemmas.
+	\begin{lemma}\label{lem:numbers_less}
+		For all $n >0$ we have that $Q \vdash \forall w, w < \underline{n+1} \Longrightarrow w = 0 \vee \hdots \vee w = \underline{n}$.
+	\end{lemma}
+	\begin{proof}
+		We proceed by induction on $n$. First consider the case where $n = 0$. We need to show that $Q \vdash \forall w, w < S(0) \Longrightarrow w = 0$. Throughout, if a proof $\pi$ has assumptions $p_1,...,p_n$ we will write $\pi(p_1,...,p_n)$. First we consider the following prooftree which we denote by $\zeta(\neg(x = 0), \forall w, w < S(0))$.
+		\begin{center}
+			\AxiomC{$\neg(x = 0)$}
+			\AxiomC{$\forall x, \neg(x = 0) \Longrightarrow \exists y, S(y) = x$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\neg (x = 0) \Longrightarrow \exists y, S(y) = x$}
+			\RightLabel{$(\Rightarrow E)$}
+			\BinaryInfC{$\exists y, S(y)= x$}
+			\AxiomC{$[S(y') = x]$}
+			\AxiomC{$x < S(0)$}
+			\noLine
+			\UnaryInfC{$\exists w', x+ S(w') = S(0)$}
+			\RightLabel{$(=E)$}
+			\BinaryInfC{$\exists w', S(y') + S(w') = S(0)$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists y'' \exists w', S(y'') + S(w') = S(0)$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\exists y''\exists w', S(y'') + S(w') = S(0)$}
+			\DisplayProof
+		\end{center}
+		We can now construct the following, which we denote $\xi(\neg(x = 0), \forall w, w < S(0))$.
+		\begin{scprooftree}{0.8}
+			\AxiomC{$\zeta(\neg(x = 0), x < S(0))$}
+			\noLine
+			\UnaryInfC{$\vdots$}
+			\noLine
+			\UnaryInfC{$[\exists y''\exists w', S(y'') + S(w') = S(0)]$}
+			\AxiomC{$[\exists w', S(y'') + S(w') = S(0)]$}
+			\AxiomC{$[S(y'') + S(w') = S(0)]$}
+			\AxiomC{$\forall x\forall y, y + S(x) = S(y + x)$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\forall y, y + S(w') = S(y + w')$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$S(y'') + S(w') = S(y'' + S(w'))$}
+			\RightLabel{$(= E)$}
+			\BinaryInfC{$S(y'' + S(w')) = S(0)$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists w', S(y'' + S(w')) = S(y'' + S(w'))$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists y'' \exists w', S(y'' + S(w')) = S(0)$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\exists y'' \exists w', S(y'' + S(w')) = S(0)$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\exists y'' \exists w', S(y'' + S(w')) = S(0)$}
+		\end{scprooftree}
+		From $\xi(\neg(x = 0),x < S(0))$ we can construct a proof of $\exists y'' \exists w', w' + y'' = 0$ with assumption $\neg(x = 0)$ in the following way, we label this proof $\nu(\neg(x = 0), \forall w, w < S(0))$.
+		\begin{scprooftree}{0.7}
+			\AxiomC{$\xi(\neg(x = 0), x < S(0))$}
+			\noLine
+			\UnaryInfC{$\vdots$}
+			\noLine
+			\UnaryInfC{$\exists y'' \exists w', S(y'' + S(w')) = S(0)$}
+			\AxiomC{$[\exists w', S(y'' + S(w')) = S(0)]$}
+			\AxiomC{$[S(y'' + S(w')) = S(0)]$}
+			\AxiomC{$\forall x \forall y, S(x) = S(y) \Longrightarrow x = y$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\forall y, S(y'' + S(w')) = S(y) \Longrightarrow y'' + S(w') = y$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$S(y'' + S(w')) = S(0) \Longrightarrow y'' + S(w') = 0$}
+			\RightLabel{$(\Longrightarrow E)$}
+			\BinaryInfC{$y'' + S(w') = 0$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$ y'' + S(w') = 0$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$y'' + S(w') = 0$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists w', y'' + S(w') = 0$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists y'' \exists w', y'' + S(w') = 0$}
+		\end{scprooftree}
+		From this, a contradiction can be drawn, and hence we end up at the following prooftree.
+		\begin{scprooftree}{0.7}
+			\AxiomC{$\nu([\neg(x = 0)]^1, [x < S(0))]^2$}
+			\noLine
+			\UnaryInfC{$\vdots$}
+			\noLine
+			\UnaryInfC{$[\exists y'' \exists w', y'' + S(w') = 0]$}
+			\AxiomC{$[\exists w', y'' + S(w') = 0]$}
+			\AxiomC{$y'' + S(w') = 0$}
+			\AxiomC{$\forall x \forall y, x + S(y) = S(x + y)$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\forall y, y'' + S(y) = S(y'' + y)$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$y'' + S(w') = S(y'' + w')$}
+			\RightLabel{$(=E)$}
+			\BinaryInfC{$S(y'' + w') = 0$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists z, S(z) = 0$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\exists z, S(z) = 0$}
+			\RightLabel{$\exists E$}
+			\BinaryInfC{$\exists z, S(z) = 0$}
+			\AxiomC{$[S(z) = 0]$}
+			\AxiomC{$\forall x, \neg(S(x) = 0)$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\neg (S(z) = 0)$}
+			\RightLabel{$(\bot I)$}
+			\BinaryInfC{$\bot$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\bot$}
+			\RightLabel{$(\bot C)^1$}
+			\UnaryInfC{$x = 0$}
+			\RightLabel{$(\Rightarrow I)^2$}
+			\UnaryInfC{$x< S(0) \Longrightarrow x = 0$}
+			\RightLabel{$(\forall I)$}
+			\UnaryInfC{$\forall x, x < S(0) \Longrightarrow x = 0$}
+		\end{scprooftree}
+		For the inductive step, we assume that $Q \vdash \forall w, w < \underline{n+1} \Longrightarrow w = 0 \wedge \hdots \wedge w = \underline{n}$ and show that $Q \vdash \forall w, w < \underline{n+2} \Longrightarrow w = 0 \wedge \hdots \wedge w = \underline{n+1}$. First we introduce some derived rules.
+		\begin{center}
+			\AxiomC{$\exists y, x + S(y) = z$}
+			\RightLabel{$(\exists S)$}
+			\UnaryInfC{$\exists y, S(x + y) = z$}
+			\DisplayProof
+			%
+			\quad
+			%
+			\AxiomC{$\exists y, S(x + y) = S(z)$}
+			\RightLabel{$(S E)_\exists$}
+			\UnaryInfC{$\exists y, x + y = z$}
+			\DisplayProof
+			%
+			\quad
+			%
+			\AxiomC{$\exists x, t$}
+			\AxiomC{$\exists y, u = v$}
+			\RightLabel{$(= E)_\exists$}
+			\BinaryInfC{$\exists x \exists y, t[u := v]$}
+			\DisplayProof
+		\end{center}
+		This first rule comes from the following prooftree.
+		\begin{center}
+			\AxiomC{$\exists y, x + S(y) = z$}
+			\AxiomC{$[x + S(y') = z]$}
+			\AxiomC{$\forall x \forall y, x + S(y) = S(x + y)$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\forall y, x + S(y) = S(x + y)$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$x + S(y') = S(x + y')$}
+			\RightLabel{$(=E)$}
+			\BinaryInfC{$S(x + y') = z$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists y, S(x + y) = z$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\exists y, S(x + y) = z$}
+			\DisplayProof
+		\end{center}
+		The second rule comes from the following.
+		\begin{center}
+			\AxiomC{$\exists y, S(x + y) = S(z)$}
+			\AxiomC{$[S(x + y') = S(z)]$}
+			\AxiomC{$\forall x\forall y, S(x) = S(y) \Longrightarrow x = y$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\forall y, S(x + y') = S(y) \Longrightarrow x + y' = y$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$S(x + y') = S(z) \Longrightarrow x + y' = z$}
+			\RightLabel{$(\Longrightarrow E)$}
+			\BinaryInfC{$x + y' = z$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists y, x + y = z$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\exists y, x + y = z$}
+			\DisplayProof
+		\end{center}
+		The third rule:
+		\begin{center}
+			\AxiomC{$\exists x, t$}
+			\AxiomC{$\exists y, u = v$}
+			\AxiomC{$[(u = v)[y := y']]$}
+			\AxiomC{$[t[x := x']]$}
+			\RightLabel{$(=E)$}
+			\BinaryInfC{$t[x:=x'][u[y:=y']:=v[y:=y']]$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists y, t[x:=x'][u := v]$}
+			\RightLabel{$(\exists I)$}
+			\UnaryInfC{$\exists x\exists y, t[u := v]$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\exists y, t[u := v]$}
+			\RightLabel{$(\exists E)$}
+			\BinaryInfC{$\exists x \exists y, t[u := v]$}
+			\DisplayProof
+		\end{center}
+		We will also make use of the following derived rule, for which we add commutativity as an axiom to $Q$. That is, we assume now that $Q$ also admits the axiom $\forall x \forall y, x + y = y + x$.
+			\begin{center}
+			\AxiomC{$\exists x \exists y, S(x) + y = t$}
+			\RightLabel{$(C)_\exists$}
+			\UnaryInfC{$\exists x \exists y, y + S(x) = t$}
+			\DisplayProof
+		\end{center}
+		We first consider the following prooftree which we denote by $\pi$.
+		\begin{center}
+			\AxiomC{$\forall w \exists w', w + S(w') = \underline{n+2}$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\exists w', w + S(w') = \underline{n+2}$}
+			\RightLabel{$(\exists S)$}
+			\UnaryInfC{$\exists w',S(w + w') = \underline{n+2}$}
+			\RightLabel{$(S E)_\exists$}
+			\UnaryInfC{$\exists w', w + w' = \underline{n+1}$}
+			\AxiomC{$\neg(w = 0)$}
+			\AxiomC{$\forall x\neg(x = 0) \Longrightarrow \exists w'', x = S(w'')$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$\neg (w = 0) \Longrightarrow \exists w'', w = S(w'')$}
+			\RightLabel{$(\Longrightarrow E)$}
+			\BinaryInfC{$\exists w'', w = S(w'')$}
+			\RightLabel{$(=E)_\exists$}
+			\BinaryInfC{$\exists w'\exists w'', S(w'') + w' = \underline{n+1}$}
+			\RightLabel{$(C)_\exists$}
+			\UnaryInfC{$\exists w'\exists w'', w' + S(w'') = \underline{n+1}$}
+			\DisplayProof
+		\end{center}
+		We can now make use of the inductive hypothesis to prove $\exists w', (w + S(w') = \underline{n+2}) \wedge (w' = 0 \vee \hdots \vee w' = \underline{n})$. From this we can prove $\forall w, w = 1 \vee \hdots \vee w = \underline{n+1}$, as the proof has an assumption $\neg(w = 0)$. The result then follows.
+	\end{proof}
+	The familiar trichotomy axiom, that for all natural numbers $n$ we have $n = 0 \vee n > 0$ is also proveable by $Q$. This is the content of the next Lemma and indeed this will be used in the proof of Lemma \ref{lem:minimisation_rep}.
+	\begin{lemma}\label{lem:trichotomy}
+		The trichotomy axiom is provable in $Q$, that is, for all $n \in \bb{N}$ we have $Q \vdash \forall x, x < \underline{n} \vee x = \underline{n} \vee \underline{n} < x$.
+	\end{lemma}
+	Now we sketch a proof of Lemma \ref{lem:minimisation_rep}.
+	\begin{proof}[Proof of Lemma \ref{lem:minimisation_rep}]
+		Assume that $\mu f(n_2,...,n_m) = k$, we first show that $Q \vdash \forall y, y = \underline{k} \Longrightarrow G(\underline{n_2},...,\underline{n_m},y)$.
+		
+		Notice that by the following proof tree it is sufficient to show $Q \vdash G(\underline{n_2},...,\underline{n_m},\underline{k})$.
+		\begin{prooftree}
+			\AxiomC{$[y= \underline{k}]^1$}
+			\AxiomC{$G(\underline{n_2},...,\underline{n_m},\underline{k})$}
+			\RightLabel{$(= E)$}
+			\BinaryInfC{$G(\underline{n_2},...,\underline{n_m},y)$}
+			\RightLabel{$(\Longrightarrow E)^1$}
+			\UnaryInfC{$y = \underline{k} \Longrightarrow G(\underline{n_2},...,\underline{n_m},y)$}
+			\RightLabel{$(\forall I)$}
+			\UnaryInfC{$\forall y, y = \underline{k} \Longrightarrow G(\underline{n_2},...,\underline{n_m},y)$}
+		\end{prooftree}
+	To show $Q \vdash \forall y, G(\underline{n_2},...,\underline{n_m},\underline{k})$ it suffices by $(\wedge I)$ to show the following.
+	\begin{equation}\label{eq:later_contradictions}
+		Q \vdash F(\underline{k}, \underline{n_2},...,\underline{n_m},0),\qquad Q \vdash \forall w, w < \underline{k} \Longrightarrow \neg F(w,\underline{n_2},...,\underline{n_m},0)
+	\end{equation}
+The first of these is easy because it follows directly from the fact that $f(k,n_2,...,n_m) = 0$. For the second of these, it suffices by Lemma \ref{lem:numbers_less} to prove the following for all $n <k$:
+\begin{equation}
+	Q \vdash \neg F(\underline{n},\underline{n_2},...,\underline{n_m},0)
+\end{equation}
+Since $\mu f(n_2,...,n_m) = k$ we have for all $n < k$ that there exists $l_n > 0$ satisfying $f(n,n_2,...,n_m) = l_n$. Since $f$ is represented by $F$ we have $Q \vdash \forall y, F(\underline{n},\underline{n_2},...,\underline{n_m}, y) \Longleftrightarrow y = \underline{l_n}$ and hence $Q \vdash F(\underline{n},\underline{n_2},...,\underline{n_m},0) \Longleftrightarrow 0 = \underline{l_n}$. Hence, $Q,  F(\underline{n},\underline{n_2},...,\underline{n_m},0)\vdash 0 = \underline{l_n}$ leads to a contradiction as $l_n > 0$.
+
+Now we need to show $Q \vdash \forall y, G(\underline{n_2},...,\underline{n_m}, y) \Longrightarrow y = \underline{k}$. We do this by showing $Q, G(\underline{n_2},...,\underline{n_m},y) \vdash \neg(\underline{k} < y) \wedge \neg(\underline{y} < k)$ which by Lemma \ref{lem:trichotomy} then implies that $Q, G(\underline{n_2},...,\underline{n_m},y) \vdash y = \underline{k}$. It then follows from $(\Rightarrow I)$ and $(\forall I)$ that $Q \vdash \forall y, G(\underline{n_2},...,\underline{n_m},y) \Longrightarrow y = \underline{k}$.
+
+Hence, the proof has been reduced to considering the following two prooftrees. We have seen in \eqref{eq:later_contradictions} already that $Q \vdash F(\underline{k},\underline{n_2},...,\underline{n_m},0)$, let $\pi$ be any proof of $F(\underline{k},\underline{n_2},...,\underline{n_m},0)$.
+\begin{prooftree}
+	\AxiomC{$\pi$}
+	\noLine
+	\UnaryInfC{$\vdots$}
+	\noLine
+	\UnaryInfC{$F(\underline{k},\underline{n_2},...,\underline{n_m},0)$}
+	\AxiomC{$[\underline{k} < y]^1$}
+	\AxiomC{$G(\underline{n_2},...,\underline{n_m},y)$}
+	\RightLabel{$(\wedge E)$}
+	\UnaryInfC{$\forall w, w < y \Longrightarrow \neg F(w,\underline{n_2},...,\underline{n_m},0)$}
+	\RightLabel{$(\forall E)$}
+	\UnaryInfC{$\underline{k} < y \Longrightarrow \neg F(\underline{k},\underline{n_2},...,\underline{n_m},0)$}
+	\RightLabel{$(\Rightarrow E)$}
+	\BinaryInfC{$\neg F(\underline{k},\underline{n_2},...,\underline{n_m},0)$}
+	\RightLabel{$(\neg E)$}
+	\BinaryInfC{$\bot$}
+	\RightLabel{$(\neg I)^1$}
+	\UnaryInfC{$\neg(\underline{k} < y)$}
+\end{prooftree}
+In the following prooftree, we use the fact that $Q \vdash \forall w, w < \underline{k} \Longrightarrow \neg F(w,\underline{n_2},...,\underline{n_m},0)$ as shown earlier in this proof, let $\zeta$ be any proof of $\forall w, w < \underline{k} \Longrightarrow \neg F(w,\underline{n_2},...,\underline{n_m},0)$.
+\begin{prooftree}
+	\AxiomC{$G(\underline{n_2},...,\underline{n_m},y)$}
+	\RightLabel{$(\wedge E)$}
+	\UnaryInfC{$F(y,\underline{n_2},...,\underline{n_m},0)$}
+	\AxiomC{$[y < \underline{k}]^1$}
+	\AxiomC{$\zeta$}
+	\noLine
+	\UnaryInfC{$\vdots$}
+	\noLine
+	\UnaryInfC{$\forall w, w < \underline{k} \Longrightarrow \neg F(y,\underline{n_2},...,\underline{n_m},0)$}
+	\RightLabel{$(\forall E)$}
+	\UnaryInfC{$y < \underline{k} \Longrightarrow \neg F(y,\underline{n_2},...,\underline{n_m},0)$}
+	\RightLabel{$(\Rightarrow E)$}
+	\BinaryInfC{$\neg F(y,\underline{n_2},...,\underline{n_m},0)$}
+	\RightLabel{$(\neg E)$}
+	\BinaryInfC{$\bot$}
+	\RightLabel{$(\neg I)^1$}
+	\UnaryInfC{$\neg(y < \underline{k})$}
+\end{prooftree}
+	\end{proof}
+	
+	\begin{proposition}\label{prop:prim_rec_rep}
+		Every general recursive function is representable.
+	\end{proposition}
+	\begin{proof}
+		By Lemma \ref{lem:prim_rec_alt_defn} it suffices to prove the result by induction on the structure of $\Phi$ as given in Definition \ref{def:prim_rec_reduct}. The result then follows from Lemmas \ref{lem:basic_rep}, \ref{lem:rep_comp_single}, \ref{lem:rep_comp_multi}, \ref{lem:minimisation_rep}.
+	\end{proof}
+	\begin{cor}\label{cor:representability}
+		Every general recursive relation is representable.
+	\end{cor}
+	\begin{proof}
+		Let $r \subseteq \bb{N}^m$ be a general recursive relation. By definition the characteristic function $\chi_r$ of $r$ is general recursive, where $\chi_r$ is defined as follows.
+		\begin{equation}
+			\chi_r(n_1,...,n_m) = 
+			\begin{cases}
+				0, & (n_1,...,n_m) \in r\\
+				1, & (n_1,...,n_m) \not\in r
+			\end{cases}
+		\end{equation}
+		Since $\chi_r$ is general recursive, it follows from Proposition \ref{prop:prim_rec_rep} that there exists a relation $R(x_1,...,x_m,y)$ subject to:
+		\begin{equation}
+			Q \vdash \forall y, R(\underline{n_1},...,\underline{n_m},y) \Longleftrightarrow y = 0
+		\end{equation}
+		We now consider the formula $R(x_1,...,x_m,0)$ which we denote $\hat{R}(x_1,...,x_n)$. We claim that $\hat{R}(x_1,...,x_n)$ represents $r$. Let $(n_1,...,n_m)$ be such that $(n_1,...,n_m) \in r$. Then $Q\vdash \forall y, R(\underline{n_1},...,\underline{n_m},y) \Longleftrightarrow y = 0$. Observe now the following prooftree.
+		\begin{center}
+			\AxiomC{}
+			\RightLabel{$\operatorname{rflx}$}
+			\UnaryInfC{$0 = 0$}
+			\AxiomC{$\forall y, R(\underline{n_1},...,\underline{n_m},y) \Longleftrightarrow y = 0$}
+			\RightLabel{$(\wedge E)$}
+			\UnaryInfC{$\forall y, y = 0 \Longrightarrow R(\underline{n_1},...,\underline{n_m},y)$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$0 = 0 \Longrightarrow R(\underline{n_1},...,\underline{n_m},0)$}
+			\RightLabel{$(\Longrightarrow E)$}
+			\BinaryInfC{$R(\underline{n_1},...,\underline{n_m},0)$}
+			\DisplayProof
+		\end{center}
+		We have shown:
+		\begin{equation}
+			\text{If }(n_1,...,n_m) \in r\text{, then }Q \vdash \hat{R}(\underline{n_1},...,\underline{n_m})
+		\end{equation}
+		Now, say $(n_1,...,n_m) \not\in r$. We thus have $Q\vdash \hat{R}(\underline{n_1},...,\underline{n_m},y) \Longleftrightarrow y = \underline{1}$. We then have the following prooftree.
+		
+		\begin{center}
+			\AxiomC{$\vdots$}
+			\noLine
+			\UnaryInfC{$\neg(0 = S(0))$}
+			\AxiomC{$[R(\underline{n_1},...,\underline{n_m},0)]^1$}
+			\AxiomC{$\forall y, R(\underline{n_1},...,\underline{n_m},y) \Longleftrightarrow y = \underline{1}$}
+			\RightLabel{$(\wedge E)$}
+			\UnaryInfC{$\forall y,R(\underline{n_1},...,\underline{n_m},y) \Longrightarrow y = \underline{1}$}
+			\RightLabel{$(\forall E)$}
+			\UnaryInfC{$R(\underline{n_1},...,\underline{n_m},0) \Longrightarrow 0 = \underline{1}$}
+			\RightLabel{$(\Longrightarrow E)$}
+			\BinaryInfC{$0 = \underline{1}$}
+			\RightLabel{$(\neg E)$}
+			\BinaryInfC{$\bot$}
+			\RightLabel{$(\neg I)^1$}
+			\UnaryInfC{$\neg (R(\underline{n_1},...,\underline{n_m},0))$}
+			\DisplayProof
+		\end{center}
+		We have shown:
+		\begin{equation}
+			\text{If }(n_1,...,n_m) \not\in r\text{, then }Q\vdash \neg\big(\hat{R}(\underline{n_1},...,\underline{n_m})\big)
+		\end{equation}
+		Completing the proof.
+	\end{proof}
+	
+	
+	\section{G\"{o}del Numbering}
+	Due to the advancement and modern presence of computer machines, it is not surprising that the natural numbers are capable of encoding and expressing complex sentences. For instance, one could map every character inside this document to its associated ASCII integer, concatenate all these integers, and then read the result as a natural number $n$. This natural number has ``more" inside it than the raw number $n$, but if read in the correct way, in fact expresses an exposition on G\"{o}del's First Incompleteness Theorem.
+	
+	That integers can \emph{encode} data is a key part of G\"{o}del's argument. Ultimately, G\"{o}del's argument comes down to defining a formula (the G\"{o}del sentence $G_Q$) whose provability infers a relationship of natural numbers which expresses (when interpreted in the correct way) a paradox.
+	
+	The particular choice of encoding taken here is largely arbitrary, many other codings could be (and have been) used and still result in a correct argument. See Definition \ref{def:godel_numbering} for the encoding.
+	
+	\begin{remark}
+		Later, we will need to be able to extract the term/formula $\varphi$ from the integer $\adj{\varphi}$ in the situation where we know that $\adj{\varphi}$ is the G\"{o}del number for some formula, hence we require that the mapping $\varphi \longmapsto \adj{\varphi}$ is injective. This is why we the definition of $\adj{\varphi}$ involves the exponents of prime numbers.
+	\end{remark}
+	
+	\section{Towards the G\"{o}del sentence}\label{sec:crucial}
+	In Section \ref{sec:prim_rec} we constructed many examples of general recursive functions, relations, and formulas. In this Section, we construct more elaborate general recursive relations, which will be crucial in defining the G\"{o}del sentence, $G_Q$.
+	
+	\subsection{Diagonalisation}
+	\begin{notation}
+		In the following, if a formula $\varphi$ of $Q$ admits one free variable $y$, then we will write $\varphi(y)$.
+	\end{notation}
+	\begin{defn}
+		The \textbf{diagonalisation} of a formula $\varphi(y)$ of $Q$ is the following formula which we denote by $\Delta(\varphi(y))$:
+		\begin{equation}
+			\exists y, y = \underline{\adj{\varphi(y)}} \wedge \varphi(y)
+		\end{equation}
+	\end{defn}
+	We next construct a function $\operatorname{diag}: \bb{N} \lto \bb{N}$ which given maps a number $n$ which is the G\"{o}del number of a formula $\varphi(y)$ to $\operatorname{diag}(n) = \adj{\Delta(\varphi(y))}$.
+	
+	\begin{lemma}
+		The function
+		\begin{align*}
+			\operatorname{num}: \bb{N} &\lto \bb{N}\\
+			n &\longmapsto \adj{\underline{n}}
+		\end{align*}
+		is general recursive.
+	\end{lemma}
+	\begin{proof}
+		We can define this as follows.
+		\begin{align*}
+			\operatorname{num}(0) &= 2^{\gamma(0)} = 2^1 = 2\\
+			\operatorname{num}(j+1) &= 2^{\gamma(S)}\times \operatorname{num}(j) = 2^3\times \operatorname{num}(j) = 8 \times \operatorname{num}(j)
+		\end{align*}
+	\end{proof}
+	
+	\begin{defn}
+		The \textbf{concatination} of two G\"{o}del numbers $n,m$, denoted $n \ast m$ is given as follows. First write $n = p_1^{\adj{s_1}}\hdots p_n^{\adj{s_n}}$ and $m = p_1^{\adj{t_1}}\hdots p_m^{\adj{t_m}}$. Then $n \ast m$ is the integer $p_1^{t_1}\hdots p_n^{s_n}p_{n+1}^{t_1}\hdots p_{n+m}^{t_m}$.
+	\end{defn}
+	A fact we will not prove is the following.
+	\begin{fact}
+		The function
+		\begin{align*}
+			\operatorname{diag}: \bb{N} &\lto \bb{N}\\
+			n &\longmapsto \adj{\exists y, y =}\ast \operatorname{num}(n)\ast \adj{\wedge} \ast n
+		\end{align*}
+		is general recursive.
+	\end{fact}
+	\begin{remark}
+		Notice that in the special case where $n$ is the G\"{o}del number of some formula $\varphi(y)$, ie, $n = \underline{\adj{\varphi(y)}}$ then $\operatorname{diag}(n) = \adj{\Delta(\varphi(y))}$.
+	\end{remark}
+	
+	\subsection{``Proof of"}
+	We have shown how to represent any formula $\varphi$ by an integer, its corresponding G\"{o}del number $\adj{\varphi}$. Now we want to represent entire proofs with integers. This will be done by first constructing a ``linear" representation of a proof tree. This is simply done by stacking a tree into a single trunk following the convention of putting the right branch at every binary deduction rule underneath the left branch. We given an example.
+	\begin{center}
+		\AxiomC{}
+		\RightLabel{$\operatorname{ax}$}
+		\UnaryInfC{$\varphi$}
+		\RightLabel{$(\vee I)_L$}
+		\UnaryInfC{$\psi \vee \varphi$}
+		\AxiomC{}
+		\RightLabel{$\operatorname{ax}$}
+		\UnaryInfC{$\gamma$}
+		\RightLabel{$(\vee I)_R$}
+		\UnaryInfC{$\gamma \vee \delta$}
+		\RightLabel{$\wedge I$}
+		\BinaryInfC{$(\psi \vee \varphi) \wedge (\gamma \vee \delta)$}
+		\DisplayProof
+		$\rightsquigarrow$
+		\AxiomC{}
+		\RightLabel{$\operatorname{ax}$}
+		\UnaryInfC{$\varphi$}
+		\RightLabel{$(\vee I)_L$}
+		\UnaryInfC{$\psi \vee \varphi$}
+		\RightLabel{$\operatorname{ax}$}
+		\UnaryInfC{$\gamma$}
+		\RightLabel{$(\vee I)_R$}
+		\UnaryInfC{$\gamma \vee \delta$}
+		\RightLabel{$\wedge I$}
+		\UnaryInfC{$(\psi \vee \varphi) \wedge (\gamma \vee \delta)$}
+		\DisplayProof
+	\end{center}
+	In the situation where there are more than one binary connective in the proof tree, we methodically work from the top of the tree (nearest the leaves) down to the root. Hence, a proof tree can be identified with a sequence of formulas, reading the truncated tree from top to bottom. It is to this sequence of formulas, we associated a \emph{super G\"{o}del number}.
+	\begin{defn}\label{def:super_g_n}
+		Let $\varphi_1,...,\varphi_n$ be a sequence of formulas. The \textbf{super G\"{o}del number} of this sequence is given by the following.
+		\begin{equation}
+			p_1^{\adj{\varphi_1}}\hdots p_n^{\adj{\varphi_n}}
+		\end{equation}
+	\end{defn}
+	There is now the following crucial fact, we will shall leave unproven.
+	\begin{fact}\label{fact:crucial}
+		There is a relation $\operatorname{proofof} \subseteq \bb{N} \times \bb{N}$ which on a pair of natural numbers $(n,m)$ where $n$ is the super G\"{o}del number of a proof of a formula $\varphi$, and $m = \adj{\varphi}$. This relation is general recursive.
+	\end{fact}
+	The proof of Fact \ref{fact:crucial} is where the bulk of the busy work of G\"{o}del's Theorem lies. We leave references of work which goes through the proof of this part in more detail: \cite{Mendelson}, \cite{Godel}, \cite{smith}, however we note that these resources use simpler proof systems, the author knows of no detailed account of the proof of Fact \ref{fact:crucial} (as stated with respect to Gentzen's Natural Deduction).
+	
+	\section{G\"{o}del's Sentence}\label{sec:godel_sentence}
+	In Section \ref{sec:crucial} we mentioned that the function $\operatorname{diag}: \bb{N} \lto \bb{N}$ and the relation $\operatorname{proof} \subseteq \bb{N} \times \bb{N}$ are general recursive. The composition of general recursive functions remains general recursive, so the following relation is general recursive.
+	\begin{equation}
+		\operatorname{gdl} \subseteq \bb{N} \times \bb{N} \text{, where }(n,m) \in \operatorname{gdl}\text{ iff }(n,\operatorname{diag}(m)) \in \operatorname{proofof}
+	\end{equation}
+	Since this is general recursive, and general recursive relations are strongly representable in $Q$ (Lemma \ref{lem:strongly_representable}) there exists a formula $\operatorname{GDL}$ of $Q$ satisfying the following.
+	\begin{align*}
+		(n,m) \in \operatorname{gdl} &\text{ implies } Q\vdash \operatorname{GDL}(\underline{n},\underline{m})\\
+		(n,m) \not\in \operatorname{gdl} &\text{ implies } Q\vdash \neg\operatorname{GDL}(\underline{n},\underline{m})
+	\end{align*}
+	We then define $U(y)$ to be the formula $\forall x, \neg \operatorname{GDL}(x,y)$. The G\"{o}del sentence is then the Diagonalisation of this.
+	\begin{equation}
+		G_Q \text{ is }\Delta(U(y))\text{ which is }\exists y, y = \adj{U(y)} \wedge U(y)
+	\end{equation}
+	We have the following proof trees.
+	\begin{center}
+		\AxiomC{$\exists y, y = \underline{\adj{U(y)}} \wedge U(y)$}
+		\RightLabel{$\exists E$}
+		\UnaryInfC{$U(\underline{\adj{U(y)}})$}
+		\DisplayProof
+		\AxiomC{$U(\underline{\adj{U(y)}})$}
+		\RightLabel{$\exists I$}
+		\UnaryInfC{$\exists y, y = \underline{\adj{U(y)}} \wedge U(y)$}
+	\end{center}
+	and so $G_Q$ can also be taken to be $U(\underline{\adj{U(y)}})$. In turn, this formula is the same as $\forall x, \neg \operatorname{GDL}(x, \underline{\adj{U(y)}})$.
+	
+	We now prove the following.
+	\begin{lemma}\label{lem:consistent}
+		If $Q$ is consistent, then $Q \not\vdash G_Q$.
+	\end{lemma}
+	\begin{proof}
+		Say $Q \vdash G_Q$ and let $\pi$ be a proof of $G_Q$. We let $m$ be the super G\"{o}del number (Definition \ref{def:super_g_n}) of $\pi$. Since $G_Q$ is the diagonalisation of $U(y)$, we hence have $(m,\adj{U(y)}) \in \operatorname{gdl}$, which as $\operatorname{GDL}$ represents $\operatorname{gdl}$ implies that $Q \vdash \operatorname{GDL}(\underline{m},\underline{\adj{U(y)}})$. However, we have assumed that $Q \vdash G_Q$, ie, $Q \vdash \forall x, \neg \operatorname{GDL}(x, \underline{\adj{U(y)}})$. Hence, in particular, $Q \vdash \neg \operatorname{GDL}(\underline{m},\underline{\adj{U(y)}})$. Hence we have contradicted our assumption that $Q$ is consistent.
+	\end{proof}
+	Lastly, we wish to show that if $Q$ is consistent, then $Q \not\vdash \neg G_Q$, however as mentioned in the introduction, we will only prove this in the context where $Q$ is \emph{$\omega$-consistent}.
+	\begin{defn}\label{def:omega_inconsistent}
+		The first order theory $Q$ is \textbf{$\omega$-inconsistent} if there exists a formula $\varphi(x)$ such that $Q \vdash \exists x, \varphi(x)$ and for all integers $m$ we have $Q \vdash \neg \varphi(\underline{m})$.
+		
+		If $Q$ is not $\omega$-inconsistent, then it is \textbf{$\omega$-consistent}.
+	\end{defn}
+	\begin{fact}
+		If $Q$ is $\omega$-consistent, then it is consistent.
+	\end{fact}
+	\begin{lemma}\label{lem:omega_consistent}
+		If $Q$ is $\omega$-consistent, then $Q \not\vdash \neg G_Q$.
+	\end{lemma}
+	\begin{proof}
+		Say $Q \vdash \neg G_Q$. Then $Q \vdash \exists x, \operatorname{GDL}(x,\underline{\adj{U(y)}})$. Now, since $Q$ is $\omega$-consistent, it is in particular consistent, and so $Q \vdash \neg G_Q$ implies that $Q$ can\emph{not} prove $G_Q$. Hence, for every integer $m \in \bb{N}$ we have that $m$ is \emph{not} the super G\"{o}del number of a proof of $G_Q$. Hence, by strong representability, we have that $Q \vdash \neg\operatorname{GDL}(\underline{m},\underline{\adj{U(y)}})$, for each integer $m \in \bb{N}$. This contradicts the assumption that $Q$ is $\omega$-consistent, and so we have that $Q \not\vdash \neg G_Q$.
+	\end{proof}
+
+	\section{Is the use of general recursive functions problematic?}
+	What is the role of the general recursive functions in the proof of G\"{o}del's First Incompleteness Theorem? Essentially, they are a convenient means to describe G\"{o}del's sentence, which is simply some formula inside the first order theory $Q$. Hence, the fact that these functions are general recursive is \emph{not} their important property, but instead, the underlying representing formulas are what matter.
+	
+	Notice that in order to prove Lemma \ref{lem:consistent}, all we need to know is that if $m$ is the super G\"{o}del number of a proof of $\pi$, then $Q \vdash \operatorname{GDL}(\underline{m},\underline{\adj{U(y)}})$, hence, as long as this can be shown, the fact that $\operatorname{gdl}$ is a general recursive function is not important.
+	
+	In fact, in order to prove Lemma \ref{lem:omega_consistent} all we need to know is that if $Q \not\vdash G_Q$ then for every integer $m \in \bb{N}$ we have that $Q \vdash \neg \operatorname{GDL}(\underline{m},\underline{\adj{U(y)}})$.
+	
+	Moreover, the proof of Proposition \ref{prop:prim_rec_rep} that every general recursive function is representable, took the inductive structure of the definition of a general recursive function and mimicked this construction inside $Q$ along with natural deduction to construct a representing formula.
+	
+	Hence, the role of general recursive functions inside the entire proof, is essentially just a convenient way to describe the construction of the G\"{o}del sentence, and is in fact not a crucial part of the proof.
+	
+	We outline here a way to prove G\"{o}del's First Incompleteness Theorem without making mention of general recursive functions, we will also use an abstract notion of G\"{o}del Numbering, meaning that we do not fix a particular such translation from proofs to integers. First, fix an injective translation from formulas in $Q$ to natural numbers, given a formula $F$ in $Q$ we denote by $\underline{F}$ its translation. Also, fix an injective translation from proofs to natural numbers, for any proof $\pi$ we let $\underline{\underline{\pi}}$ denote its translation. The next step is to prove the following Lemma.
+	
+	\begin{lemma}\label{lem:existence_Godel}
+		There exists a formula $F(x,y)$ with two free variables $x,y$ subject to the following properties.
+		\begin{itemize}
+			\item Given a proof $\pi$ of $\forall x, F(x,y)$ we have $Q \vdash F(\underline{\underline{\pi}},\underline{\forall x, F(x,y)})$.
+			\item If there is no proof of $\forall x, F(x,y)$ then for each natural number $m \in \bb{N}$ we have $Q \vdash \neg F(\underline{m},\underline{\forall x, F(x,y)})$.
+		\end{itemize} 
+	\end{lemma}
+	Then Lemmas \ref{lem:consistent}, \ref{lem:omega_consistent} can easily be adapted to accomodate Lemma \ref{lem:existence_Godel}.
+	
+	Hence, the introduction of general recursive functions to this argument is a detour, one could be more direct by simply working with the underlying representing formulas right from the beginning. However, this is not so simple, as what is the underlying representing formula of a function defined by primitive recursion? Recall, that we showed that these such functions are representable by making use of a $\beta$-function (Definition \ref{def:beta_function}).
+	
+	In fact, not only is the introduction of general recursive functions not necessary, it can be argued that it is indeed problematic; what \emph{is} a general recursive function? The point of G\"{o}del's First Incompleteness Theorem is to show a counterintuitive result concerning the theory of arithmetic. Before this is organised, how can we discuss the general recursive functions? One must accept a kind of Platonic existence of general recursive functions, but then what slips in when we do this? After all, we wish to talk about these functions, so what language do we use? A first order theory of some kind....?
+	
+	It is the author's opinion that, one \emph{ought} to present G\"{o}del's First Incompleteness Theorem on the level of the representing formulas, in order to stay completely contained in the realm of logic and language. Only then can the philosophical implications be considered before moving onto further mathematical discourse.
+	
+	
+	\begin{thebibliography}{9}
+		\bibitem{first_order_logic} \emph{First Order Logic}, W. Troiani.
+		\bibitem{smith} \emph{An Introduction to G\"{o}del's Theorems}, P. Smith.
+		\bibitem{Godel} \emph{???} Kurt G\"{o}del
+		\bibitem{Billy} \emph{Soundness and completeness} W. Price.
+		\bibitem{Rosser} \emph{Extensions of some Theorems of G\"{o}del and Church}, B. Rosser.
+		\bibitem{Mendelson} \emph{Mathematical logic}, 1997
+	\end{thebibliography}
+	
+	
+	
+	
+	
+	
+	
+\end{document}
